@@ -1,0 +1,232 @@
+body {
+  font-family: "TH Sarabun New", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #5D8C6F; 
+  color: white;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #0b3d1c;
+  padding: 15px 40px; 
+  color: white;
+  font-size: 26px; 
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 80px; 
+  font-size: 35px;
+}
+
+.navbar-left img {
+  height: 90px; 
+  width: 90px;
+  border-radius: 50%; 
+  object-fit: cover; 
+  background-color: white; 
+  padding: 5px; 
+}
+
+.navbar-left nav a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.navbar-left nav a:hover {
+  color: #a3e4d7; 
+}
+
+.user-box {
+  display: flex;
+  align-items: center;
+  gap: 20px; 
+  background: #C8DACE;
+  padding: 15px 25px; 
+  border-radius: 25px; /* ปรับความมนของขอบ */
+  color: black;
+  font-size: 19px;
+  border: 3px solid #0b3d1c; /* เพิ่มเส้นขอบสีเข้ม */
+}
+
+.user-box img {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.logout-btn {
+  background-color: transparent;
+  border: 3px solid #e74c3c;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+  width: 45px;
+  height: 45px;
+}
+
+.logout-btn:hover {
+    background-color: rgba(231, 76, 60, 0.1);
+}
+
+.logout-btn img {
+    height: 30px;
+    width: 30px;
+}
+
+/* Container */
+.container {
+  padding: 30px;
+}
+
+/* Stats Section */
+.stats {
+  display: flex;
+  justify-content: space-between; /* ปรับให้กล่องกระจายเต็มพื้นที่ */
+  gap: 50px;
+  margin-bottom: 40px;
+}
+
+.stat-box {
+  flex: 1; /* ทำให้กล่องขยายเท่ากัน */
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  text-align: center;
+  color: black;
+  border: 2px solid #444; /* เพิ่มเส้นขอบสีเทาเข้ม */
+}
+
+.stat-box h3 {
+  margin-bottom: 10px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.stat-number {
+  font-size: 50px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Toggle switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 90px;
+  height: 44px;
+  margin-top: 15px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 44px;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 36px;
+  width: 36px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #4CAF50;
+}
+
+input:checked + .slider:before {
+  transform: translateX(46px);
+}
+
+/* Title for table */
+.table-title {
+  font-size: 32px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 15px; /* เพิ่มระยะห่างระหว่างแถว */
+  background: transparent;
+  box-shadow: none;
+  color: black;
+  font-size: 22px; 
+}
+
+td, th {
+    padding: 20px;
+    text-align: left;
+    border: none; /* เอาเส้นขอบออกทั้งหมด */
+}
+
+th {
+  background-color: #EAEAEA; /* ปรับสีพื้นหลังหัวตาราง */
+  color: #333;
+  font-size: 24px; 
+}
+
+th:first-child {
+    border-radius: 15px 0 0 15px;
+}
+th:last-child {
+    border-radius: 0 15px 15px 0;
+}
+
+tbody tr {
+    background-color: #D4E6D9; /* ปรับสีพื้นหลังของแถว */
+    border-radius: 15px;
+}
+
+td:first-child {
+    border-radius: 15px 0 0 15px;
+}
+td:last-child {
+    border-radius: 0 15px 15px 0;
+}
+
+.action {
+  color: #0b6623;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex; /* จัดข้อความกับไอคอนให้อยู่ในแนวเดียวกัน */
+  align-items: center;
+  gap: 8px; /* ระยะห่างระหว่างข้อความกับไอคอน */
+}
+
+.action img {
+  height: 24px; /* ขนาดของไอคอนดินสอ */
+  width: 24px;
+}
