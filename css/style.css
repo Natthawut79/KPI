@@ -1,3 +1,6 @@
+/* =================================
+   BASE & SHARED STYLES
+   ================================= */
 body {
   font-family: "TH Sarabun New", sans-serif;
   margin: 0;
@@ -6,7 +9,9 @@ body {
   color: white;
 }
 
-/* Navbar */
+/* =================================
+   NAVBAR (ใช้ร่วมกันทุกหน้า)
+   ================================= */
 .navbar {
   display: flex;
   align-items: center;
@@ -51,10 +56,10 @@ body {
   gap: 20px; 
   background: #C8DACE;
   padding: 15px 25px; 
-  border-radius: 25px; /* ปรับความมนของขอบ */
+  border-radius: 25px;
   color: black;
   font-size: 19px;
-  border: 3px solid #0b3d1c; /* เพิ่มเส้นขอบสีเข้ม */
+  border: 3px solid #0b3d1c;
 }
 
 .user-box img {
@@ -87,28 +92,29 @@ body {
     width: 30px;
 }
 
-/* Container */
+/* =================================
+   INDEX PAGE STYLES
+   ================================= */
 .container {
   padding: 30px;
 }
 
-/* Stats Section */
 .stats {
   display: flex;
-  justify-content: space-between; /* ปรับให้กล่องกระจายเต็มพื้นที่ */
+  justify-content: space-between;
   gap: 50px;
   margin-bottom: 40px;
 }
 
 .stat-box {
-  flex: 1; /* ทำให้กล่องขยายเท่ากัน */
+  flex: 1;
   background: white;
   border-radius: 15px;
   padding: 25px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
   text-align: center;
   color: black;
-  border: 2px solid #444; /* เพิ่มเส้นขอบสีเทาเข้ม */
+  border: 2px solid #444;
 }
 
 .stat-box h3 {
@@ -123,7 +129,6 @@ body {
   color: #333;
 }
 
-/* Toggle switch */
 .switch {
   position: relative;
   display: inline-block;
@@ -132,17 +137,12 @@ body {
   margin-top: 15px;
 }
 
-.switch input {
-  display: none;
-}
+.switch input { display: none; }
 
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   background-color: #ccc;
   border-radius: 44px;
   transition: .4s;
@@ -151,35 +151,26 @@ body {
 .slider:before {
   position: absolute;
   content: "";
-  height: 36px;
-  width: 36px;
-  left: 4px;
-  bottom: 4px;
+  height: 36px; width: 36px;
+  left: 4px; bottom: 4px;
   background-color: white;
   border-radius: 50%;
   transition: .4s;
 }
 
-input:checked + .slider {
-  background-color: #4CAF50;
-}
+input:checked + .slider { background-color: #4CAF50; }
+input:checked + .slider:before { transform: translateX(46px); }
 
-input:checked + .slider:before {
-  transform: translateX(46px);
-}
-
-/* Title for table */
 .table-title {
   font-size: 32px;
   margin-bottom: 20px;
   font-weight: bold;
 }
 
-/* Table */
 table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 15px; /* เพิ่มระยะห่างระหว่างแถว */
+  border-spacing: 0 15px;
   background: transparent;
   box-shadow: none;
   color: black;
@@ -189,44 +180,201 @@ table {
 td, th {
     padding: 20px;
     text-align: left;
-    border: none; /* เอาเส้นขอบออกทั้งหมด */
+    border: none;
 }
 
 th {
-  background-color: #EAEAEA; /* ปรับสีพื้นหลังหัวตาราง */
+  background-color: #EAEAEA;
   color: #333;
   font-size: 24px; 
 }
 
-th:first-child {
-    border-radius: 15px 0 0 15px;
-}
-th:last-child {
-    border-radius: 0 15px 15px 0;
-}
+th:first-child { border-radius: 15px 0 0 15px; }
+th:last-child { border-radius: 0 15px 15px 0; }
 
 tbody tr {
-    background-color: #D4E6D9; /* ปรับสีพื้นหลังของแถว */
+    background-color: #D4E6D9;
     border-radius: 15px;
 }
 
-td:first-child {
-    border-radius: 15px 0 0 15px;
-}
-td:last-child {
-    border-radius: 0 15px 15px 0;
-}
+tbody tr:hover { background-color: #b2d8be; }
+
+td:first-child { border-radius: 15px 0 0 15px; }
+td:last-child { border-radius: 0 15px 15px 0; }
 
 .action {
   color: #0b6623;
   cursor: pointer;
   font-weight: bold;
-  display: flex; /* จัดข้อความกับไอคอนให้อยู่ในแนวเดียวกัน */
+  display: flex;
   align-items: center;
-  gap: 8px; /* ระยะห่างระหว่างข้อความกับไอคอน */
+  gap: 8px;
 }
 
 .action img {
-  height: 24px; /* ขนาดของไอคอนดินสอ */
+  height: 24px;
   width: 24px;
+}
+
+/* =================================
+   PROFILE PAGE STYLES
+   ================================= */
+.main-container {
+    padding: 50px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.profile-card {
+    background-color: #fdfefe;
+    width: 100%;
+    max-width: 800px;
+    padding: 40px;
+    border-radius: 35px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e8e8;
+}
+
+.profile-picture {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profile-picture img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 6px solid #fff;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    align-items: center;
+    gap: 20px;
+}
+
+.form-row label {
+    font-size: 22px;
+    font-weight: bold;
+    color: #34495e;
+    text-align: right;
+}
+
+.form-row input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #bdc3c7;
+    border-radius: 12px;
+    font-size: 20px;
+    font-family: "TH Sarabun New", sans-serif;
+    color: #2c3e50;
+    box-sizing: border-box;
+}
+
+.form-row input:disabled {
+    background-color: #ecf0f1;
+    color: #7f8c8d;
+    cursor: not-allowed;
+}
+
+.button-container {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.save-button {
+    background-color: #0b3d1c;
+    color: white;
+    border: none;
+    padding: 12px 45px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-family: "TH Sarabun New", sans-serif;
+}
+
+.save-button:hover {
+    background-color: #145a32;
+    transform: translateY(-2px);
+}
+  
+/* =================================
+   MODAL / POP-UP STYLES
+   ================================= */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+  background-color: #fff;
+  color: #333;
+  padding: 30px 50px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.modal.show .modal-content {
+    transform: scale(1);
+}
+
+.modal-icon {
+  font-size: 60px;
+}
+
+.modal-content h2 {
+  font-size: 32px;
+  font-weight: bold;
+  margin: 15px 0;
+  color: #0b3d1c;
+}
+
+.close-button {
+  background-color: #0b6623;
+  color: white;
+  border: none;
+  padding: 10px 40px;
+  border-radius: 50px;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s;
+  font-family: "TH Sarabun New", sans-serif;
+}
+
+.close-button:hover {
+  background-color: #145a32;
 }

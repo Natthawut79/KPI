@@ -1,41 +1,14 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>หน้าหลัก - ตัวชี้วัด</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+<?php 
+    $page_title = "หน้าหลัก - ตัวชี้วัด";
+    include 'templates/navbar.php'; 
+?>
 
-  <div class="navbar">
-    <div class="navbar-left">
-      <img src="img/ICT.png" alt="Logo">
-      <nav>
-        <a href="index.html">หน้าหลัก</a> |
-        <a href="indicator_types.html">ประเภทตัวชี้วัด</a> |
-        <a href="indicators.html">ตัวชี้วัด</a>
-      </nav>
-    </div>
-    <div class="user-box">
-      <img src="img/profile.png" alt="User">
-      <div>
-        <strong>Username :</strong> xxxxxxxx <br>
-        <strong>ชื่อ-สกุล :</strong> สมชาย แสงดี <br> <strong>ตำแหน่ง :</strong> Admin
-      </div>
-      <button class="logout-btn" onclick="logout()">
-          <img src="img/logout.png" alt="Logout"> 
-      </button>
-    </div>
-  </div>
-
-  <div class="container">
+<div class="container">
     <div class="stats">
       <div class="stat-box">
         <h3>จำนวนผู้ใช้ในระบบ</h3>
         <div class="stat-number" id="userCount">35 👥</div>
       </div>
-
       <div class="stat-box">
         <h3>เปิด-ปิด การแก้ไข</h3>
         <label class="switch">
@@ -44,9 +17,7 @@
         </label>
       </div>
     </div>
-
     <h2 class="table-title">รายชื่อผู้ใช้ในระบบ</h2>
-
     <table>
       <thead>
         <tr>
@@ -83,8 +54,6 @@
         </tr>
       </tbody>
     </table>
-  </div>
+</div>
 
-  <script src="script.js"></script>
-</body>
-</html>
+<?php include 'templates/footer.php'; ?>

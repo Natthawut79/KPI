@@ -10,7 +10,6 @@ toggle.addEventListener("change", () => {
 
 // ฟังก์ชันสำหรับปุ่มออกจากระบบ
 function logout() {
-  alert("คุณได้ออกจากระบบแล้ว");
-  // ในการใช้งานจริง อาจจะเปลี่ยนไปหน้า login
-  // window.location.href = "login.html";
+  // ไม่ต้องมี alert แต่จะ redirect กลับไปหน้า login ทันที
+  window.location.href = 'login.php';
 }
