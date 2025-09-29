@@ -1,6 +1,11 @@
 <?php 
     $page_title = "หน้าหลัก - ตัวชี้วัด";
-    include 'templates/navbar.php'; 
+    include 'templates/navbar.php';
+    include 'conn.php';
+    $sql = "SELECT COUNT(*) AS total FROM user";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+    $userCount = $row['total'];
 ?>
 
 <div class="container">

@@ -2,7 +2,7 @@
  $servername="localhost";
  $userName="root";
  $password="";
- $db="parking_me";
+ $db="kpi_project";
  $conn=mysqli_connect($servername,$userName,$password,$db);
  if($conn){
  } else {

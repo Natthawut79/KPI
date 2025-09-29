@@ -15,15 +15,15 @@
             <h1 class="system-name">KPI Management System</h1>
         </div>
         <div class="login-form-container">
-            <form id="loginForm" class="login-form">
+            <form id="loginForm" class="login-form" action="config/checklogin.php" method="post">
                 <h2>LOGIN</h2>
                 <div class="input-group">
                     <i class="fas fa-user"></i>
-                    <input type="text" placeholder="Username" required>
+                    <input type="text"name ="Emp_code" placeholder="รหัสพนักงาน" required>
                 </div>
                 <div class="input-group">
                     <i class="fas fa-keyboard"></i>
-                    <input type="password" placeholder="Password" required>
+                    <input type="password"name = "Password" placeholder="พาสเวิร์ด" required>
                 </div>
                 <button type="submit" class="login-btn">LOGIN</button>
             </form>
@@ -37,7 +37,7 @@
         </svg>
     </div>
 
-    <script src="js/login.js"></script>
+    
 
 </body>
 </html>
