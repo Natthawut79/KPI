@@ -1,18 +1,28 @@
 <?php 
     $page_title = "หน้าหลัก - ตัวชี้วัด";
     include 'templates/navbar.php';
-    include 'conn.php';
-    $sql = "SELECT COUNT(*) AS total FROM user";
+    include 'config/conn.php';
+
+    // นับจำนวนผู้ใช้
+    $sql = "SELECT COUNT(*) AS total FROM employee";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($result);
     $userCount = $row['total'];
+
+    // ดึงข้อมูลพนักงาน + ชื่อสาขาจากตาราง department
+    $sql_employee = "
+    SELECT e.Emp_code, e.Fname_th, e.Lname_th, d.Department_name
+    FROM employee e
+    JOIN department d ON e.Department_id = d.Department_id";
+
+    $result_employee = mysqli_query($conn, $sql_employee);
 ?>
 
 <div class="container">
     <div class="stats">
       <div class="stat-box">
         <h3>จำนวนผู้ใช้ในระบบ</h3>
-        <div class="stat-number" id="userCount">35 👥</div>
+        <div class="stat-number" id="userCount"><?php echo $userCount; ?> 👥</div>
       </div>
       <div class="stat-box">
         <h3>เปิด-ปิด การแก้ไข</h3>
@@ -22,6 +32,7 @@
         </label>
       </div>
     </div>
+
     <h2 class="table-title">รายชื่อผู้ใช้ในระบบ</h2>
     <table>
       <thead>
@@ -32,31 +43,16 @@
         </tr>
       </thead>
       <tbody>
+        <?php while($employee = mysqli_fetch_assoc($result_employee)) { ?>
         <tr>
-          <td>ผศ.เดชาภัทร วรยุทธพรพงศ์</td>
-          <td>เทคโนโลยีสารสนเทศและการสื่อสาร</td>
-          <td class="action">ดูรายละเอียด <img src="img/edit.png" alt="แก้ไข"></td>
+          <td><?php echo $employee['Fname_th']." ".$employee['Lname_th']; ?></td>
+          <td><?php echo $employee['Department_name']; ?></td>
+          <td class="action"><a href="profile.php?Emp_code=<?php echo $employee['Emp_code']; ?>">
+          ดูรายละเอียด </a>
+          </td>
+
         </tr>
-        <tr>
-          <td>ผศ.ดร.อนุสรณ์ พิมพ์งาม</td>
-          <td>เทคโนโลยีสารสนเทศและการสื่อสาร</td>
-          <td class="action">ดูรายละเอียด <img src="img/edit.png" alt="แก้ไข"></td>
-        </tr>
-        <tr>
-          <td>ผศ.ชญาดา มาศธีรสกุล</td>
-          <td>เทคโนโลยีสารสนเทศและการสื่อสาร</td>
-          <td class="action">ดูรายละเอียด <img src="img/edit.png" alt="แก้ไข"></td>
-        </tr>
-        <tr>
-          <td>ผศ.ดร.ศราวุธ สิงห์คร</td>
-          <td>เทคโนโลยีสารสนเทศและการสื่อสาร</td>
-          <td class="action">ดูรายละเอียด <img src="img/edit.png" alt="แก้ไข"></td>
-        </tr>
-        <tr>
-          <td>ผศ.ดร.รัตน์ โรจนรัตน์</td>
-          <td>เทคโนโลยีสารสนเทศและการสื่อสาร</td>
-          <td class="action">ดูรายละเอียด <img src="img/edit.png" alt="แก้ไข"></td>
-        </tr>
+        <?php } ?>
       </tbody>
     </table>
 </div>

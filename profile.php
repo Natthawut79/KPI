@@ -1,48 +1,68 @@
-<?php 
-    $page_title = "แก้ไขข้อมูลผู้ใช้";
-    include 'templates/navbar.php'; 
+<?php
+session_start();
+include 'config/conn.php';
+
+// ถ้ามี Emp_code ส่งมาผ่าน URL (GET) ให้ใช้ค่านั้นก่อน
+if (isset($_GET['Emp_code'])) {
+    $Emp_code = mysqli_real_escape_string($conn, $_GET['Emp_code']);
+} elseif (isset($_SESSION['Emp_code'])) {
+    // ถ้าไม่มี GET แต่มี SESSION ให้ใช้ SESSION
+    $Emp_code = mysqli_real_escape_string($conn, $_SESSION['Emp_code']);
+} else {
+    echo "ไม่พบรหัสพนักงาน!";
+    exit();
+}
+
+$sql = "SELECT * FROM employee WHERE Emp_code = '$Emp_code'";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+
+$page_title = "แก้ไขข้อมูลผู้ใช้";
+include 'templates/navbar.php';
 ?>
 
 <div class="main-container">
     <div class="profile-card">
-      
+
       <div class="profile-picture">
         <img src="img/profile.png" alt="Profile Picture">
       </div>
 
-      <form class="profile-form">
-        <div class="form-row">
-          <label for="prefix">คำนำหน้าชื่อ</label>
-          <input type="text" id="prefix" value="รศ.">
-        </div>
-        <div class="form-row">
-          <label for="first-name-th">ชื่อ(ไทย)</label>
-          <input type="text" id="first-name-th" value="เอกรินทร์">
-        </div>
-        <div class="form-row">
-          <label for="last-name-th">นามสกุล(ไทย)</label>
-          <input type="text" id="last-name-th" value="วรุตบางกุร">
-        </div>
-        <div class="form-row">
-            <label for="first-name-en">ชื่อ(eng)</label>
-            <input type="text" id="first-name-en" value="Eakkarin">
-        </div>
-        <div class="form-row">
-            <label for="last-name-en">นามสกุล(eng)</label>
-            <input type="text" id="last-name-en" value="Worabangkoon">
-        </div>
-        <div class="form-row">
-          <label for="employee-id">รหัสพนักงาน</label>
-          <input type="text" id="employee-id" value="22154890" disabled>
-        </div>
-        <div class="form-row">
-          <label for="department">สาขา</label>
-          <input type="text" id="department" value="เทคโนโลยีสารสนเทศและการสื่อสาร" disabled>
-        </div>
-        
-        <div class="button-container">
-            <button type="submit" class="save-button">บันทึกการเปลี่ยนแปลง</button>
-        </div>
+
+      <form class="profile-form" action="checkprofile.php" method="post">
+          <div class="form-row">
+            <label for="prefix">คำนำหน้าชื่อ</label>
+            <input type="text" name="Title_name" value="<?php echo $row['Title_name']; ?>">
+          </div>
+          <div class="form-row">
+            <label for="first-name-th">ชื่อ(ไทย)</label>
+            <input type="text" name="Fname_th" value="<?php echo $row['Fname_th']; ?>">
+          </div>
+          <div class="form-row">
+            <label for="last-name-th">นามสกุล(ไทย)</label>
+            <input type="text" name="Lname_th" value="<?php echo $row['Lname_th'];?>">
+          </div>
+          <div class="form-row">
+              <label for="first-name-en">ชื่อ(eng)</label>
+              <input type="text" name="Fname_eng" value="<?php echo $row['Fname_eng'];?>">
+          </div>
+          <div class="form-row">
+              <label for="last-name-en">นามสกุล(eng)</label>
+              <input type="text" name="Lname_eng" value="<?php echo $row['Lname_eng'];?>">
+          </div>
+          <div class="form-row">
+            <label for="employee-id">รหัสพนักงาน</label>
+            <input type="text" name="Emp_code" value="<?php echo $row['Emp_code'];?>" disabled>
+          </div>
+          <div class="form-row">
+            <label for="department">สาขา</label>
+            <input type="text" name="Department_name" value="<?php echo $row['Department_id'];?>" disabled>
+          </div>
+
+          <div class="button-container">
+              <button type="submit" class="save-button">บันทึกการเปลี่ยนแปลง</button>
+          </div>
+
       </form>
     </div>
 </div>
