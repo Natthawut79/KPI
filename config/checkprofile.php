@@ -1,34 +1,40 @@
 <?php
 session_start();
-include "config/conn.php";
+include 'conn.php';
 
-if (!isset($_SESSION['Emp_code'])) {
-    echo "กรุณาเข้าสู่ระบบก่อน!";
-    exit();
-}
+// ตรวจสอบว่าเป็น POST หรือไม่
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-$Emp_code   = mysqli_real_escape_string($conn, $_SESSION['Emp_code']);
-$Title_id = mysqli_real_escape_string($conn, $_POST['Title_id']);
-$Fname_th   = mysqli_real_escape_string($conn, $_POST['Fname_th']);
-$Lname_th   = mysqli_real_escape_string($conn, $_POST['Lname_th']);
-$Fname_eng  = mysqli_real_escape_string($conn, $_POST['Fname_eng']);
-$Lname_eng  = mysqli_real_escape_string($conn, $_POST['Lname_eng']);
+    // รับค่าจากฟอร์ม
+    $Fname_th   = mysqli_real_escape_string($conn, $_POST['Fname_th']);
+    $Lname_th   = mysqli_real_escape_string($conn, $_POST['Lname_th']);
+    $Fname_eng  = mysqli_real_escape_string($conn, $_POST['Fname_eng']);
+    $Lname_eng  = mysqli_real_escape_string($conn, $_POST['Lname_eng']);
 
-$sql = "UPDATE employee 
-        SET Title_id = '$Title_id', 
-            Fname_th = '$Fname_th', 
-            Lname_th = '$Lname_th', 
-            Fname_eng = '$Fname_eng', 
-            Lname_eng = '$Lname_eng' 
-        WHERE Emp_code = '$Emp_code'";
+    // รับค่า id ตรง ๆ จาก select
+    $Title_id       = mysqli_real_escape_string($conn, $_POST['Title_id']);
+    $Department_id  = mysqli_real_escape_string($conn, $_POST['Department_id']);
 
-if (mysqli_query($conn, $sql)) {
-    header("Location: homepage.php?success=1");
-    exit();
+    // รหัสพนักงานจาก hidden input (ไม่ใช้ session แล้ว ปลอดภัยกว่า)
+    $Emp_code   = mysqli_real_escape_string($conn, $_POST['Emp_code']);
+
+    // --- Update ข้อมูล ---
+    $sql_update = "UPDATE employee 
+                   SET Title_id = '$Title_id',
+                       Fname_th = '$Fname_th',
+                       Lname_th = '$Lname_th',
+                       Fname_eng = '$Fname_eng',
+                       Lname_eng = '$Lname_eng',
+                       Department_id = '$Department_id'
+                   WHERE Emp_code = '$Emp_code'";
+
+    if (mysqli_query($conn, $sql_update)) {
+    echo "<script>
+            alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
+            window.location='../profile.php?Emp_code=$Emp_code';
+          </script>";
 } else {
-    echo "เกิดข้อผิดพลาดในการอัพเดตข้อมูล: " . mysqli_error($conn);
+    echo "Error: " . mysqli_error($conn);
 }
-
-mysqli_close($conn);
+}
 ?>
-

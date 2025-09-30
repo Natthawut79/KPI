@@ -17,26 +17,26 @@ if (toggleSwitch) {
     });
 }
 
-// --- โค้ดสำหรับหน้า PROFILE.PHP ---
-// ค้นหา element ของฟอร์มโปรไฟล์
-const profileForm = document.querySelector('.profile-form');
-// ตรวจสอบว่า element นี้มีอยู่ในหน้าเว็บหรือไม่ก่อนจะเพิ่ม event listener
-if (profileForm) {
-  const successModal = document.getElementById('successModal');
-  const closeModalBtn = document.getElementById('closeModalBtn');
+// // --- โค้ดสำหรับหน้า PROFILE.PHP ---
+// // ค้นหา element ของฟอร์มโปรไฟล์
+// const profileForm = document.querySelector('.profile-form');
+// // ตรวจสอบว่า element นี้มีอยู่ในหน้าเว็บหรือไม่ก่อนจะเพิ่ม event listener
+// if (profileForm) {
+//   const successModal = document.getElementById('successModal');
+//   const closeModalBtn = document.getElementById('closeModalBtn');
 
-  profileForm.addEventListener('submit', function(event) {
-    event.preventDefault(); 
-    successModal.classList.add('show');
-  });
+//   profileForm.addEventListener('submit', function(event) {
+//     event.preventDefault(); 
+//     successModal.classList.add('show');
+//   });
 
-  closeModalBtn.addEventListener('click', function() {
-    successModal.classList.remove('show');
-  });
+//   closeModalBtn.addEventListener('click', function() {
+//     successModal.classList.remove('show');
+//   });
 
-  window.addEventListener('click', function(event) {
-    if (event.target == successModal) {
-      successModal.classList.remove('show');
-    }
-  });
-}
+//   window.addEventListener('click', function(event) {
+//     if (event.target == successModal) {
+//       successModal.classList.remove('show');
+//     }
+//   });
+// }

@@ -13,9 +13,14 @@ if (isset($_GET['Emp_code'])) {
     exit();
 }
 
-$sql = "SELECT e.*, t.Title_name 
-        FROM employee e 
-        LEFT JOIN title t ON e.Title_id = t.Title_id 
+$sql = "SELECT e.*, 
+               t.Title_id,
+               t.Title_name, 
+               d.Department_id,
+               d.Department_name 
+        FROM employee e
+        LEFT JOIN title t ON e.Title_id = t.Title_id
+        LEFT JOIN department d ON e.Department_id = d.Department_id
         WHERE e.Emp_code = '$Emp_code'";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($result);
@@ -31,12 +36,23 @@ include 'templates/navbar.php';
         <img src="img/profile.png" alt="Profile Picture">
       </div>
 
+      <form class="profile-form" action="config/checkprofile.php" method="post">
 
-      <form class="profile-form" action="checkprofile.php" method="post">
+          <!-- Title Select -->
           <div class="form-row">
-            <label for="prefix">คำนำหน้าชื่อ</label>
-            <input type="text" name="Title_name" value="<?php echo $row['Title_name']; ?>">
+              <label for="Title_id">คำนำหน้าชื่อ</label>
+              <select name="Title_id" required>
+                  <?php
+                  $sql_title = "SELECT Title_id, Title_name FROM title";
+                  $res_title = mysqli_query($conn, $sql_title);
+                  while ($t = mysqli_fetch_assoc($res_title)) {
+                      $selected = ($t['Title_id'] == $row['Title_id']) ? "selected" : "";
+                      echo "<option value='{$t['Title_id']}' $selected>{$t['Title_name']}</option>";
+                  }
+                  ?>
+              </select>
           </div>
+
           <div class="form-row">
             <label for="first-name-th">ชื่อ(ไทย)</label>
             <input type="text" name="Fname_th" value="<?php echo $row['Fname_th']; ?>">
@@ -55,26 +71,30 @@ include 'templates/navbar.php';
           </div>
           <div class="form-row">
             <label for="employee-id">รหัสพนักงาน</label>
-            <input type="text" name="Emp_code" value="<?php echo $row['Emp_code'];?>" disabled>
+            <input type="text" value="<?php echo $row['Emp_code'];?>" disabled>
+            <!-- ส่ง Emp_code ไปแบบ hidden เพื่อ update -->
+            <input type="hidden" name="Emp_code" value="<?php echo $row['Emp_code'];?>">
           </div>
+
+          <!-- Department Select -->
           <div class="form-row">
-            <label for="department">สาขา</label>
-            <input type="text" name="Department_name" value="<?php echo $row['Department_id'];?>">
+              <label for="Department_id">สาขา</label>
+              <select name="Department_id" required>
+                  <?php
+                  $sql_dep = "SELECT Department_id, Department_name FROM department";
+                  $res_dep = mysqli_query($conn, $sql_dep);
+                  while ($dep = mysqli_fetch_assoc($res_dep)) {
+                      $selected = ($dep['Department_id'] == $row['Department_id']) ? "selected" : "";
+                      echo "<option value='{$dep['Department_id']}' $selected>{$dep['Department_name']}</option>";
+                  }
+                  ?>
+              </select>
           </div>
 
           <div class="button-container">
               <button type="submit" class="save-button">บันทึกการเปลี่ยนแปลง</button>
           </div>
-
       </form>
-    </div>
-</div>
-
-<div id="successModal" class="modal">
-    <div class="modal-content">
-      <span class="modal-icon">✅</span>
-      <h2>บันทึกข้อมูลสำเร็จ</h2>
-      <button id="closeModalBtn" class="close-button">ตกลง</button>
     </div>
 </div>
 
