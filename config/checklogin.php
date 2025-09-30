@@ -23,7 +23,7 @@ if($row){
     }elseif($_SESSION['Type_id'] == 4){
         echo '<meta http-equiv="refresh" content="0;url=../index.php"> ';
     }elseif($_SESSION['Type_id'] == 5){
-        echo '<meta http-equiv="refresh" content="0;url=../profile.php"> ';    
+        echo '<meta http-equiv="refresh" content="0;url=../index.php"> ';    
     }
 
 }else{

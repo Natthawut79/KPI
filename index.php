@@ -9,11 +9,13 @@
     $row = mysqli_fetch_assoc($result);
     $userCount = $row['total'];
 
-    // ดึงข้อมูลพนักงาน + ชื่อสาขาจากตาราง department
+    // ดึงข้อมูลพนักงาน + ชื่อสาขาจากตาราง department + title
     $sql_employee = "
-    SELECT e.Emp_code, e.Fname_th, e.Lname_th, d.Department_name
+    SELECT e.Emp_code, t.Title_shortname, e.Fname_th, e.Lname_th, d.Department_name
     FROM employee e
-    JOIN department d ON e.Department_id = d.Department_id";
+    JOIN department d ON e.Department_id = d.Department_id
+    JOIN title t ON e.Title_id = t.Title_id
+    ";
 
     $result_employee = mysqli_query($conn, $sql_employee);
 ?>
@@ -45,12 +47,13 @@
       <tbody>
         <?php while($employee = mysqli_fetch_assoc($result_employee)) { ?>
         <tr>
-          <td><?php echo $employee['Fname_th']." ".$employee['Lname_th']; ?></td>
+          <td><?php echo $employee['Title_shortname']." ".$employee['Fname_th']." ".$employee['Lname_th']; ?></td>
           <td><?php echo $employee['Department_name']; ?></td>
-          <td class="action"><a href="profile.php?Emp_code=<?php echo $employee['Emp_code']; ?>">
-          ดูรายละเอียด </a>
+          <td class="action">
+            <a href="profile.php?Emp_code=<?php echo $employee['Emp_code']; ?>">
+              ดูรายละเอียด
+            </a>
           </td>
-
         </tr>
         <?php } ?>
       </tbody>
@@ -58,3 +61,4 @@
 </div>
 
 <?php include 'templates/footer.php'; ?>
+

@@ -13,7 +13,10 @@ if (isset($_GET['Emp_code'])) {
     exit();
 }
 
-$sql = "SELECT * FROM employee WHERE Emp_code = '$Emp_code'";
+$sql = "SELECT e.*, t.Title_name 
+        FROM employee e 
+        LEFT JOIN title t ON e.Title_id = t.Title_id 
+        WHERE e.Emp_code = '$Emp_code'";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($result);
 
@@ -56,7 +59,7 @@ include 'templates/navbar.php';
           </div>
           <div class="form-row">
             <label for="department">สาขา</label>
-            <input type="text" name="Department_name" value="<?php echo $row['Department_id'];?>" disabled>
+            <input type="text" name="Department_name" value="<?php echo $row['Department_id'];?>">
           </div>
 
           <div class="button-container">
