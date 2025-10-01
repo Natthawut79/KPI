@@ -43,7 +43,7 @@ $user = mysqli_fetch_assoc($result);
     <div class="navbar-left">
         <img src="img/ICT.png" alt="Logo">
         <nav>
-            <a href="index.php">หน้าหลัก</a> |
+            <a href="mainadmin.php">หน้าหลัก</a> |
             <a href="kpitype.php">ประเภทตัวชี้วัด</a> |
             <a href="indicators.php">ตัวชี้วัด</a>
         </nav>

@@ -40,3 +40,24 @@ if (toggleSwitch) {
 //     }
 //   });
 // }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const profileImage = document.getElementById("profileImage");
+    const imageUpload = document.getElementById("imageUpload");
+
+    // เวลา click ที่รูป -> เปิด file dialog
+    profileImage.addEventListener("click", function () {
+        imageUpload.click();
+    });
+
+    // เวลาเลือกไฟล์ -> เปลี่ยน preview ให้เห็นทันที
+    imageUpload.addEventListener("change", function () {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                profileImage.src = e.target.result;
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+});
