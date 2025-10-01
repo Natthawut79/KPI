@@ -19,7 +19,7 @@
 
     $result_employee = mysqli_query($conn, $sql_employee);
 ?>
-
+<link rel="stylesheet" href="css/mainadmin.css">
 <div class="container">
     <div class="stats">
       <div class="stat-box">

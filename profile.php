@@ -28,7 +28,7 @@ $row = mysqli_fetch_assoc($result);
 $page_title = "แก้ไขข้อมูลผู้ใช้";
 include 'templates/navbar.php';
 ?>
-
+<link rel="stylesheet" href="css/profile.css">
 <div class="main-container">
     <div class="profile-card">
 

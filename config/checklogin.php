@@ -15,15 +15,15 @@ if($row){
 
     // ตรวจสอบ Type_id ว่าเป็นค่าอะไร
     if($_SESSION['Type_id'] == 1){
-        echo '<meta http-equiv="refresh" content="0;url=../index.php"> ';
+        echo '<meta http-equiv="refresh" content="0;url=../mainadmin.php"> ';
     }elseif($_SESSION['Type_id'] == 2){
-        echo '<meta http-equiv="refresh" content="0;url=../index.php"> ';
+        echo '<meta http-equiv="refresh" content="0;url=../mainadmin.php"> ';
     }elseif($_SESSION['Type_id'] == 3){
         echo '<meta http-equiv="refresh" content="0;url=../index.php"> ';
     }elseif($_SESSION['Type_id'] == 4){
         echo '<meta http-equiv="refresh" content="0;url=../index.php"> ';
     }elseif($_SESSION['Type_id'] == 5){
-        echo '<meta http-equiv="refresh" content="0;url=../index.php"> ';    
+        echo '<meta http-equiv="refresh" content="0;url=../mainadmin.php"> ';    
     }
 
 }else{
