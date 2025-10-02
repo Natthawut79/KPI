@@ -3,7 +3,7 @@
     include 'templates/navbar.php'; // เรียกใช้ Navbar
 ?>
 
-<link rel="stylesheet" href="css/ckpi.css">
+<link rel="stylesheet" href="css/create_kpi_type.css">
 
 <div class="main-container">
     <div class="form-wrapper">

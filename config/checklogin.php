@@ -13,7 +13,7 @@ if($row){
     $_SESSION['Emp_code'] = $row['Emp_code'];
     $_SESSION['Type_id']  = $row['Type_id'];
 
-    // ตรวจสอบ Type_id ว่าเป็นค่าอะไร
+    // ไถนาไว้ ค่อยคิดว่าจะทำยังไง
     if($_SESSION['Type_id'] == 1){
         echo '<meta http-equiv="refresh" content="0;url=../mainadmin.php"> ';
     }elseif($_SESSION['Type_id'] == 2){
@@ -23,7 +23,7 @@ if($row){
     }elseif($_SESSION['Type_id'] == 4){
         echo '<meta http-equiv="refresh" content="0;url=../index.php"> ';
     }elseif($_SESSION['Type_id'] == 5){
-        echo '<meta http-equiv="refresh" content="0;url=../mainadmin.php"> ';    
+        echo '<meta http-equiv="refresh" content="0;url=../index.php"> ';    
     }
 
 }else{

@@ -2,6 +2,7 @@
     $page_title = "หน้าหลัก - ตัวชี้วัด";
     include 'templates/navbar.php';
     include 'config/conn.php';
+    include 'config/auth_admin.php';
 
     // นับจำนวนผู้ใช้
     $sql = "SELECT COUNT(*) AS total FROM employee";
@@ -16,7 +17,6 @@
     JOIN department d ON e.Department_id = d.Department_id
     JOIN title t ON e.Title_id = t.Title_id
     ";
-
     $result_employee = mysqli_query($conn, $sql_employee);
 ?>
 <link rel="stylesheet" href="css/mainadmin.css">
@@ -50,9 +50,7 @@
           <td><?php echo $employee['Title_shortname']." ".$employee['Fname_th']." ".$employee['Lname_th']; ?></td>
           <td><?php echo $employee['Department_name']; ?></td>
           <td class="action">
-            <a href="profile.php?Emp_code=<?php echo $employee['Emp_code']; ?>">
-              ดูรายละเอียด
-            </a>
+          <a href="profile.php?Emp_code=<?php echo $employee['Emp_code']; ?>">ดูรายละเอียด</a>
           </td>
         </tr>
         <?php } ?>

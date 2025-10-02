@@ -1,24 +1,19 @@
 <?php
 session_start();
 include 'conn.php';
-
-// ตรวจสอบว่าเป็น POST หรือไม่
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // รับค่าจากฟอร์ม
     $Fname_th = mysqli_real_escape_string($conn, $_POST['Fname_th']);
     $Lname_th = mysqli_real_escape_string($conn, $_POST['Lname_th']);
     $Fname_eng = mysqli_real_escape_string($conn, $_POST['Fname_eng']);
     $Lname_eng = mysqli_real_escape_string($conn, $_POST['Lname_eng']);
 
-    // รับค่า id ตรง ๆ จาก select
+    // รับค่า id ตรง ๆ จาก select แปลงค่า name เป็น id เพื่อบันทึก
     $Title_id = mysqli_real_escape_string($conn, $_POST['Title_id']);
     $Department_id = mysqli_real_escape_string($conn, $_POST['Department_id']);
 
-    // รหัสพนักงานจาก hidden input
     $Emp_code = mysqli_real_escape_string($conn, $_POST['Emp_code']);
 
-    // --- เริ่มเขียน SQL Update ---
     $sql_update = "UPDATE employee 
                    SET Title_id = '$Title_id',
                        Fname_th = '$Fname_th',
@@ -27,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                        Lname_eng = '$Lname_eng',
                        Department_id = '$Department_id'";
 
-    // --- ถ้ามีการอัปโหลดรูป ---
     if (!empty($_FILES['IMGname']['tmp_name'])) {
         $imgData = addslashes(file_get_contents($_FILES['IMGname']['tmp_name']));
         $sql_update .= ", IMGname = '$imgData'";

@@ -4,13 +4,13 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include 'config/conn.php';
 
-// ตรวจสอบว่ามีการ login
+// ตรวจสอบการ login 
 $user = null;
 if(isset($_SESSION['Emp_code'])){
     $Emp_code = $_SESSION['Emp_code'];
 
     // ดึงข้อมูล Username, Fname, Lname, Title_name, Type_id
-    $sql = "SELECT e.Emp_code, e.Fname_th, e.Lname_th,  t.Title_name
+    $sql = "SELECT e.Emp_code, e.Fname_th, e.Lname_th,  t.Title_name,e.IMGname
         FROM employee e
         LEFT JOIN title t ON e.Title_id = t.Title_id
         WHERE e.Emp_code = '$Emp_code'";
@@ -44,14 +44,18 @@ $user = mysqli_fetch_assoc($result);
         <img src="img/ICT.png" alt="Logo">
         <nav>
             <a href="mainadmin.php">หน้าหลัก</a> |
-            <a href="kpitype.php">ประเภทตัวชี้วัด</a> |
+            <a href="kpi_type.php">ประเภทตัวชี้วัด</a> |
             <a href="indicators.php">ตัวชี้วัด</a>
         </nav>
     </div>
     <div class="user-box">
         <a href="profile.php?Emp_code=<?php echo $Emp_code ?? ''; ?>">
-            <img src="img/profile.png" alt="User" style="cursor: pointer;">
-        </a>
+        <?php if (!empty($user['IMGname'])): ?>
+        <img src="data:image/jpeg;base64,<?php echo base64_encode($user['IMGname']); ?>" style="cursor: pointer;">
+    <?php else: ?>
+        <img src="img/default.png" style="cursor: pointer;"> <!-- รูป default ถ้าไม่มี -->
+    <?php endif; ?>
+</a>
         <div>
             <strong>รหัสพนักงาน :</strong> <?php echo $user['Emp_code'] ?? ''; ?> <br>
             <strong>ชื่อ-สกุล :</strong> 

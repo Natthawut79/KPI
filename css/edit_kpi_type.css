@@ -1,0 +1,112 @@
+/* =================================
+   EDIT KPI TYPE PAGE STYLES
+   ================================= */
+
+body {
+    background-color: #5D8C6F; 
+    margin: 0;
+    font-family: "TH Sarabun New", sans-serif;
+    min-height: 100vh;
+}
+
+.main-container {
+    width: 90%;
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.form-wrapper {
+    background-color: #FFFFFF;
+    border-radius: 40px;
+    padding: 30px 50px 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.form-title {
+    color: #333;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 35px;
+}
+
+.form-group {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #444;
+    text-align: right;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px 15px;
+    font-size: 1.3rem;
+    font-family: "TH Sarabun New", sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* ระยะห่างระหว่างปุ่ม */
+    margin-top: 30px;
+}
+
+/* --- สไตล์สำหรับปุ่ม "บันทึก" และ "ลบ" --- */
+.save-btn, .delete-btn {
+    color: white;
+    border: none;
+    padding: 10px 50px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "TH Sarabun New", sans-serif;
+    text-decoration: none; /* สำหรับปุ่มลบที่เป็น <a> */
+    display: inline-block; /* ทำให้ <a> มีขนาดตาม padding */
+}
+
+.save-btn {
+    background-color: #D4EDDA; /* สีเขียวอ่อน */
+    color: #155724; /* สีเขียวเข้ม */
+    border: 2px solid #82C38E;
+}
+
+.save-btn:hover {
+    background-color: #C3E6CB;
+    border-color: #6FB37E;
+    transform: translateY(-2px);
+}
+
+.delete-btn {
+    background-color: #F8D7DA; /* สีแดงอ่อน */
+    color: #721C24; /* สีแดงเข้ม */
+    border: 2px solid #F5C6CB;
+}
+
+.delete-btn:hover {
+    background-color: #F1C4C8;
+    border-color: #EBACB1;
+    transform: translateY(-2px);
+}
