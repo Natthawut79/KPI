@@ -1,0 +1,150 @@
+/* =================================
+   KPI PAGE STYLES (CORRECTED)
+   ================================= */
+
+body {
+    background-color: #E8F5E9; /* เปลี่ยนสีพื้นหลังให้สว่างขึ้น */
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'TH Sarabun New', sans-serif; /* แนะนำให้กำหนด font หลัก */
+}
+
+.main-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* จัดให้อยู่ด้านบน */
+    padding: 40px 20px;
+}
+
+.content-wrapper {
+    background-color: #5D8C6F; /* สีเขียวหลักสำหรับกรอบเนื้อหา */
+    width: 90%;
+    max-width: 1000px;
+    padding: 20px 40px 40px;
+    border-radius: 35px; /* ทำให้ขอบมนใหญ่ขึ้น */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.page-title {
+    color: white;
+    font-size: 2.8rem;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.indicator-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.indicator-card {
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 25px;
+    padding: 25px 35px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.indicator-card h2 {
+    color: #333;
+    font-size: 1.8rem;
+    margin-top: 0;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+    text-align: left; /* เปลี่ยนเป็นชิดซ้ายตามรูป */
+}
+
+.form-group {
+    display: grid;
+    /* ปรับสัดส่วน label ให้กว้างขึ้น */
+    grid-template-columns: 320px 1fr;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #555;
+    text-align: right;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px 15px;
+    font-size: 1.2rem;
+    font-family: 'TH Sarabun New', sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #4a9d7d;
+    box-shadow: 0 0 5px rgba(74, 157, 125, 0.5);
+}
+
+.button-wrapper {
+    text-align: center; /* จัดปุ่มให้อยู่ตรงกลาง */
+    margin-top: 25px;
+}
+
+.edit-btn {
+    background-color: #A5D6A7; /* สีเขียวอ่อนตามรูป */
+    color: #1A5230; /* สีตัวอักษรเข้ม */
+    border: 2px solid white;
+    padding: 8px 60px; /* ปรับขนาดปุ่ม */
+    font-size: 1.3rem;
+    font-weight: bold;
+    font-family: 'TH Sarabun New', sans-serif;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.edit-btn:hover {
+    background-color: #81C784;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.add-btn-container {
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+    z-index: 1000;
+}
+
+.add-btn {
+    display: flex; /* ใช้ flexbox จัดให้อยู่กลาง */
+    justify-content: center;
+    align-items: center;
+    width: 70px;  /* ขยายขนาดปุ่ม */
+    height: 70px;
+    font-size: 3.5rem;
+    font-weight: 300;
+    color: white;
+    background-color: #145A32; /* สีเขียวเข้มทึบ */
+    border-radius: 50%;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.add-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
