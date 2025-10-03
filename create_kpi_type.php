@@ -9,35 +9,45 @@
     <div class="form-wrapper">
         <h1 class="form-title">สร้างประเภทตัวชี้วัด</h1>
 
-        <form action="config/add_kpi_type.php" method="POST">
+        <form action="config/checkcreate_kpi_type.php " method="POST">
             <div class="form-group">
                 <label>ชื่อประเภทตัวชี้วัด (ENG) :</label>
-                <input type="text" name="kpi_type_name_eng" required>
+                <input type="text" name="KPI_Type_Name_EN" required>
             </div>
             <div class="form-group">
                 <label>ชื่อประเภทตัวชี้วัด (TH) :</label>
-                <input type="text" name="kpi_type_name_th" required>
+                <input type="text" name="KPI_Type_Name_TH" required>
             </div>
             <div class="form-group">
                 <label>ค่าน้ำหนัก :</label>
-                <input type="number" name="weight" required>
+                <input type="number" name="Weight" required>
             </div>
             <div class="form-group">
                 <label>ลำดับที่ :</label>
-                <input type="number" name="order_no" required>
+                <input type="number" name="Order_No" required>
             </div>
             <div class="form-group">
                 <label>หมายเหตุ :</label>
-                <input type="text" name="description">
+                <input type="text" name="Description_text">
             </div>
             <div class="form-group">
                 <label>ปีการศึกษา :</label>
-                <input type="number" name="academic_year" required>
+                <input type="number" name="Academic" required>
             </div>
-            <div class="form-group">
-                <label>รหัสกลุ่มผู้ใช้ :</label>
-                <input type="text" name="group_id" required>
-            </div>
+           <div class="form-group">
+    <label for="Group_ID">กลุ่มผู้ใช้ :</label>
+    <select name="Group_ID" required>
+        <?php
+        // ดึงข้อมูลกลุ่มผู้ใช้ทั้งหมดมาแสดง
+        $sql_group = "SELECT Group_ID, Group_Name FROM group_use_kpis";
+        $res_group = mysqli_query($conn, $sql_group);
+        while ($group = mysqli_fetch_assoc($res_group)) {
+            echo "<option value='{$group['Group_ID']}'>{$group['Group_Name']}</option>";
+        }
+        ?>
+    </select>
+</div>
+
 
             <div class="button-container">
                 <button type="submit" class="create-btn">สร้าง</button>
