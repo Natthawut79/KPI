@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ('$KPI_Type_Name_EN', '$KPI_Type_Name_TH', '$Weight', '$Order_No', '$Description_text', '$Academic', '$Group_ID')";
 
     if (mysqli_query($conn, $sql)) {
-        echo "<script>alert('บันทึกข้อมูลสำเร็จ!'); window.location='../kpi_type.php';</script>";
+        echo "<script>alert('สร้างประเภทตัวชี้วัดสำเร็จ!'); window.location='../kpi_type.php';</script>";
     } else {
         echo "Error: " . mysqli_error($conn);
     }

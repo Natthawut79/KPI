@@ -51,10 +51,18 @@
           <td><?php echo $employee['Department_name']; ?></td>
           <td class="action">
           <a href="profile.php?Emp_code=<?php echo $employee['Emp_code']; ?>">ดูรายละเอียด</a>
+
+          <a href="config/checkdelete_user.php?Emp_code=<?php echo $employee['Emp_code']; ?>" 
+              class="delete-btn" 
+              onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีผู้ใช้นี้?');">
+              ลบบัญชีผู้ใช้
+            </a>
           </td>
         </tr>
         <?php } ?>
       </tbody>
+
+      
     </table>
 </div>
 

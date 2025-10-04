@@ -17,7 +17,7 @@ if($row){
     if($_SESSION['Type_id'] == 1){
         echo '<meta http-equiv="refresh" content="0;url=../mainadmin.php"> ';
     }elseif($_SESSION['Type_id'] == 2){
-        echo '<meta http-equiv="refresh" content="0;url=../mainadmin.php"> ';
+        echo '<meta http-equiv="refresh" content="0;url=../index.php"> ';
     }elseif($_SESSION['Type_id'] == 3){
         echo '<meta http-equiv="refresh" content="0;url=../index.php"> ';
     }elseif($_SESSION['Type_id'] == 4){

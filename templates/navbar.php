@@ -44,8 +44,9 @@ $user = mysqli_fetch_assoc($result);
         <img src="img/ICT.png" alt="Logo">
         <nav>
             <a href="mainadmin.php">หน้าหลัก</a> |
+            <a href="create_user.php">สร้างบัญชีผู้ใช้</a> |
             <a href="kpi_type.php">ประเภทตัวชี้วัด</a> |
-            <a href="allkpi.php">ตัวชี้วัด</a>
+            <a href="indicators.php">ตัวชี้วัด</a>
         </nav>
     </div>
     <div class="user-box">

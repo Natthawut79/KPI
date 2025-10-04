@@ -21,7 +21,7 @@ if (!$result) {
 }
 ?>
 
-<link rel="stylesheet" href="css/allkpi.css">
+<link rel="stylesheet" href="css/indicators.css">
 
 <div class="main-container">
     <div class="content-wrapper">
@@ -72,7 +72,7 @@ if (!$result) {
                     </div>
 
                     <div class="button-wrapper">
-                        <a href="editinfokpi.php?KPI_topic_id=<?php echo $row['KPI_topic_id']; ?>" class="edit-btn">แก้ไข</a>
+                        <a href="edit_indicator.php?KPI_topic_id=<?php echo $row['KPI_topic_id']; ?>" class="edit-btn">แก้ไข</a>
                     </div>
                 </form>
             </div>
@@ -81,7 +81,7 @@ if (!$result) {
     </div>
 
     <div class="add-btn-container">
-        <a href="createinfokpi.php" class="add-btn">+</a>
+        <a href="create_indicator.php" class="add-btn">+</a>
     </div>
 </div>
 

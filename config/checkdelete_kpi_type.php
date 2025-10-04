@@ -10,8 +10,7 @@ if (isset($_GET['KPI_type_id'])) {
 
     if (mysqli_query($conn, $sql)) {
         // ลบเสร็จ -> กลับไปหน้ารายการประเภทตัวชี้วัด
-        header("Location: ../kpi_type.php?msg=deleted");
-        exit();
+        echo "<script>alert('ลบประเภทตัวชี้วัดสำเร็จ!'); window.location='../kpi_type.php';</script>";
     } else {
         echo "เกิดข้อผิดพลาดในการลบข้อมูล: " . mysqli_error($conn);
     }

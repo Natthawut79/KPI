@@ -20,15 +20,12 @@ $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($result);
 
 ?>
-
-<link rel="stylesheet" href="css/createinfokpi.css">
-
+<link rel="stylesheet" href="css/create_indicator.css">
 <div class="main-container">
     <div class="form-wrapper">
         <h1 class="form-title">สร้างข้อมูลตัวชี้วัด</h1>
         
-
-        <form action="config/checkcreate_info_kpi.php" method="POST" onsubmit="return confirm('คุณต้องการบันทึกข้อมูลใช่หรือไม่?');">
+        <form action="config/checkcreate_indicator.php" method="POST" onsubmit="return confirm('คุณต้องการบันทึกข้อมูลใช่หรือไม่?');">
             <div class="form-group">
                 <label>ชื่อประเภทตัวชี้วัด :</label>
                 <select name="KPI_type_id" required>
@@ -89,44 +86,8 @@ $row = mysqli_fetch_assoc($result);
 
             <div class="button-container">
                 <button type="submit" class="create-btn">สร้าง</button>
-                <a href="kpitype.php" class="cancel-btn">ยกเลิก</a>
+                <a href="allkpi.php" class="cancel-btn">ยกเลิก</a>
             </div>
         </form>
     </div>
 </div>
-
-<?php
-    include 'templates/footer.php'; // เรียกใช้ Footer
-?>
-Collapse
-message.txt
-5 KB
-<?php
-session_start();
-include "conn.php";
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-
-    $KPI_type_id = mysqli_real_escape_string($conn, $_POST['KPI_type_id']);
-    $Order_no = mysqli_real_escape_string($conn, $_POST['Order_no']);
-    $KPI_topic_name = mysqli_real_escape_string($conn, $_POST['KPI_topic_name']);
-    $Unit = mysqli_real_escape_string($conn, $_POST['Unit']);
-    $Goal = mysqli_real_escape_string($conn, $_POST['Goal']);
-    $Score_criteria = mysqli_real_escape_string($conn, $_POST['Score_criteria']);
-    $Weight = mysqli_real_escape_string($conn, $_POST['Weight']);
-    $Important_level_no = mysqli_real_escape_string($conn, $_POST['Important_level_no']);
-    $Description_text = mysqli_real_escape_string($conn, $_POST['Description_text']);
-}
-
-    $sql_insert = "INSERT into kpi_topic (KPI_type_id,Order_no,KPI_topic_name,Unit,Goal,Score_criteria,Weight,Important_level_no,Description_text )
-                    values ('$KPI_type_id','$Order_no','$KPI_topic_name','$Unit','$Goal','$Score_criteria','$Weight','$Important_level_no','$Description_text')";
-
-     if (mysqli_query($conn, $sql_insert)) {
-        echo "<script>
-                alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
-
-              </script>";
-    } else {
-        echo "Error: " . mysqli_error($conn);
-    }
-?>

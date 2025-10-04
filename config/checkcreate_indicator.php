@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
      if (mysqli_query($conn, $sql_insert)) {
         echo "<script>
-                alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
-
+                alert('สร้างตัวชี้วัดสำเร็จ!');
+                window.location.href = '../indicators.php';
               </script>";
     } else {
         echo "Error: " . mysqli_error($conn);
