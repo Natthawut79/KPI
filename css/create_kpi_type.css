@@ -68,6 +68,25 @@ body {
     box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
 }
 
+select {
+    width: 100%;
+    padding: 8px 15px;
+    font-size: 1.3rem;
+    font-family: "TH Sarabun New", sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #444;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+select:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+}
+
 .button-container {
     text-align: center;
     margin-top: 30px;

@@ -1,6 +1,8 @@
 <?php
     $page_title = "สร้างประเภทตัวชี้วัด";
-    include 'templates/navbar.php'; // เรียกใช้ Navbar
+    include 'templates/navbar.php'; 
+        include 'config/conn.php';
+
 ?>
 
 <link rel="stylesheet" href="css/create_kpi_type.css">
@@ -34,19 +36,19 @@
                 <label>ปีการศึกษา :</label>
                 <input type="number" name="Academic" required>
             </div>
-           <div class="form-group">
-    <label for="Group_ID">กลุ่มผู้ใช้ :</label>
-    <select name="Group_ID" required>
-        <?php
-        // ดึงข้อมูลกลุ่มผู้ใช้ทั้งหมดมาแสดง
-        $sql_group = "SELECT Group_ID, Group_Name FROM group_use_kpis";
-        $res_group = mysqli_query($conn, $sql_group);
-        while ($group = mysqli_fetch_assoc($res_group)) {
-            echo "<option value='{$group['Group_ID']}'>{$group['Group_Name']}</option>";
-        }
-        ?>
-    </select>
-</div>
+            <div class="form-group">
+                <label>กลุ่มผู้ใช้ :</label>
+                <select name="Group_ID" required>
+                    <?php
+                    // ดึงข้อมูลกลุ่มผู้ใช้ทั้งหมดมาแสดง
+                    $sql_group = "SELECT Group_ID, Group_Name FROM group_use_kpis";
+                    $res_group = mysqli_query($conn, $sql_group);
+                    while ($group = mysqli_fetch_assoc($res_group)) {
+                        echo "<option value='{$group['Group_ID']}'>{$group['Group_Name']}</option>";
+                    }
+                    ?>
+                </select>
+            </div>
 
 
             <div class="button-container">
