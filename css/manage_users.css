@@ -1,0 +1,202 @@
+/* --- สไตล์สำหรับหน้า manage_users.php (ฉบับแก้ไขสมบูรณ์) --- */
+
+/* กำหนดพื้นหลังและ font เริ่มต้น */
+body {
+    background-color: #f4f7f6;
+    font-family: "TH Sarabun New", sans-serif;
+}
+
+/* Container หลักของเนื้อหา */
+.content-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2.5rem;
+}
+
+/* จัดวางส่วนหัว (Header) ของหน้า */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.page-header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+/* ปุ่ม "เพิ่มบัญชีผู้ใช้" */
+.add-user-btn {
+    background-color: #0b3d1c;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.add-user-btn:hover {
+    background-color: #145a32;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* กล่องค้นหา */
+.search-container {
+    background-color: #ffffff;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+    margin-bottom: 2rem;
+}
+
+.search-form {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-end; /* จัดให้ทุกอย่างชิดขอบล่าง */
+}
+
+.form-group {
+    flex-grow: 1;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: #34495e;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1.2rem;
+    font-family: "TH Sarabun New", sans-serif;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    box-sizing: border-box; /* สำคัญมาก */
+}
+
+/* --- จุดแก้ไขสำคัญ: ปรับขนาดปุ่มให้เท่าช่องค้นหา --- */
+.search-button {
+    background-color: #157347;
+    color: white;
+    border: 1px solid #157347; /* ทำให้มีเส้นขอบขนาดเท่ากัน */
+    padding: 0.75rem 2.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-family: "TH Sarabun New", sans-serif; /* ใช้ font เดียวกัน */
+    box-sizing: border-box; /* <<<< ใช้วิธีคำนวณขนาดแบบเดียวกับ input */
+}
+
+.search-button:hover {
+    background-color: #0b3d1c;
+}
+
+/* ตารางแสดงข้อมูล */
+.user-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.75rem;
+}
+
+.user-table th,
+.user-table td {
+    padding: 1.2rem;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.user-table thead th {
+    background-color: #0b3d1c;
+    color: white;
+    font-size: 1.4rem;
+}
+
+.user-table thead th:first-child { border-radius: 10px 0 0 10px; }
+.user-table thead th:last-child { border-radius: 0 10px 10px 0; }
+
+.user-table tbody tr:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.user-table tbody td {
+    background-color: #ffffff;
+    color: #333;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.user-table tbody td:first-child { border-radius: 10px 0 0 10px; }
+.user-table tbody td:last-child { border-radius: 0 10px 10px 0; }
+.user-table .text-center { text-align: center; }
+
+/* ปุ่มแก้ไขและลบ */
+.action-btn {
+    text-decoration: none;
+    padding: 0.4rem 1.2rem;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: opacity 0.3s;
+}
+
+.action-btn:hover { opacity: 0.85; }
+.btn-edit { background-color: #ffc107; color: #333; }
+.btn-delete { background-color: #dc3545; color: white; }
+/* เพิ่มใน css/manage_users.css */
+
+/* สำหรับฟอร์มค้นหาแบบ 1 ช่อง (เช่น main_bachelor.php) */
+.search-form.layout-1col {
+    grid-template-columns: 1fr auto;
+}
+
+/* สำหรับฟอร์มค้นหาแบบ 2 ช่อง (เช่น show_on_off.php) */
+.search-form.layout-2col {
+    grid-template-columns: 1fr 1fr auto;
+}
+
+/* สำหรับฟอร์มค้นหาแบบ 3 ช่อง (เช่น main_head_of_department.php) */
+.search-form.layout-3col {
+    grid-template-columns: 1fr 1fr 1fr auto;
+}
+
+/* สำหรับฟอร์มค้นหาแบบ 4 ช่อง (เช่น mainsuper.php, approve_kpi.php) */
+.search-form.layout-4col {
+    grid-template-columns: 1fr 1fr 1fr 1fr auto;
+}
+.action-container .action-box.active {
+        background-color: #0056b3;
+        color: #ffffff;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
+    }
+.btn-approve { background-color: #28a745; color: white; }
+    .btn-approve:hover { background-color: #218838; opacity: 0.9; }
+    .action-btn { opacity: 1; visibility: visible; }
+    .btn-cancel-approval {
+        background-color: #dc3545; 
+        color: white;
+    }
+    .btn-cancel-approval:hover {
+        background-color: #c82333; 
+        opacity: 0.9;
+    }
+    .action-btn + .action-btn {
+        margin-left: 10px; 
+    }

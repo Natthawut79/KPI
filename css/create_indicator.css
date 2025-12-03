@@ -38,7 +38,8 @@ body {
     /* ปรับความกว้างของ label ให้เหมาะสมกับข้อความที่ยาวขึ้น */
     grid-template-columns: 280px 1fr; 
     gap: 15px;
-    align-items: center;
+    /* === [แก้ไข] ปรับเป็น 'start' เพื่อให้ label ชิดด้านบน === */
+    align-items: start; 
     margin-bottom: 18px;
 }
 
@@ -47,10 +48,14 @@ body {
     font-weight: bold;
     color: #444;
     text-align: left;
+    /* === [แก้ไข] เพิ่ม padding-top === */
+    padding-top: 8px; 
 }
 
+/* ================= START [แก้ไข] ================= */
 .form-group input,
-.form-group select {
+.form-group select,
+.form-group textarea { /* <-- เพิ่ม textarea เข้ากลุ่ม */
     width: 100%;
     padding: 8px 15px;
     font-size: 1.3rem;
@@ -63,11 +68,22 @@ body {
 }
 
 .form-group input:focus,
-.form-group select:focus {
+.form-group select:focus,
+.form-group textarea:focus { /* <-- เพิ่ม textarea เข้ากลุ่ม */
     outline: none;
     border-color: #4CAF50;
     box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
 }
+
+/* * สไตล์เฉพาะสำหรับ textarea ให้เหมือนไฟล์ create_kpi_type.css
+ * (สูง 150px และ ปรับขนาดไม่ได้)
+ */
+.form-group textarea {
+    min-height: 150px; /* <-- เปลี่ยนเป็น 150px */
+    resize: none;       /* <-- เปลี่ยนเป็น none */
+}
+/* ================= END [แก้ไข] ================= */
+
 
 .button-container {
     display: flex;

@@ -1,0 +1,648 @@
+/* ====== โครงสร้างหลัก ====== */
+.container {
+    padding: 40px 15px;
+    font-family: "Sarabun", sans-serif;
+}
+
+/* ====== Tab Styles (ส่วนที่เพิ่มเข้ามา) ====== */
+.tab-container {
+    display: flex;
+    margin-bottom: -1px; /* ทำให้ขอบของแท็บเชื่อมกับเนื้อหา */
+    position: relative;
+    z-index: 10;
+}
+
+.tab-link {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 1px solid #a6a6a6;
+    border-bottom: none;
+    background-color: #f1f1f1;
+    transition: background-color 0.3s;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px 8px 0 0;
+    margin-right: 5px;
+}
+
+.tab-link:hover {
+    background-color: #e9ecef;
+}
+
+.tab-link.active {
+    background-color: #ffffff;
+    border-bottom: 1px solid #ffffff; /* ทำให้แท็บที่เลือกเชื่อมกับเนื้อหา */
+}
+
+.tab-content {
+    display: none; /* ซ่อนเนื้อหาแท็บอื่นที่ไม่ถูกเลือก */
+    animation: fadeIn 0.5s;
+    border-radius: 8px;
+    border-top-left-radius: 0;
+}
+
+.tab-content.active {
+    display: block; /* แสดงเฉพาะเนื้อหาของแท็บที่ถูกเลือก */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* General Form Header for other tabs (ส่วนที่เพิ่มเข้ามา) */
+.form-header h2 {
+    font-weight: 700;
+    color: #0b3d1c;
+}
+.form-header h4 {
+    color: #6c757d;
+}
+
+/* Styles for other forms inputs (ส่วนที่เพิ่มเข้ามา) */
+#define-kpi-form label,
+#okr-form .form-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+
+/* ====== Title Container ====== */
+.title-container {
+    background-color: #d8f3dc;
+    border: 1px solid #4b6043;
+    color: #000000;
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px;
+    font-weight: 600;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 0;
+}
+
+.title-container h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000000;
+    margin: 0;
+}
+
+.title-container h4 {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #333;
+    margin: 0;
+}
+
+.form-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #a6a6a6;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+}
+
+/* ====== ตาราง KPI: เพิ่ม Min-width เพื่อให้เกิด Scrollbar หลักของเบราว์เซอร์ ====== */
+.kpi-table,
+.kpi-detail-table,
+.okr-form-styles .evaluation-table {
+    /* กำหนดความกว้างขั้นต่ำที่มากพอเพื่อให้เกิด Scrollbar แนวนอน */
+    width: 100%;           /* ◀️ [แก้ไข] */
+    table-layout: fixed;   /* ◀️ [เพิ่ม] */
+    min-width: 1400px;     /* ◀️ [เพิ่ม] (หรือคงไว้ถ้ามี) */
+    border-collapse: collapse;
+}
+
+.kpi-table {
+    width: 100%; /* ให้ใช้ความกว้าง 100% ของ min-width 1200px ที่กำหนด */
+    border-collapse: collapse;
+    font-size: 14px;
+    background-color: #ffffff;
+    border: 1px solid #a6a6a6;
+}
+
+.kpi-table thead tr th {
+    background-color: #d8f3dc;
+    border: 1px solid #4b6043;
+    color: #000000;
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px;
+    font-weight: 600;
+}
+
+.kpi-table thead tr:last-child th {
+    border-bottom: 2px solid #4b6043;
+}
+
+.kpi-table th,
+.kpi-table td {
+    border: 1px solid #c5c5c5;
+    padding: 8px 10px;
+    vertical-align: middle;
+    color: #000000;
+}
+
+.kpi-table td.text-left[rowspan] {
+    vertical-align: top;
+    text-align: left;
+}
+
+.kpi-table tbody td.text-left {
+    text-align: left;
+}
+
+.kpi-table .category-title {
+    font-weight: bold;
+    color: #1b4332;
+    font-size: 15px;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.kpi-table .nested-item {
+    padding-left: 15px;
+    color: #4b6043;
+    font-size: 13px;
+    line-height: 1.4;
+    font-style: italic;
+}
+
+.kpi-table tbody tr:nth-child(even) {
+    background-color: #f5f9f7;
+}
+
+.kpi-table tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+.kpi-table tbody tr:hover {
+    background-color: #eaf4ef;
+    transition: 0.2s;
+}
+
+.kpi-table input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #198754;
+    cursor: pointer;
+}
+
+.kpi-table td input[type="radio"]:hover {
+    transform: scale(1.1);
+    transition: 0.1s ease-in-out;
+}
+
+/* ====== NEW SIGNATURE SECTION STYLES ====== */
+.signature-section-new {
+    padding-top: 20px;
+}
+
+.signature-fields-container {
+    display: flex;
+    align-items: flex-end; /* Align items to the bottom */
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Align group to the left */
+}
+
+.form-group-signature {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-signature .form-label {
+    font-weight: 600;
+    margin-bottom: .5rem;
+    font-size: 14px;
+    text-align: left;
+    color: #6c757d;
+}
+
+/* Reduce width of the signature input */
+#approverSignature {
+    width: 250px;
+    text-align: center;
+}
+
+.approval-title {
+    text-align: center;
+    margin-top: 25px;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+/* ====== Button Container (Updated) ====== */
+.button-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-success {
+    background-color: #198754;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn-success:hover {
+    background-color: #157347;
+}
+
+/* *** ปรับปรุง Media Query สำหรับ Responsive: ลบการแปลงตารางให้เป็น List Mode ออก *** */
+@media (max-width: 768px) {
+    .tab-container {
+        flex-direction: column;
+    }
+
+    .tab-link {
+        border-radius: 8px;
+        margin-bottom: 5px;
+    }
+    
+    .signature-fields-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #approverSignature {
+        width: 100%;
+    }
+}
+/* ====== โค้ดเดิมทั้งหมด ====== */
+
+/* Styles for KPI Detail Table (Annual Review) */
+.kpi-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    background-color: #ffffff;
+    border: 1px solid #a6a6a6;
+    margin-top: 20px;
+}
+
+.kpi-detail-table thead th {
+    background-color: #d8f3dc;
+    border: 1px solid #4b6043;
+    color: #000000;
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px;
+    font-weight: 600;
+}
+/* --- NEW ---: Added background color for the second row of the header */
+.kpi-detail-table thead tr:nth-child(2) > th {
+    background-color: #c8e6c9;
+}
+.kpi-detail-table thead tr:nth-child(3) > th {
+    background-color: #e0f2f1;
+}
+
+
+.kpi-detail-table th,
+.kpi-detail-table td {
+    border: 1px solid #c5c5c5;
+    padding: 8px;
+    vertical-align: middle;
+    color: #000000;
+    text-align: center;
+}
+
+.kpi-detail-table tbody tr:hover {
+    background-color: #eaf4ef;
+}
+
+.kpi-detail-table .form-control {
+    width: 100%;
+    padding: 0.25rem 0.5rem;
+    font-size: 14px;
+    box-sizing: border-box; /* <<< ADDED */
+}
+
+.kpi-detail-table textarea.form-control {
+    min-height: 75px;
+    resize: vertical;
+}
+
+.kpi-detail-table .section-header td {
+    background-color: #1b4332;
+    color: white;
+    font-weight: bold;
+    text-align: left;
+    font-size: 1rem;
+}
+
+/* ===== [ START ] สไตล์ที่เพิ่มเข้ามา ===== */
+.kpi-detail-table .section-total-row td {
+    background-color: #f8f9fa; /* สีพื้นหลังแถวสรุป */
+    border-top: 2px solid #1b4332; /* เส้นขอบบนหนา */
+    font-weight: bold;
+    color: #000;
+}
+/* ===== [ END ] สไตล์ที่เพิ่มเข้ามา ===== */
+
+
+.kpi-detail-table tfoot td {
+    font-weight: bold;
+}
+
+.kpi-detail-table .text-left {
+    text-align: left;
+}
+.kpi-detail-table .text-right {
+    text-align: right;
+}
+.kpi-detail-table .form-check {
+    margin-top: 5px;
+}
+.kpi-detail-table .form-check-label {
+    font-weight: normal;
+}
+
+
+/* Rating Scale Styles */
+.rating-scale-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.rating-box {
+    flex: 1;
+    border: 1px solid #4b6043;
+    background-color: #d8f3dc;
+    padding: 10px;
+    text-align: center;
+    min-width: 150px;
+}
+
+.rating-box strong {
+    font-size: 1.5rem;
+    display: block;
+    background-color: #4b6043;
+    color: white;
+    border-radius: 5px;
+    margin: -10px -10px 10px -10px;
+    padding: 5px;
+}
+
+.rating-box p {
+    margin: 0 0 5px 0;
+    font-size: 0.9rem;
+    min-height: 50px;
+}
+
+.rating-box span {
+    font-weight: bold;
+    color: #1b4332;
+}
+/* ====== OKR Evaluation Form Styles ====== */
+
+.okr-form-styles .section-title-bar {
+    background-color: #2c3e50;
+    color: white;
+    padding: 10px 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+
+.okr-form-styles .info-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px 20px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.okr-form-styles .info-grid label {
+    font-weight: bold;
+    text-align: right;
+}
+
+.okr-form-styles .evaluation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.okr-form-styles .evaluation-table th,
+.okr-form-styles .evaluation-table td {
+    border: 1px solid #a6a6a6;
+    padding: 8px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.okr-form-styles .evaluation-table thead th {
+    background-color: #d4e6f1;
+    text-align: center;
+    font-weight: bold;
+}
+
+.okr-form-styles .evaluation-table .sub-header th {
+    background-color: #aed6f1;
+}
+
+.okr-form-styles .evaluation-table tbody td {
+    background-color: #fef9e7;
+}
+
+.okr-form-styles .evaluation-table textarea.form-control {
+    width: 100%;
+    resize: vertical;
+    min-height: 75px;
+}
+
+.okr-form-styles .signature-block {
+    margin-top: 15px;
+    margin-bottom: 20px;
+    padding-left: 20px;
+    border-left: 3px solid #d4e6f1;
+}
+.okr-form-styles .signature-block p {
+    margin: 2px 0;
+}
+.okr-form-styles .signature-block .note {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.okr-form-styles .summary-table td {
+    background-color: white !important;
+}
+.okr-form-styles .summary-table .text-right {
+    text-align: right !important;
+    background-color: #d4e6f1 !important;
+}
+
+.okr-form-styles .dev-plan-table td {
+    vertical-align: top;
+}
+.okr-form-styles .dev-plan-table label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.okr-form-styles .final-summary {
+    text-align: center;
+    font-size: 1.1rem;
+    margin: 20px 0;
+    padding: 10px;
+    background-color: #fef9e7;
+    border: 1px solid #a6a6a6;
+}
+
+/* เพิ่มช่องว่างระหว่าง .final-summary-section กับ ตาราง .evaluation-table */
+.final-summary-section {
+    margin-bottom: 24px; /* ปรับค่าได้ตามต้องการ */
+}
+
+/* หากตาราง .evaluation-table เป็น immediate sibling ให้เพิ่ม margin-top เพื่อความแน่นอน */
+.final-summary-section + .evaluation-table {
+    margin-top: 12px;
+}
+
+/* ====== Font Readability Adjustments ====== */
+
+/* --- 1. Tab: แบบประเมินประจำปี --- */
+.kpi-detail-table th,
+.kpi-detail-table td {
+    color: #212529; /* ปรับสีตัวอักษรในตารางให้เข้มขึ้น */
+    font-size: 15px;   /* เพิ่มขนาดตัวอักษรเล็กน้อย */
+}
+
+.kpi-detail-table thead th {
+    color: #000000; /* ทำให้หัวตารางเป็นสีดำสนิท */
+}
+
+.rating-box p {
+    color: #343a40; /* ปรับปรุงสีข้อความในกล่องเรตติ้ง */
+}
+
+
+/* --- 2. Tab: แบบประเมินผลการปฏิบัติงาน --- */
+.okr-form-styles {
+    color: #212529; /* กำหนดสีพื้นฐานของตัวอักษรในฟอร์มให้เข้มขึ้น */
+}
+
+.okr-form-styles .info-grid label,
+.okr-form-styles .evaluation-table th {
+    color: #000000; /* ทำให้ Label และหัวตารางเป็นสีดำสนิทเพื่อความชัดเจน */
+}
+
+.okr-form-styles .evaluation-table td {
+    font-size: 15px; /* เพิ่มขนาดตัวอักษรในตาราง */
+}
+
+.okr-form-styles p,
+.okr-form-styles .final-summary p {
+    color: #212529;
+}
+
+.okr-form-styles .signature-block .note {
+    color: #495057; /* ปรับสีหมายเหตุให้เข้มขึ้นเล็กน้อย */
+}/* Styles for Development Plan Table */
+.dev-plan-table .main-header {
+    background-color: #cce5ff; /* Light Blue */
+    font-weight: bold;
+    color: #000;
+}
+
+.dev-plan-table .sub-header {
+    background-color: #f2f2f2; /* Light Grey */
+    font-weight: bold;
+    color: #000;
+}
+
+.dev-plan-table .sub-header .eng-text {
+    font-weight: normal;
+    font-size: 0.9em;
+}
+
+.dev-plan-table .topic-header {
+    background-color: #f2f2f2; /* Light Grey */
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dev-plan-table .input-cell {
+    background-color: #ffffcc; /* Light Yellow */
+    padding: 0;
+    vertical-align: top;
+}
+
+.dev-plan-table textarea {
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    height: 60px; /* Adjust height as needed */
+    resize: vertical;
+    box-sizing: border-box;
+    padding: 8px;
+}
+
+/* Override existing styles for this specific table type if necessary */
+.okr-form-styles .dev-plan-table td {
+    vertical-align: middle; /* Resetting just in case */
+}
+
+.okr-form-styles .dev-plan-table .input-cell,
+.okr-form-styles .dev-plan-table .topic-header {
+    border: 1px solid #a6a6a6;
+}
+
+/* ============================================== */
+/* === [เพิ่มส่วนนี้] สไตล์สำหรับกล่อง Criteria === */
+/* ============================================== */
+.criteria-box {
+    max-height: 150px; /* กำหนดความสูงสูงสุด (ปรับได้ตามต้องการ) */
+    overflow-y: auto;  /* แสดง scrollbar แนวตั้งเมื่อข้อความล้น */
+    background-color: #ffffff; /* พื้นหลังสีขาว (เพื่อให้เห็นขอบเขตชัดเจน) */
+    border: 1px solid #dcdcdc; /* เส้นขอบสีเทาอ่อน */
+    border-radius: 5px; /* ขอบมนเล็กน้อย */
+    padding: 8px;       /* ระยะห่างภายใน */
+    text-align: left;   /* จัดข้อความชิดซ้าย */
+    white-space: normal; /* ให้ข้อความตัดบรรทัด (เผื่อไว้) */
+    min-height: 50px; /* ความสูงขั้นต่ำ */
+    box-sizing: border-box;
+    font-size: 14px; /* ปรับขนาดฟอนต์ให้สอดคล้องกับ input */
+}
+/* เพิ่มใน individual_kpi.css */
+tr.additional-textarea-row td {
+    padding-top: 10px;
+    padding-bottom: 20px;
+    background-color: #fdfdfd; /* สีพื้นหลังเล็กน้อยเพื่อให้แยกง่าย */
+    border-bottom: 2px solid #dee2e6; /* เส้นหนาขึ้นเล็กน้อยเพื่อจบหัวข้อ */
+}
+
+tr.additional-textarea-row label {
+    margin-bottom: 0;
+    font-size: 0.95em;
+}
+/* [แก้ไข] จัดกลางกล่อง input "รวมคะแนนประจำหมวด" และบังคับให้พื้นหลังเป็นสีเขียว */
+.kpi-detail-table .section-total-row .total-score-cell-merged {
+    background-color: #c8e6c9; /* ⬅️ บังคับสีเขียว (เหมือนในแถว) */
+    text-align: center;      /* จัดกลาง */
+    vertical-align: middle;
+}
+
+/* [แก้ไข] ทำให้ input ในแถวสรุปหมวดมีขนาดเล็กและอยู่ตรงกลาง */
+.kpi-detail-table .form-control.section-total-score {
+    width: 100px; 
+    display: inline-block; 
+    box-sizing: border-box;
+}
+/* จัดตำแหน่งเลขลำดับให้อยู่ ตรงกลาง + ชิดบน */
+.kpi-table .order-col-top {
+    vertical-align: top !important;
+    text-align: center !important;
+}

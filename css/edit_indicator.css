@@ -33,11 +33,12 @@ body {
     margin-bottom: 35px;
 }
 
+/* ================= START [แก้ไข] ================= */
 .form-group {
     display: grid;
     grid-template-columns: 280px 1fr; 
     gap: 15px;
-    align-items: center;
+    align-items: start; /* <-- เปลี่ยนจาก center เป็น start */
     margin-bottom: 18px;
 }
 
@@ -45,11 +46,13 @@ body {
     font-size: 1.4rem;
     font-weight: bold;
     color: #444;
-    text-align: right;
+    text-align: left;  /* <-- เปลี่ยนจาก right เป็น left */
+    padding-top: 8px;  /* <-- เพิ่ม padding-top */
 }
 
 .form-group input,
-.form-group select {
+.form-group select,
+.form-group textarea { /* <-- เพิ่ม textarea */
     width: 100%;
     padding: 8px 15px;
     font-size: 1.3rem;
@@ -61,11 +64,20 @@ body {
 }
 
 .form-group input:focus,
-.form-group select:focus {
+.form-group select:focus,
+.form-group textarea:focus { /* <-- เพิ่ม textarea */
     outline: none;
     border-color: #4CAF50;
     box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
 }
+
+/* เพิ่มสไตล์สำหรับ textarea (เหมือน create_indicator.css) */
+.form-group textarea {
+    min-height: 150px;
+    resize: none;
+}
+/* ================= END [แก้ไข] ================= */
+
 
 .button-container {
     display: flex;

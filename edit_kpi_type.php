@@ -2,8 +2,6 @@
 $page_title = "แก้ไขประเภทตัวชี้วัด";
 include 'templates/navbar.php'; 
 include 'config/conn.php'; // เชื่อมต่อ DB
-
-// รับค่า KPI_type_id จาก URL
 if (isset($_GET['KPI_type_id'])) {
     $KPI_type_id = mysqli_real_escape_string($conn, $_GET['KPI_type_id']);
 
@@ -11,6 +9,12 @@ if (isset($_GET['KPI_type_id'])) {
     $sql = "SELECT * FROM kpi_type WHERE KPI_type_id = '$KPI_type_id' LIMIT 1";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($result);
+
+    $current_year = date("Y") + 543;
+    $is_editable = ($row['Academic'] == $current_year);
+
+    // Style เพิ่มเติมสำหรับปุ่ม Disable
+    $disabled_style = 'background-color: #cccccc !important; cursor: not-allowed; pointer-events: none; opacity: 0.7;';
 
     if (!$row) {
         echo "<p>ไม่พบข้อมูลประเภทตัวชี้วัด</p>";
@@ -29,7 +33,6 @@ if (isset($_GET['KPI_type_id'])) {
         <h1 class="form-title">แก้ไขข้อมูลประเภทตัวชี้วัด</h1>
 
         <form action="config/checkedit_kpi_type.php" method="POST">
-            <!-- hidden ไว้ส่งไปตอน update -->
             <input type="hidden" name="KPI_type_id" value="<?php echo $row['KPI_type_id']; ?>">
 
             <div class="form-group">
@@ -71,11 +74,16 @@ if (isset($_GET['KPI_type_id'])) {
             </div>
 
             <div class="button-container">
-                <button type="submit" class="save-btn">บันทึก</button>
-                <a href="config/delete_kpi_type.php?KPI_type_id=<?php echo $row['KPI_type_id']; ?>"></a>
+                <button type="submit" class="save-btn" 
+                    <?php echo $is_editable ? '' : 'disabled'; ?>
+                    style="<?php echo $is_editable ? '' : $disabled_style; ?>">
+                    บันทึก
+                </button>
+
                 <a href="config/checkdelete_kpi_type.php?KPI_type_id=<?php echo $row['KPI_type_id']; ?>"
                    class="delete-btn" 
-                   onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?');">
+                   onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?');"
+                   <?php echo $is_editable ? '' : 'style="' . $disabled_style . '"'; ?>>
                    ลบ
                 </a>
             </div>

@@ -47,6 +47,14 @@ body {
   color: #a3e4d7; 
 }
 
+/* === [ เพิ่มเติม ] === */
+/* สไตล์สำหรับลิงก์ Navbar ที่กำลังใช้งาน (Active) */
+.navbar-left nav a.active-nav {
+  color: #FFFF00; /* สีเหลือง */
+  font-weight: bold; /* ทำให้เด่นขึ้นเล็กน้อย */
+}
+/* === [ สิ้นสุดการเพิ่มเติม ] === */
+  
 .user-box {
   display: flex;
   align-items: center;

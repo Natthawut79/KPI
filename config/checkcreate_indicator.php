@@ -1,9 +1,11 @@
 <?php
 session_start();
-include "conn.php";
+// ตรวจสอบว่าไฟล์ conn.php อยู่ในโฟลเดอร์เดียวกัน (config)
+include "conn.php"; 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
+    // --- ค่าที่มีอยู่เดิม ---
     $KPI_type_id = mysqli_real_escape_string($conn, $_POST['KPI_type_id']);
     $Order_no = mysqli_real_escape_string($conn, $_POST['Order_no']);
     $KPI_topic_name = mysqli_real_escape_string($conn, $_POST['KPI_topic_name']);
@@ -13,17 +15,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $Weight = mysqli_real_escape_string($conn, $_POST['Weight']);
     $Important_level_no = mysqli_real_escape_string($conn, $_POST['Important_level_no']);
     $Description_text = mysqli_real_escape_string($conn, $_POST['Description_text']);
-}
+    $Additional = mysqli_real_escape_string($conn, $_POST['fill_data']);
+    $Retrieve = mysqli_real_escape_string($conn, $_POST['fetch_data']);
 
-    $sql_insert = "INSERT into kpi_topic (KPI_type_id,Order_no,KPI_topic_name,Unit,Goal,Score_criteria,Weight,Important_level_no,Description_text )
-                    values ('$KPI_type_id','$Order_no','$KPI_topic_name','$Unit','$Goal','$Score_criteria','$Weight','$Important_level_no','$Description_text')";
+    
+    
+    $Table_id_sql_val = "NULL"; 
+    
+    if ($Retrieve === 'yes' && isset($_POST['Table_id']) && is_numeric($_POST['Table_id'])) {
+        // แปลงเป็นตัวเลข (Integer)
+        $Table_id_sql_val = intval($_POST['Table_id']); 
+    }
 
-     if (mysqli_query($conn, $sql_insert)) {
+    // 4. ค่าจาก "ประเภทการตีพิมพ์" (name="Publication_type_id")
+    // ตั้งค่าเริ่มต้นเป็น NULL (สำหรับ SQL)
+    $Publication_type_id_sql_val = "NULL"; 
+
+    // ตรวจสอบเงื่อนไขทั้งหมด
+    if ($Retrieve === 'yes' && isset($_POST['Table_id']) && $_POST['Table_id'] == '3' && 
+        isset($_POST['Publication_type_id']) && is_numeric($_POST['Publication_type_id'])) {
+        
+        // แปลงเป็นตัวเลข (Integer)
+        $Publication_type_id_sql_val = intval($_POST['Publication_type_id']);
+    }
+
+    // แก้ไข SQL INSERT
+    // (คอลัมน์ที่เป็นข้อความยังคงมี '...' แต่คอลัมน์ตัวเลข $Table_id_sql_val และ $Publication_type_id_sql_val ไม่มี)
+    $sql_insert = "INSERT into kpi_topic (
+                        KPI_type_id, Order_no, KPI_topic_name, Unit, Goal, Score_criteria, Weight, 
+                        Important_level_no, Description_text, Additional, Retrieve, 
+                        Table_id, Publication_type_id
+                    )
+                    values (
+                        '$KPI_type_id', '$Order_no', '$KPI_topic_name', '$Unit', '$Goal', 
+                        '$Score_criteria', '$Weight', '$Important_level_no', '$Description_text', 
+                        '$Additional', '$Retrieve', 
+                        $Table_id_sql_val, $Publication_type_id_sql_val
+                    )";
+    
+    if (mysqli_query($conn, $sql_insert)) {
         echo "<script>
                 alert('สร้างตัวชี้วัดสำเร็จ!');
                 window.location.href = '../indicators.php';
               </script>";
     } else {
-        echo "Error: " . mysqli_error($conn);
+        // หากเกิดข้อผิดพลาด ให้แสดง Error เพื่อตรวจสอบ
+        echo "Error: " . $sql_insert . "<br>" . mysqli_error($conn);
     }
+
+} else {
+    echo "Invalid request method.";
+}
+
+mysqli_close($conn);
 ?>

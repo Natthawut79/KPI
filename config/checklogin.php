@@ -5,26 +5,36 @@ include "conn.php";
 $Emp_code = $_POST['Emp_code'];
 $Password = $_POST['Password'];
 
-$sql = "SELECT * FROM user WHERE Emp_code='$Emp_code' AND Password='$Password' ";
-$result = mysqli_query($conn, $sql);
-$row = mysqli_fetch_assoc($result); 
+// Prepare and execute the statement to prevent SQL injection
+$stmt = $conn->prepare("SELECT * FROM user WHERE Emp_code = ?");
+$stmt->bind_param("s", $Emp_code);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
 
-if($row){
+if ($row && password_verify($Password, $row['Password'])) {
     $_SESSION['Emp_code'] = $row['Emp_code'];
     $_SESSION['Type_id']  = $row['Type_id'];
 
-    // ไถนาไว้ ค่อยคิดว่าจะทำยังไง
-    if($_SESSION['Type_id'] == 1){
-        echo '<meta http-equiv="refresh" content="0;url=../mainadmin.php"> ';
-    }elseif($_SESSION['Type_id'] == 2){
-        echo '<meta http-equiv="refresh" content="0;url=../index.php"> ';
-    }elseif($_SESSION['Type_id'] == 3){
-        echo '<meta http-equiv="refresh" content="0;url=../index.php"> ';
-    }elseif($_SESSION['Type_id'] == 4){
-        echo '<meta http-equiv="refresh" content="0;url=../index.php"> ';
-    }elseif($_SESSION['Type_id'] == 5){
-        echo '<meta http-equiv="refresh" content="0;url=../index.php"> ';    
+    // Redirect based on user type
+    switch ($_SESSION['Type_id']) {
+        case 1: // admin
+            header("Location: ../mainadmin.php");
+            break;
+        case 2: // superadmin
+            header("Location: ../mainsuper.php");
+            break;
+        case 3: // Bachelor (Teacher)
+            header("Location: ../main_bachelor.php");
+            break;
+        case 4: // Associate_Dean
+            header("Location: ../main_associate_dean.php");
+            break;
+        case 5: // Head_of_Department
+            header("Location: ../main_head_of_department.php");
+            break;
     }
+    exit();
 
 }else{
     echo "<script>alert('ข้อมูลไม่ถูกต้อง');</script>";

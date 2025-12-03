@@ -17,7 +17,7 @@
                 <label for="profile-pic">
                     <img src="img/profile.png" alt="Profile Picture" id="profileImage">
                 </label>
-                <input type="file" name="IMGname" id="imageUpload" accept="image/*" hidden>
+                <input type="file" name="IMGname" id="imageUpload" accept="image/*" hidden onchange="previewImage(event)">
             </div>
 
             <div class="form-group">
@@ -50,39 +50,44 @@
             </div>
             <div class="form-group">
                 <label>ชื่อ (Eng):</label>
-                <input type="text" name="Fname_eng">
+                 <input type="text" name="Fname_eng" required>
             </div>
             <div class="form-group">
                 <label>นามสกุล (Eng):</label>
-                <input type="text" name="Lname_eng">
+                 <input type="text" name="Lname_eng" required>
             </div>
             <div class="form-group">
                 <label>สาขา:</label>
                 <select name="Department_id" required>
-            <?php
-                $sql_dep = "SELECT Department_id, Department_name FROM department";
-                $res_dep = mysqli_query($conn, $sql_dep);
+                    <?php
+                    $sql_dep = "SELECT Department_id, Department_name FROM department";
+                    $res_dep = mysqli_query($conn, $sql_dep);
                     while ($dep = mysqli_fetch_assoc($res_dep)) {
                         echo "<option value='{$dep['Department_id']}'>{$dep['Department_name']}</option>";
                     }
-            ?>
-            </select>
+                    ?>
+                </select>
             </div>
-            <div class="form-group">
+           <div class="form-group">
                 <label>ประเภทผู้ใช้:</label>
                 <select name="Type_id" required>
-            <?php
-                $sql_type = "SELECT Type_id, Type_name FROM user_type";
-                $res_type = mysqli_query($conn, $sql_type);
+                    <?php
+                    // แก้ไข SQL เพื่อดึง Type_name_th มาด้วย
+                    $sql_type = "SELECT Type_id, Type_name, Type_name_th FROM user_type";
+                    $res_type = mysqli_query($conn, $sql_type);
+
                     while ($type = mysqli_fetch_assoc($res_type)) {
-                        echo "<option value='{$type['Type_id']}'>{$type['Type_name']}</option>";
+                        // กำหนดการแสดงผลเป็น: ชื่อภาษาไทย (ชื่อภาษาอังกฤษ)
+                        $display_name = htmlspecialchars($type['Type_name_th']) . " (" . htmlspecialchars($type['Type_name']) . ")";
+
+                        echo "<option value='{$type['Type_id']}'>{$display_name}</option>";
                     }
-            ?>        
+                    ?>
                 </select>
             </div>
             <div class="button-container">
-                <button type="submit" class="create-btn">สร้าง</button>
-                <a href="mainadmin.php" class="cancel-btn">ยกเลิก</a>
+                <button type="submit" class="create-btn">บันทึก</button>
+                <a href="manage_users.php" class="cancel-btn">ยกเลิก</a>
             </div>
         </form>
     </div>

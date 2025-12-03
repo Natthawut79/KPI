@@ -7,16 +7,30 @@ include 'auth_admin.php'; // ตรวจสอบสิทธิ์แอดม
 if (isset($_GET['Emp_code'])) {
     $Emp_code = mysqli_real_escape_string($conn, $_GET['Emp_code']);
 
-    // SQL ลบข้อมูลพนักงาน
-    $sql = "DELETE FROM employee WHERE Emp_code = '$Emp_code';";
+    // เริ่มต้น transaction (เพื่อให้แน่ใจว่าทำครบหรือยกเลิกทั้งชุด)
+    mysqli_begin_transaction($conn);
 
-    if (mysqli_query($conn, $sql)) {
-        // ลบสำเร็จ กลับไปหน้าหลัก พร้อมส่งข้อความแจ้งเตือน
-        echo "<script>alert('ลบบัญชีผู้ใช้สำเร็จ!'); window.location='../mainadmin.php';</script>";
+    try {
+        // ลบจาก user ก่อน (เผื่อมี foreign key)
+        $sql_user = "DELETE FROM user WHERE Emp_code = '$Emp_code'";
+        mysqli_query($conn, $sql_user);
+
+        // ลบจาก employee ต่อ
+        $sql_emp = "DELETE FROM employee WHERE Emp_code = '$Emp_code'";
+        mysqli_query($conn, $sql_emp);
+
+        // ถ้าไม่มีปัญหา ให้ commit
+        mysqli_commit($conn);
+
+        echo "<script>alert('ลบบัญชีผู้ใช้สำเร็จ!'); window.location='../manage_users.php';</script>";
         exit();
-    } else {
-        echo "เกิดข้อผิดพลาดในการลบ: " . mysqli_error($conn);
+
+    } catch (Exception $e) {
+        // ถ้ามีปัญหา ให้ rollback ย้อนกลับ
+        mysqli_rollback($conn);
+        echo "เกิดข้อผิดพลาดในการลบ: " . $e->getMessage();
     }
+
 } else {
     // ถ้าไม่มี Emp_code ส่งมา กลับไปหน้าหลัก
     header("Location: ../mainadmin.php");

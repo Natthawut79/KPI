@@ -1,0 +1,177 @@
+/* toggles_switch.css */
+body {
+    background-color: #5D8C6F;
+    font-family: "TH Sarabun New", sans-serif;
+}
+
+.record-container {
+    display: flex;
+    justify-content: center;
+    padding: 50px 20px;
+}
+
+.record-wrapper {
+    background-color: #FFFFFF;
+    border-radius: 40px;
+    padding: 40px 60px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 700px;
+}
+
+.form-title {
+    color: #333;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.setting-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f2f2f2;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.setting-box h3 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+/* --- NEW STYLES for Start and End Date --- */
+.date-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* ระยะห่างระหว่างกล่องวันที่ */
+}
+
+.date-input {
+    flex: 1; /* ทำให้กล่องวันที่แบ่งพื้นที่เท่าๆ กัน */
+}
+/* -------------------------------------- */
+
+.form-group label {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #444;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.form-group input[type="datetime-local"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 18px;
+    font-size: 1.3rem;
+    font-family: "TH Sarabun New", sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+/* ✅ [แก้ไข] เปลี่ยนมาใช้ Flexbox เพื่อจัดปุ่มให้ตรงกัน */
+.button-container {
+    /* text-align: center; (Flexbox จะจัดการแทน) */
+    margin-top: 30px;
+    display: flex;
+    justify-content: center; /* จัดให้อยู่ตรงกลางแนวนอน */
+    align-items: center;   /* จัดให้อยู่ตรงกลางแนวตั้ง (แก้เบี้ยว) */
+    gap: 10px;             /* ✅ เพิ่มระยะห่างระหว่างปุ่ม */
+}
+
+.save-btn {
+    background-color: #0b3d1c;
+    color: white;
+    border: none;
+    padding: 12px 50px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    
+    /* ✅ [เพิ่ม 2 บรรทัดนี้] */
+    font-family: "TH Sarabun New", sans-serif;
+    line-height: 1.5; 
+}
+
+.save-btn:hover {
+    background-color: #145a32;
+}
+
+/* Switch styles */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 90px;
+  height: 44px;
+}
+.switch input { display: none; }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  border-radius: 44px;
+  transition: .4s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 36px; width: 36px;
+  left: 4px; bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+  transition: .4s;
+}
+
+input:checked + .slider { background-color: #4CAF50; }
+input:checked + .slider:before { transform: translateX(46px); }
+/* ✅ [เพิ่ม] สไตล์สำหรับจัดแถวคู่ */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* แบ่ง 2 คอลัมน์เท่าๆ กัน */
+    gap: 20px; /* ระยะห่างระหว่างช่อง */
+    margin-bottom: 30px; /* ระยะห่างเหมือน .form-group */
+}
+
+/* ✅ [เพิ่ม] สไตล์สำหรับปุ่ม "ยกเลิก" */
+.btn-cancel {
+    background-color: #6c757d; /* สีเทา */
+    color: white;
+    border: none;
+    padding: 12px 50px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    line-height: 1.5;
+}
+
+.btn-cancel:hover {
+    background-color: #5a6268; /* สีเทาเข้ม */
+}
+
+/* ✅ [เพิ่ม] ระยะห่างระหว่างปุ่มบันทึกและยกเลิก */
+.button-container .save-btn {
+    margin-right: 10px;
+}
