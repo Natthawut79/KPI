@@ -1,7 +1,9 @@
 <?php
 $page_title = "แบบประเมินผลการปฏิบัติงาน";
 include 'templates/navbar.php';
-include 'config/conn.php'; //
+include 'config/conn.php';
+include 'config/academic_year_resolver.php';
+$system_current_academic_year = $current_academic_year;
 
 if (!isset($_SESSION['Emp_code'])) {
     echo "<p>Error: กรุณา Login ก่อน.</p>";
@@ -46,9 +48,7 @@ if (isset($_GET['Emp_code']) && !empty($_GET['Emp_code']) && isset($_GET['year']
     $current_emp_code = $_SESSION['Emp_code']; // ใช้ Emp_code ของคนที่ Login
     $user_type_id = $_SESSION['Type_id']; // ใช้ Type_id ของคนที่ Login
 
-    // --- กำหนดปีการศึกษา (ดึงปีปัจจุบัน พ.ศ.) ---
-    $current_year_ad = date('Y'); // ดึงปี ค.ศ. ปัจจุบัน
-    $current_academic_year = intval($current_year_ad) + 543; // แปลงเป็น พ.ศ.
+
 }
 $is_approved = false; // ตั้งค่าเริ่มต้นว่ายังไม่อนุมัติ
 
@@ -109,7 +109,7 @@ $active_period_name = "นอกช่วงเวลาทำการ";
 $is_admin_edit_mode = (isset($_GET['mode']) && $_GET['mode'] === 'edit');
 
 // (ดึงปีปัจจุบันจริงๆ มาเทียบ)
-$actual_current_year_ph = intval(date('Y')) + 543;
+$actual_current_year_ph = $system_current_academic_year;
 
 // กรณีที่ 1: Admin กดแก้ไข (มาจาก approve_kpi.php)
 // ($is_viewing_other คือ true เพราะมี Emp_code ใน URL)
