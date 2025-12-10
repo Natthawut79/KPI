@@ -690,24 +690,32 @@ $saved_okr_data = null; // Placeholder
 
                 <table class="table table-bordered kpi-detail-table" id="annual-review-table">
                     <colgroup>
-                        <col style="width: 3%;">
-                        <col style="width: 16%;">
-                        <col style="width: 4%;">
-                        <col style="width: 6%;">
-                        <col style="width: 14%;">
-                        <col style="width: 4%;">
-                        <col class="temp-hidden-goal"> <?php if ($active_submit_type_id != 2): ?>
-                            <col style="width: 7%;"> <?php endif; ?>
-                        <col class="temp-hidden-goal"> <?php if ($active_submit_type_id != 1): ?>
-                            <col style="width: 7%;"> <?php endif; ?>
+    <col style="width: 3%;">
+    <col style="width: 8%;"> <col style="width: 4%;">
+    <col style="width: 5%;">
+    <col style="width: 7%;"> <col style="width: 4%;">
+    <col class="temp-hidden-goal">
 
-                        <col style="width: 12%;">
-                        <col style="width: 7%;">
-                        <col style="width: 7%;">
-                        <col style="width: 5%;"> 
-<col style="width: 7%;"> <col style="width: 3%;"> 
-<col style="width: 4%;"> 
-<col style="width: 16%;"> </colgroup>
+    <?php if ($active_submit_type_id != 2): ?>
+        <col style="width: 30%;">
+    <?php endif; ?>
+
+    <col class="temp-hidden-goal">
+
+    <?php if ($active_submit_type_id != 1): ?>
+        <col style="width: <?php echo ($active_submit_type_id == 2) ? '15%' : '15%'; ?>;">
+    <?php endif; ?>
+
+    <col style="<?php echo ($active_submit_type_id == 2) ? 'width: 15%;' : 'display: none;'; ?>">
+
+    <col style="width: 6%;">
+    <col style="width: 6%;">
+    <col style="width: 5%;">
+    <col style="width: 4%;"> <col style="width: 3%;">
+    <col style="width: 4%;">
+    
+    <col style="width: 10%;">
+</colgroup>
                         
                     <thead>
     <tr>
@@ -744,11 +752,11 @@ $saved_okr_data = null; // Placeholder
             <th rowspan="2">ผลงานจริง<br>ครึ่งปีหลัง</th>
         <?php endif; ?>
 
-        <th rowspan="2">ผลงานจริง<br><u>ทั้งปี</u></th>
-        <th rowspan="2">อัปโหลดไฟล์<br>(หลักฐาน)</th>
+<th rowspan="2" style="<?php echo ($active_submit_type_id == 2) ? '' : 'display:none;'; ?>">ผลงานจริง<br><u>ทั้งปี</u></th>     
+<th rowspan="2">อัปโหลดไฟล์<br>(หลักฐาน)</th>
         <th rowspan="2">URL ไฟล์</th>
         <th colspan="4">ผลเทียบเป้าหมาย</th>
-        <th rowspan="2" style="width: 10%;">หมายเหตุ</th>
+        <th rowspan="2" style="width: 15%;">หมายเหตุ</th>
     </tr>
     <tr>
         <th> ค่าน้ำหนัก</th>
@@ -917,11 +925,14 @@ if (empty($actual_work_all_year_value)) {
                                             </td>
                                         <?php endif; ?>
 
-                                        <td>
-                                            <textarea class="form-control actual-year" rows="3"
-                                                name="data[<?php echo $topic_id; ?>][Actual_work_all_year]"
-                                                <?php echo $disable_all_attr; ?>><?php echo htmlspecialchars($actual_work_all_year_value); ?></textarea>
-                                        </td>
+                                        <td style="<?php echo ($active_submit_type_id == 2) ? '' : 'display:none;'; ?>">
+    <textarea class="form-control actual-year" rows="3"
+        name="data[<?php echo $topic_id; ?>][Actual_work_all_year]"
+        <?php 
+        // เงื่อนไข: ถ้าเป็นรอบ 2 และระบบเปิด ($is_editable) ให้พิมพ์ได้ (ไม่ disable)
+        echo ($active_submit_type_id == 2 && $is_editable) ? '' : 'disabled'; 
+        ?>><?php echo htmlspecialchars($actual_work_all_year_value); ?></textarea>
+</td>
                                         <td>
 <?php
     // 1. สร้างตัวแปรเก็บข้อมูลไฟล์ที่จะดึงมาแสดงใน input (Auto-fill)
@@ -1077,12 +1088,13 @@ if (empty($actual_work_all_year_value)) {
 
                                 <?php endforeach; ?>
                                 <tr class="section-total-row" data-kpi-type-id="<?php echo $kpi_type_id; ?>">
-                                <td colspan="<?php echo ($active_submit_type_id == 1 || $active_submit_type_id == 2) ? '12' : '13'; ?>" class="text-right"><strong>รวมคะแนนประจำหมวด</strong></td>
-                                <td colspan="2" class="text-center">
-                                <input type="number" step="0.01" class="form-control section-total-score" value="<?php echo number_format(floatval($saved_category_scores[$kpi_type_id] ?? 0), 2); ?>"readonly style="background-color: #e9ecef;">
-                                </td>
-                                <td></td>
-                                </tr>
+    <td colspan="<?php echo ($active_submit_type_id == 1) ? '11' : '12'; ?>" class="text-right"><strong>รวมคะแนนประจำหมวด</strong></td>
+    
+    <td colspan="2" class="text-center">
+        <input type="number" step="0.01" class="form-control section-total-score" value="<?php echo number_format(floatval($saved_category_scores[$kpi_type_id] ?? 0), 2); ?>" readonly style="background-color: #e9ecef;">
+    </td>
+    <td></td>
+</tr>
                             <?php else: ?>
                                 <tr>
                                     <td colspan="16" class="text-center text-muted">-- ไม่มีหัวข้อตัวชี้วัดสำหรับประเภทนี้ --
@@ -1099,7 +1111,7 @@ if (empty($actual_work_all_year_value)) {
 
         <td class="text-center"><strong id="grand-total-weight"><?php echo $total_weight_sum_types; ?></strong></td>
 
-        <td colspan="<?php echo ($active_submit_type_id == 1 || $active_submit_type_id == 2) ? '6' : '7'; ?>" class="text-center text-right">
+        <td colspan="<?php echo ($active_submit_type_id == 1) ? '5' : '6'; ?>" class="text-center text-right">
             <strong>คะแนนรวมด้านผลสำเร็จของงานทั้งปี </strong>
         </td>
 
@@ -1108,7 +1120,6 @@ if (empty($actual_work_all_year_value)) {
                 class="form-control"
                 value="<?php echo number_format(floatval($saved_total_scores['Score_500_max'] ?? 0), 2); ?>"
                 readonly style="background-color: #e9ecef;">
-
             <input type="hidden" id="grand-total-score-100-hidden" name="grand_total_score_100">
         </td>
         <td></td>

@@ -66,6 +66,7 @@
                     <th>ประเภทผู้ใช้</th> 
                     <th>สาขาวิชา</th>
                     <th>ปีการประเมิน</th>
+                    <th>สถานะ</th>
                     <th class="text-center">จัดการ</th>
                 </tr>
             </thead>
@@ -73,10 +74,10 @@
             <?php
             // 13. ตรรกะการแสดงผล (เหมือนเดิม)
             if (isset($search_error_message)) {
-                 echo "<tr><td colspan='5' class='text-center'>" . htmlspecialchars($search_error_message) . "</td></tr>";
+                 echo "<tr><td colspan='6' class='text-center'>" . htmlspecialchars($search_error_message) . "</td></tr>";
             }
             elseif ($result_kpi_list === null) {
-                echo "<tr><td colspan='5' class='text-center'>กรุณากรอกข้อมูล แล้วกดปุ่มค้นหา</td></tr>";
+                echo "<tr><td colspan='6' class='text-center'>กรุณากรอกข้อมูล แล้วกดปุ่มค้นหา</td></tr>";
             } 
             elseif (mysqli_num_rows($result_kpi_list) > 0) {
                 while ($row = mysqli_fetch_assoc($result_kpi_list)) {
@@ -92,11 +93,32 @@
                         $edit_link_href = 'individualceo_kpi.php?Emp_code=' . $emp_code . '&year=' . $kpi_year; //
                     }
 
+                    $status_msg = "";
+                        $status_color = "";
+
+                        if ($row['Approve_id'] == 1) {
+                            $status_msg = "ยังไม่รับการอนุมัติ";
+                            $status_color = "color: #e0a800;"; // สีเหลืองเข้ม/ส้ม
+                        } elseif ($row['Approve_id'] == 2) {
+                            $status_msg = "ได้รับการอนุมัติ";
+                            $status_color = "color: #28a745;"; // สีเขียว
+                        } elseif ($row['Approve_id'] == 3) {
+                            $status_msg = "รอการเเก้ไข";
+                            $status_color = "color: #dc3545;"; // สีแดง
+                        } else {
+                            $status_msg = "-";
+                        }
+
+                    
+                        // ------------------------------------------
+
+
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($row['Title_shortname'] . $row['Fname_th'] . " " . $row['Lname_th']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['Type_name']) . "</td>"; // (คอลัมน์นี้จะแสดง "อาจารย์" เสมอ)
                     echo "<td>" . htmlspecialchars($row['Department_name']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['kpi_year']) . "</td>"; 
+                    echo '<td style="' . $status_color . ' font-weight: bold;">' . $status_msg . '</td>';
                     
                     echo '<td class="text-center">
                             <a href="' . $edit_link_href . '" class="action-btn btn-edit">ดูรายละเอียด</a>
@@ -104,7 +126,7 @@
                     echo "</tr>";
                 }
             } else {
-                 echo "<tr><td colspan='5' class='text-center'>ไม่พบข้อมูลตามเงื่อนไขที่ค้นหา</td></tr>";
+                 echo "<tr><td colspan='6' class='text-center'>ไม่พบข้อมูลตามเงื่อนไขที่ค้นหา</td></tr>";
             }
             ?>
             </tbody>

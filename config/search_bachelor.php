@@ -1,6 +1,5 @@
 <?php
 
-
 // 1. รับค่า Filter (1 ช่อง: ปี)
 $searchYear = isset($_GET['searchYear']) ? trim($_GET['searchYear']) : '';
 
@@ -15,23 +14,22 @@ if (isset($_GET['search_button'])) {
 
     // 5. สร้าง SQL Query หลัก (เหมือน mainsuper)
     $sql_kpi_list = "
-        SELECT 
-            e.Emp_code, t.Title_shortname, e.Fname_th, e.Lname_th, 
-            d.Department_name, uty.Type_name, ik.kpi_year, gkm.Group_ID 
-        FROM (
-            SELECT DISTINCT Emp_code, Academic AS kpi_year 
-            FROM individual_kpi WHERE Academic IS NOT NULL AND Academic != 0
-        ) AS ik
-        JOIN employee e ON ik.Emp_code = e.Emp_code
-        JOIN department d ON e.Department_id = d.Department_id
-        JOIN title t ON e.Title_id = t.Title_id
-        JOIN user u ON e.Emp_code = u.Emp_code
-        LEFT JOIN user_type uty ON u.Type_id = uty.Type_id 
-        JOIN group_kpi_mapping gkm ON u.Type_id = gkm.Type_id 
-        
-        -- 6. [แก้ไข] บังคับให้เป็น Emp_code ของตัวเองเท่านั้น
-        WHERE ik.Emp_code = ? 
-    ";
+    SELECT 
+        e.Emp_code, t.Title_shortname, e.Fname_th, e.Lname_th, 
+        d.Department_name, uty.Type_name, ik.kpi_year, ik.Approve_id, gkm.Group_ID 
+    FROM (
+        SELECT DISTINCT Emp_code, Academic AS kpi_year, Approve_id 
+        FROM individual_kpi WHERE Academic IS NOT NULL AND Academic != 0
+    ) AS ik
+    JOIN employee e ON ik.Emp_code = e.Emp_code
+    JOIN department d ON e.Department_id = d.Department_id
+    JOIN title t ON e.Title_id = t.Title_id
+    JOIN user u ON e.Emp_code = u.Emp_code
+    LEFT JOIN user_type uty ON u.Type_id = uty.Type_id 
+    JOIN group_kpi_mapping gkm ON u.Type_id = gkm.Type_id 
+    
+    WHERE ik.Emp_code = ? 
+";
 
     // 7. สร้าง Array สำหรับ Bind
     $bind_params_values = []; 

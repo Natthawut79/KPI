@@ -9,6 +9,18 @@ include 'config/conn.php';            // 3. เชื่อมต่อฐาน
 include 'config/search_toggles.php';
 // (ไฟล์นี้จะสร้างตัวแปร: $searchYear, $filter_submit_type, $result_submit_types,
 // $result_toggles, $search_error_message)
+
+// ฟังก์ชันแปลงวันที่เป็น พ.ศ.
+function formatDateThai($date) {
+    if (!$date || $date == '0000-00-00') {
+        return '-';
+    }
+    $timestamp = strtotime($date);
+    $year = date('Y', $timestamp) + 543; // บวก 543 ปี
+    $month = date('m', $timestamp);
+    $day = date('d', $timestamp);
+    return $day . '/' . $month . '/' . $year;
+}
 ?>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -83,8 +95,11 @@ elseif ($result_toggles && mysqli_num_rows($result_toggles) > 0) {
         echo "<tr>";
         echo "<td>" . htmlspecialchars($row['Academic']) . "</td>";
         echo "<td>" . htmlspecialchars($row['Submit_type_name']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['Start_date']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['End_date']) . "</td>";
+        
+        // แก้ไข: เรียกใช้ฟังก์ชัน formatDateThai เพื่อแสดงวันที่เป็น พ.ศ.
+        echo "<td>" . htmlspecialchars(formatDateThai($row['Start_date'])) . "</td>";
+        echo "<td>" . htmlspecialchars(formatDateThai($row['End_date'])) . "</td>";
+        
         echo "<td class='{$status_class}'>" . htmlspecialchars($row['Status']) . "</td>";
         
         // 10.2 ปุ่มจัดการ (เหมือน indicators.php)

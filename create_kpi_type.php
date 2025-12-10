@@ -1,7 +1,7 @@
 <?php
 $page_title = "สร้างประเภทตัวชี้วัด";
 include 'templates/navbar.php';
-include 'config/conn.php'; 
+include 'config/conn.php';
 
 // 1. ดึงข้อมูลกลุ่มผู้ใช้ สำหรับใส่ใน Dropdown
 $sql_group = "SELECT Group_ID, Group_Name FROM group_use_kpis";
@@ -20,7 +20,7 @@ $res_all_kpi = mysqli_query($conn, $sql_all_kpi);
 $all_kpi_data = [];
 if ($res_all_kpi) {
     while ($row = mysqli_fetch_assoc($res_all_kpi)) {
-        $all_kpi_data[] = $row; 
+        $all_kpi_data[] = $row;
     }
 }
 $json_all_kpi = json_encode($all_kpi_data); // แปลงเป็น JSON string
@@ -33,16 +33,17 @@ $json_all_kpi = json_encode($all_kpi_data); // แปลงเป็น JSON str
         <h1 class="form-title">เพิ่มประเภทตัวชี้วัด</h1>
 
         <form action="config/checkcreate_kpi_type.php " method="POST">
-            
+
             <div class="form-group">
                 <label>ปีการศึกษา :</label>
                 <input type="number" name="Academic" id="academic_input" value="<?php echo date('Y') + 543; ?>" required>
+                    required>
             </div>
-            
+
             <div class="form-group">
                 <label>กลุ่มผู้ใช้ :</label>
                 <select name="Group_ID" id="group_select" required>
-                    <option value="">--- เลือกกลุ่มผู้ใช้ ---</option> 
+                    <option value="">--- เลือกกลุ่มผู้ใช้ ---</option>
                     <?php echo $options_html; ?>
                 </select>
             </div>
