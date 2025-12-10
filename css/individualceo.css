@@ -636,7 +636,7 @@
 
 
 .file-upload::before {
-    content: 'เลือกไฟล์'; 
+    content: 'ไฟล์'; 
     color: #333;
     display: inline-block;
     background: #f0f0f0; 

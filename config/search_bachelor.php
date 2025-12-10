@@ -16,7 +16,7 @@ if (isset($_GET['search_button'])) {
     $sql_kpi_list = "
     SELECT 
         e.Emp_code, t.Title_shortname, e.Fname_th, e.Lname_th, 
-        d.Department_name, uty.Type_name, ik.kpi_year, ik.Approve_id, gkm.Group_ID 
+        d.Department_name, uty.Type_name_th, ik.kpi_year, ik.Approve_id, gkm.Group_ID 
     FROM (
         SELECT DISTINCT Emp_code, Academic AS kpi_year, Approve_id 
         FROM individual_kpi WHERE Academic IS NOT NULL AND Academic != 0

@@ -115,7 +115,7 @@
 
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($row['Title_shortname'] . $row['Fname_th'] . " " . $row['Lname_th']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['Type_name']) . "</td>"; // (คอลัมน์นี้จะแสดง "อาจารย์" เสมอ)
+                    echo "<td>" . htmlspecialchars($row['Type_name_th']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['Department_name']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['kpi_year']) . "</td>"; 
                     echo '<td style="' . $status_color . ' font-weight: bold;">' . $status_msg . '</td>';

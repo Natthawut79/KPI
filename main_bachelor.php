@@ -74,7 +74,7 @@ include 'config/search_bachelor.php';
 
                         echo "<tr>";
                         echo "<td>" . htmlspecialchars($row['Title_shortname'] . $row['Fname_th'] . " " . $row['Lname_th']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['Type_name']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['Type_name_th']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['Department_name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['kpi_year']) . "</td>";
                         // --- แทรกโค้ดด้านล่างนี้ต่อจากบรรทัดด้านบน ---

@@ -6,7 +6,7 @@ $filter_user_type = isset($_GET['userType']) ? mysqli_real_escape_string($conn, 
 $filter_department = isset($_GET['department']) ? mysqli_real_escape_string($conn, $_GET['department']) : 'all';
 
 // 2. Query ข้อมูลสำหรับ Dropdown ประเภทผู้ใช้ (ยกเว้น Type_id = 1)
-$sql_user_types = "SELECT Type_id, Type_name FROM user_type WHERE Type_id != 1 ORDER BY Type_id";
+$sql_user_types = "SELECT Type_id, Type_name, Type_name_th FROM user_type WHERE Type_id != 1 ORDER BY Type_id";
 $result_user_types = mysqli_query($conn, $sql_user_types);
 
 // 3. Query ข้อมูลสำหรับ Dropdown สาขา
@@ -27,7 +27,7 @@ if (isset($_GET['search_button'])) {
     // 5.2 SQL Query หลัก
     // [แก้ไข] เปลี่ยนเป็น INNER JOIN เพื่อดึงเฉพาะคนที่มีข้อมูลในปีปัจจุบัน และเชื่อมเงื่อนไขปีการศึกษาที่นี่เลย
     $sql = "SELECT e.Emp_code, t.Title_shortname, e.Fname_th, e.Lname_th, 
-                   uty.Type_name, d.Department_name,
+                   uty.Type_name, uty.Type_name_th, d.Department_name,
                    gkm.Group_ID
             FROM employee e
             LEFT JOIN title t ON e.Title_id = t.Title_id

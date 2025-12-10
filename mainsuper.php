@@ -55,7 +55,7 @@ include 'config/search_mainsuper.php';
                         mysqli_data_seek($result_user_types, 0);
                         while ($type = mysqli_fetch_assoc($result_user_types)) {
                             $selected = ($filter_user_type == $type['Type_id']) ? 'selected' : '';
-                            echo '<option value="' . $type['Type_id'] . '" ' . $selected . '>' . htmlspecialchars($type['Type_name']) . '</option>';
+                            echo '<option value="' . $type['Type_id'] . '" ' . $selected . '>' . htmlspecialchars($type['Type_name_th']) . '</option>';
                         }
                     }
                     ?>
@@ -141,7 +141,7 @@ include 'config/search_mainsuper.php';
 
                         echo "<tr>";
                         echo "<td>" . htmlspecialchars($row['Title_shortname'] . $row['Fname_th'] . " " . $row['Lname_th']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['Type_name']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['Type_name_th']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['Department_name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['kpi_year']) . "</td>";
                         echo '<td style="' . $status_color . ' font-weight: bold;">' . $status_msg . '</td>';

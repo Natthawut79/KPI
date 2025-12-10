@@ -38,7 +38,7 @@ $current_academic_year = intval($current_year_ad) + 543;
                         mysqli_data_seek($result_user_types, 0); 
                         while ($type = mysqli_fetch_assoc($result_user_types)) {
                             $selected = ($filter_user_type == $type['Type_id']) ? 'selected' : '';
-                            echo '<option value="' . $type['Type_id'] . '" ' . $selected . '>' . htmlspecialchars($type['Type_name']) . '</option>';
+                            echo '<option value="' . $type['Type_id'] . '" ' . $selected . '>' . htmlspecialchars($type['Type_name_th']) . '</option>';
                         }
                     }
                     ?>
@@ -118,7 +118,7 @@ elseif ($result_employee && mysqli_num_rows($result_employee) > 0) {
         echo "<tr>";
         echo "<td>" . $count++ . "</td>";
         echo "<td>" . $emp_full_name . "</td>";
-        echo "<td>" . htmlspecialchars($row['Type_name']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['Type_name_th']) . "</td>";
         echo "<td>" . htmlspecialchars($row['Department_name']) . "</td>";
         
         echo '<td class="text-center">';
