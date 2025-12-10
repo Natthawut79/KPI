@@ -649,8 +649,9 @@ $saved_okr_data = null; // Placeholder
                         disabled>
                         <i class="fas fa-file-excel"></i> Export to Excel
                     </button>
-                    <small class="d-block mt-2 text-muted">รายงานจะ Export ได้ต่อเมื่อได้รับการอนุมัติแล้ว</small>
-
+                    <div class="mt-2 text-muted" style="font-size: 1rem; color: blue;">(รายงานจะ Export
+                        ได้ต่อเมื่อได้รับการอนุมัติแล้ว)
+                    </div>
                 <?php endif; ?>
 
             </div>
@@ -1132,6 +1133,16 @@ if (empty($actual_work_all_year_value)) {
     <?php echo $disable_all_attr; ?> <?php echo $disable_all_title; ?>>
     <i class="fas fa-save"></i> บันทึกผลการประเมิน
 </button>
+
+                    <?php if (isset($_SESSION['Type_id']) && $_SESSION['Type_id'] == 2 && $is_admin_edit_mode): ?>
+                        <a href="config/process_approval.php?approve_user_id=<?php echo htmlspecialchars($current_emp_code); ?>&year=<?php echo htmlspecialchars($current_academic_year); ?>"
+                           class="btn" 
+                           style="background-color: #007bff; color: #ffffff; font-size: 1rem; padding: 10px 30px; width: auto; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.15); border-radius: 50px; margin-left: 15px;"
+                           onclick="return confirm('คุณต้องการอนุมัติผลงานของ <?php echo htmlspecialchars($viewed_user_data['Fname_th'] . ' ' . $viewed_user_data['Lname_th']); ?> ใช่หรือไม่?')">
+                            <i class="fas fa-check-circle"></i> อนุมัติงาน
+                        </a>
+                    <?php endif; ?>
+
                 </div>
             </form>
         </div>
