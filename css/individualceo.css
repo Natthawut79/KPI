@@ -623,3 +623,42 @@
     display: block;
     margin-top: 5px;
 }
+
+.file-upload {
+    color: transparent !important; 
+    width: 120px;
+}
+
+
+.file-upload::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+
+.file-upload::before {
+    content: 'เลือกไฟล์'; 
+    color: #333;
+    display: inline-block;
+    background: #f0f0f0; 
+    border: 1px solid #999; 
+    border-radius: 4px;
+    padding: 6px 12px; 
+    outline: none;
+    white-space: nowrap;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    visibility: visible;
+    text-align: center;
+}
+
+
+.file-upload:hover::before {
+    border-color: #333;
+    background: #e0e0e0;
+}
+
+
+.file-upload:active::before {
+    background: #d0d0d0;
+}
