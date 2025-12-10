@@ -243,28 +243,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         });
-        // ค้นหาฟอร์ม
-        const form = document.getElementById('annualReviewForm2');
-        if (form) {
-            // ดักจับ event 'input' ที่เกิดขึ้นภายในฟอร์ม
-            form.addEventListener('input', function (e) {
-
-                // ตรวจสอบว่า event เกิดจาก input ที่มี class 'actual-h1' (ผลงานจริงครึ่งปีแรก) หรือไม่
-                if (e.target.classList.contains('actual-h1')) {
-
-                    // ค้นหาแถว (tr) ที่ input นี้อยู่
-                    const currentRow = e.target.closest('tr');
-                    if (currentRow) {
-                        // ค้นหา input 'actual-year' (ผลงานจริงทั้งปี) ที่อยู่ในแถวเดียวกัน
-                        const actualYearInput = currentRow.querySelector('.actual-year');
-                        if (actualYearInput) {
-                            // คัดลอกค่าจาก 'actual-h1' ไปยัง 'actual-year'
-                            actualYearInput.value = e.target.value;
-                        }
-                    }
-                }
-            });
-        }
     });
 
 
