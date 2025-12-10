@@ -810,7 +810,7 @@ if (empty($actual_work_all_year_value)) {
                                     <tr data-topic-id="<?php echo $topic_id; ?>"
                                         data-weight="<?php echo htmlspecialchars($item['weight']); ?>"
                                         data-kpi-type-id="<?php echo $kpi_type_id; ?>">
-                                        <td><?php echo htmlspecialchars($item['id']); ?></td>
+                                        <td class="text-left" style="vertical-align: top;"><?php echo htmlspecialchars($item['id']); ?></td>
                                         <td class="text-left" style="vertical-align: top;">
                                             <?php echo htmlspecialchars($item['name']); ?>
                                             <?php if (isset($item['Additional']) && strtoupper($item['Additional']) == 'YES'): ?>
