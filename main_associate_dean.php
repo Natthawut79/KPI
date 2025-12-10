@@ -44,11 +44,12 @@
         <table class="user-table">
             <thead>
                 <tr>
-                    <th>อาจารย์</th>
-                    <th>ประเภทผู้ใช้</th> 
-                    <th>สาขาวิชา</th>
-                    <th>ปีการประเมิน</th>
-                    <th>สถานะ</th>
+                    <th class="text-center">อาจารย์</th>
+                    <th class="text-center">ประเภทผู้ใช้</th> 
+                    <th class="text-center">สาขาวิชา</th>
+                    <th class="text-center">ปีการประเมิน</th>
+                    <th class="text-center">สถานะ</th>
+                    <th class="text-center">ดาวน์โหลด</th>
                     <th class="text-center">จัดการ</th>
                 </tr>
             </thead>
@@ -56,10 +57,10 @@
             <?php
             // 13. ตรรกะการแสดงผล (เหมือน main_bachelor)
             if (isset($search_error_message)) {
-                 echo "<tr><td colspan='6' class='text-center'>" . htmlspecialchars($search_error_message) . "</td></tr>";
+                 echo "<tr><td colspan='7' class='text-center'>" . htmlspecialchars($search_error_message) . "</td></tr>";
             }
             elseif ($result_kpi_list === null) {
-                echo "<tr><td colspan='6' class='text-center'>กรุณากรอกข้อมูล แล้วกดปุ่มค้นหา</td></tr>";
+                echo "<tr><td colspan='7' class='text-center'>กรุณากรอกข้อมูล แล้วกดปุ่มค้นหา</td></tr>";
             } 
             elseif (mysqli_num_rows($result_kpi_list) > 0) {
                 while ($row = mysqli_fetch_assoc($result_kpi_list)) {
@@ -90,6 +91,16 @@
                         } else {
                             $status_msg = "-";
                         }
+                        // --- สร้างปุ่ม Export (แยก logic ออกมา) ---
+                        $export_btn_html = "";
+                        if ($row['Approve_id'] == 2) {
+                            // ปุ่มสีเขียว (Export ได้)
+                            $export_link = $export_script . '?Emp_code=' . $emp_code . '&year=' . $kpi_year;
+                            $export_btn_html = '<a href="' . $export_link . '" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: normal; transition: background-color 0.3s;"><i class="fas fa-file-excel"></i> Export</a>';
+                        } else {
+                            // ปุ่มสีเทา (Disabled)
+                            $export_btn_html = '<span style="display: inline-block; padding: 10px 20px; background-color: #6c757d; color: white; border-radius: 4px; font-size: 12px; cursor: not-allowed; opacity: 0.6; font-weight: normal;"><i class="fas fa-file-excel"></i> Export</span>';
+                        }
 
                     
                         // ------------------------------------------
@@ -99,6 +110,8 @@
                     echo "<td>" . htmlspecialchars($row['Department_name']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['kpi_year']) . "</td>"; 
                     echo '<td style="' . $status_color . ' font-weight: bold;">' . $status_msg . '</td>';
+                    // แสดงปุ่ม Export ในช่องใหม่ (Download)
+                    echo '<td class="text-center">' . $export_btn_html . '</td>';
                     
                     echo '<td class="text-center">
                             <a href="' . $edit_link_href . '" class="action-btn btn-edit">ดูรายละเอียด</a>
