@@ -50,7 +50,7 @@ if (isset($_GET['search_button'])) {
         $sql .= " AND ik.Approve_id = 2"; 
     } else {
         // กรณี not_approved คือสถานะที่ไม่ใช่ 2 (เช่น 1 = รออนุมัติ)
-        $sql .= " AND ik.Approve_id != 2"; 
+        $sql .= " AND ik.Approve_id = 1"; 
     }
 
     // 5.5 Bind ชื่อ

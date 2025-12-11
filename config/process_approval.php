@@ -3,8 +3,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 include 'auth_superadmin.php'; 
-include 'conn.php';          
-
+include 'conn.php';
+include 'academic_year_resolver.php';          
+$current_academic_year = isset($_GET['year']) ? mysqli_real_escape_string($conn, $_GET['year']) : $current_academic_year;
 $alert_message = "";
 $emp_code = "";
 $approve_id_to_set = -1; 

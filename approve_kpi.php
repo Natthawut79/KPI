@@ -4,11 +4,7 @@ include 'templates/navbar.php';
 include 'config/auth_superadmin.php'; 
 include 'config/conn.php';         
 include 'config/search_approve.php'; 
-
-
-$current_year_ad = date('Y');
-$current_academic_year = intval($current_year_ad) + 543; 
-
+include 'config/academic_year_resolver.php';
 ?>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
