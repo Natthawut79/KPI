@@ -1,6 +1,4 @@
 <?php
-// === [ เพิ่มส่วนนี้เข้ามา ] ===
-// ตรวจสอบว่าเป็นการเรียก AJAX เพื่อขอ KPI Types หรือไม่
 if (isset($_GET['group_id'])) {
     include 'config/conn.php'; // เชื่อมต่อ DB เฉพาะเมื่อเป็น AJAX request
 
@@ -33,17 +31,11 @@ if (isset($_GET['group_id'])) {
     echo json_encode($types);
     exit(); // <<-- สำคัญมาก: หยุดไม่ให้แสดง HTML ด้านล่าง
 }
-// === [ สิ้นสุดส่วนที่เพิ่ม ] ===
-
-
-// โค้ดเดิมของ indicators.php (เริ่มจากตรงนี้)
 $page_title = "ตัวชี้วัด";
 include 'templates/navbar.php';
 include 'config/conn.php';
+include 'config/academic_year_resolver.php';
 
-
-// === [ แก้ไขส่วนรับค่า ] ===
-// รับค่าค้นหาจากฟอร์ม
 $Academic = isset($_POST['Academic']) ? mysqli_real_escape_string($conn, $_POST['Academic']) : '';
 $Group_ID = isset($_POST['group_use_kpis']) ? mysqli_real_escape_string($conn, $_POST['group_use_kpis']) : '';
 $KPI_type_id = isset($_POST['kpi_type']) ? mysqli_real_escape_string($conn, $_POST['kpi_type']) : ''; // <-- เพิ่มตัวแปรใหม่
@@ -51,12 +43,8 @@ $KPI_type_id = isset($_POST['kpi_type']) ? mysqli_real_escape_string($conn, $_PO
 // ตรวจสอบว่ามีการกดค้นหาหรือไม่
 $isSearch = ($_SERVER['REQUEST_METHOD'] === 'POST');
 
-// ✅ ถ้าผู้ใช้ไม่ได้กรอกอะไรเลย (ทั้งปี, กลุ่ม, และประเภท) ให้ไม่แสดงผลลัพธ์
+
 $noResult = (empty($Academic) && $Group_ID === 'empty' && empty($KPI_type_id));
-// === [ สิ้นสุดการแก้ไขส่วนรับค่า ] ===
-
-
-// สร้าง SQL พื้นฐาน
 $sql = "
     SELECT 
         kt.KPI_topic_id,
@@ -72,9 +60,6 @@ $sql = "
     JOIN important_level AS il ON kt.Important_level_no = il.Important_level_no
     WHERE 1
 ";
-
-// === [ แก้ไขส่วน SQL WHERE ] ===
-// เพิ่มเงื่อนไขเฉพาะเมื่อมีการค้นหา
 if (!empty($Academic)) {
     $sql .= " AND ktype.Academic LIKE '%$Academic%'";
 }
@@ -156,7 +141,7 @@ $result = ($isSearch && !$noResult) ? mysqli_query($conn, $sql) : false;
             <tbody>
                 <?php
                 // [เพิ่ม] กำหนดปีปัจจุบัน (พ.ศ.)
-                $current_year = date("Y") + 543;
+                $current_year = $current_academic_year;
 
                 if ($noResult) {
                     // กรณีเลือก "ช่องว่าง"

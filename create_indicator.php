@@ -2,17 +2,13 @@
 
 if (isset($_GET['group_id'])) {
     include 'config/conn.php'; // เชื่อมต่อ DB
+    include 'config/academic_year_resolver.php';
 
     $group_id = intval($_GET['group_id']);
     $types = [];
 
     if ($group_id > 0) {
-        // 1. กำหนดปีการศึกษาปัจจุบันจากเวลา Server (ปี ค.ศ. + 543 = ปี พ.ศ.)
-        $current_academic = date("Y") + 543;
-        
-        // (เผื่อกรณีต้องการปรับเดือนตัดรอบปีการศึกษา เช่น ถ้าเดือน >= 6 ให้เป็นปีใหม่)
-        // $current_academic = (date("m") >= 6) ? (date("Y") + 543) : (date("Y") + 543 - 1);
-
+        $current_academic = $current_academic_year;
         // 2. ดึงข้อมูล KPI Type โดยกรองทั้ง Group_ID และ Academic (ปีปัจจุบัน)
         $sql = "SELECT KPI_type_id, KPI_Type_Name_EN, KPI_Type_Name_TH 
                 FROM kpi_type 
@@ -68,14 +64,15 @@ if (isset($_GET['kpi_type_id'])) {
     // ส่งข้อมูลกลับเป็น JSON
     header('Content-Type: application/json');
     echo json_encode(['next_order' => $next_order]);
-    exit(); // หยุดการทำงาน
+    exit();
 }
 
 
 // โค้ดเดิมของ create_indicator.php (เริ่มจากตรงนี้)
 $page_title = "สร้างตัวชี้วัด";
 include 'templates/navbar.php'; 
-include 'config/conn.php'; 
+include 'config/conn.php';
+
 
 $KPI_topic_id = isset($_GET['KPI_topic_id']) ? $_GET['KPI_topic_id'] : '';
 

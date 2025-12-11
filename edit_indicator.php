@@ -2,6 +2,7 @@
 // === [ ส่วน PHP AJAX ] ===
 if (isset($_GET['group_id'])) {
     include 'config/conn.php'; // เชื่อมต่อ DB เฉพาะเมื่อเป็น AJAX request
+    include 'config/academic_year_resolver.php';
 
     $group_id = intval($_GET['group_id']);
     $types = [];
@@ -9,11 +10,11 @@ if (isset($_GET['group_id'])) {
     if ($group_id > 0) {
         $sql_ajax = "SELECT KPI_type_id, KPI_Type_Name_EN, KPI_Type_Name_TH
                      FROM kpi_type
-                     WHERE Group_ID = ?
+                     WHERE Group_ID = ? AND Academic = ?
                      ORDER BY Order_No ASC";
 
         $stmt = mysqli_prepare($conn, $sql_ajax);
-        mysqli_stmt_bind_param($stmt, "i", $group_id);
+        mysqli_stmt_bind_param($stmt, "is", $group_id, $current_academic_year);
         mysqli_stmt_execute($stmt);
         $result_ajax = mysqli_stmt_get_result($stmt);
 
@@ -37,7 +38,8 @@ if (isset($_GET['group_id'])) {
 // โค้ดเดิมของ edit_indicator.php
 $page_title = "แก้ไขตัวชี้วัด";
 include 'templates/navbar.php'; 
-include 'config/conn.php'; 
+include 'config/conn.php';
+include 'config/academic_year_resolver.php'; 
 
 // รับค่า KPI_topic_id จาก URL
 if (isset($_GET['KPI_topic_id'])) {
@@ -64,7 +66,7 @@ if (isset($_GET['KPI_topic_id'])) {
     }
 
     // [เพิ่ม] ตรวจสอบสิทธิ์การแก้ไข (ปีปัจจุบันหรือไม่)
-    $current_year = date("Y") + 543;
+    $current_year = $current_academic_year;
     $is_editable = ($row['Academic'] == $current_year);
 
     // กำหนด Style พื้นฐาน และ Style สำหรับ Disable
