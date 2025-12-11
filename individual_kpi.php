@@ -698,13 +698,13 @@ $saved_okr_data = null; // Placeholder
     <col class="temp-hidden-goal">
 
     <?php if ($active_submit_type_id != 2): ?>
-        <col style="width: 30%;">
+        <col style="width: <?php echo ($active_submit_type_id == 1) ? '30%' : '15%'; ?>;">
     <?php endif; ?>
 
     <col class="temp-hidden-goal">
 
     <?php if ($active_submit_type_id != 1): ?>
-        <col style="width: <?php echo ($active_submit_type_id == 2) ? '15%' : '15%'; ?>;">
+        <col style="width: 15%;">
     <?php endif; ?>
 
     <col style="<?php echo ($active_submit_type_id == 2) ? 'width: 15%;' : 'display: none;'; ?>">
@@ -1076,6 +1076,7 @@ if (empty($actual_work_all_year_value)) {
                                         </td>
 
                                         <td>
+                                            <input type="hidden" name="data[<?php echo $topic_id; ?>][Advice]" value="<?php echo htmlspecialchars($latest_score_data['Advice'] ?? ''); ?>">
                                             <textarea class="form-control" rows="2" 
     name="data[<?php echo $topic_id; ?>][Advice]" style="min-width: 100%;" 
     <?php 

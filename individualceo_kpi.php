@@ -688,32 +688,35 @@ $saved_okr_data = null;
 
                 <table class="table table-bordered kpi-detail-table" id="annual-review-table">
                     <colgroup>
-    <col style="width: 3%;">
-    <col style="width: 8%;"> <col style="width: 4%;">
-    <col style="width: 5%;">
-    <col style="width: 7%;"> <col style="width: 4%;">
-    <col class="temp-hidden-goal">
+                        <col style="width: 3%;">
+                        <col style="width: 8%;">
+                        <col style="width: 4%;">
+                        <col style="width: 5%;">
+                        <col style="width: 7%;">
+                        <col style="width: 4%;">
+                        <col class="temp-hidden-goal">
 
-    <?php if ($active_submit_type_id != 2): ?>
-        <col style="width: 30%;">
-    <?php endif; ?>
+                        <?php if ($active_submit_type_id != 2): ?>
+                            <col style="width: <?php echo ($active_submit_type_id == 1) ? '30%' : '15%'; ?>;">
+                        <?php endif; ?>
 
-    <col class="temp-hidden-goal">
+                        <col class="temp-hidden-goal">
 
-    <?php if ($active_submit_type_id != 1): ?>
-        <col style="width: <?php echo ($active_submit_type_id == 2) ? '15%' : '15%'; ?>;">
-    <?php endif; ?>
+                        <?php if ($active_submit_type_id != 1): ?>
+                            <col style="width: 15%;">
+                        <?php endif; ?>
 
-    <col style="<?php echo ($active_submit_type_id == 2) ? 'width: 15%;' : 'display: none;'; ?>">
+                        <col style="<?php echo ($active_submit_type_id == 2) ? 'width: 15%;' : 'display: none;'; ?>">
 
-    <col style="width: 6%;">
-    <col style="width: 6%;">
-    <col style="width: 5%;">
-    <col style="width: 4%;"> <col style="width: 3%;">
-    <col style="width: 4%;">
-    
-    <col style="width: 10%;">
-</colgroup>d
+                        <col style="width: 6%;">
+                        <col style="width: 6%;">
+                        <col style="width: 5%;">
+                        <col style="width: 4%;">
+                        <col style="width: 3%;">
+                        <col style="width: 4%;">
+
+                        <col style="width: 10%;">
+                    </colgroup>
                     <thead>
                         <tr>
                             <th rowspan="4">ข้อที่</th>
@@ -810,7 +813,9 @@ $saved_okr_data = null;
                                     <tr data-topic-id="<?php echo $topic_id; ?>"
                                         data-weight="<?php echo htmlspecialchars($item['weight']); ?>"
                                         data-kpi-type-id="<?php echo $kpi_type_id; ?>">
-                                        <td class="text-left" style="vertical-align: top;"><?php echo htmlspecialchars($item['id']); ?></td>
+                                        <td class="text-left" style="vertical-align: top;">
+                                            <?php echo htmlspecialchars($item['id']); ?>
+                                        </td>
                                         <td class="text-left" style="vertical-align: top;">
                                             <?php echo htmlspecialchars($item['name']); ?>
                                             <?php if (isset($item['Additional']) && strtoupper($item['Additional']) == 'YES'): ?>
@@ -1075,6 +1080,8 @@ $saved_okr_data = null;
                                         </td>
 
                                         <td>
+                                            <input type="hidden" name="data[<?php echo $topic_id; ?>][Advice]"
+                                                value="<?php echo htmlspecialchars($latest_score_data['Advice'] ?? ''); ?>">
                                             <textarea class="form-control" rows="2" name="data[<?php echo $topic_id; ?>][Advice]"
                                                 style="min-width: 100%;" <?php
                                                 if (!$is_editable || $_SESSION['Type_id'] != 2) {
@@ -1139,9 +1146,9 @@ $saved_okr_data = null;
 
                     <?php if (isset($_SESSION['Type_id']) && $_SESSION['Type_id'] == 2 && $is_admin_edit_mode): ?>
                         <a href="config/process_approval.php?approve_user_id=<?php echo htmlspecialchars($current_emp_code); ?>&year=<?php echo htmlspecialchars($current_academic_year); ?>"
-                           class="btn btn-primary"
-                           style="font-size: 1rem; padding: 10px 30px; width: auto; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.15); border-radius: 50px; margin-left: 15px;"
-                           onclick="return confirm('คุณต้องการอนุมัติผลงานของ <?php echo htmlspecialchars($viewed_user_data['Fname_th'] . ' ' . $viewed_user_data['Lname_th']); ?> ใช่หรือไม่?')">
+                            class="btn btn-primary"
+                            style="font-size: 1rem; padding: 10px 30px; width: auto; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.15); border-radius: 50px; margin-left: 15px;"
+                            onclick="return confirm('คุณต้องการอนุมัติผลงานของ <?php echo htmlspecialchars($viewed_user_data['Fname_th'] . ' ' . $viewed_user_data['Lname_th']); ?> ใช่หรือไม่?')">
                             <i class="fas fa-check-circle"></i> อนุมัติงาน
                         </a>
                     <?php endif; ?>
