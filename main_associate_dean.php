@@ -71,10 +71,12 @@
                     $edit_link_href = '#'; 
 
                     if ($group_id == 1) {
-                        $edit_link_href = 'individual_kpi.php?Emp_code=' . $emp_code . '&year=' . $kpi_year; //
-                    } elseif ($group_id == 2) {
-                        $edit_link_href = 'individualceo_kpi.php?Emp_code=' . $emp_code . '&year=' . $kpi_year; //
-                    }
+                            $edit_link_href = 'individual_kpi.php?Emp_code=' . $emp_code . '&year=' . $kpi_year;
+                            $export_script = 'export_kpi.php';
+                        } elseif ($group_id == 2) {
+                            $edit_link_href = 'individualceo_kpi.php?Emp_code=' . $emp_code . '&year=' . $kpi_year;
+                            $export_script = 'export_kpi2.php';
+                        }
                     // --- แทรกโค้ดด้านล่างนี้ต่อจากบรรทัดด้านบน ---
                         $status_msg = "";
                         $status_color = "";

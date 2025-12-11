@@ -89,10 +89,12 @@
                     $edit_link_href = '#'; 
 
                     if ($group_id == 1) {
-                        $edit_link_href = 'individual_kpi.php?Emp_code=' . $emp_code . '&year=' . $kpi_year; //
-                    } elseif ($group_id == 2) {
-                        $edit_link_href = 'individualceo_kpi.php?Emp_code=' . $emp_code . '&year=' . $kpi_year; //
-                    }
+                            $edit_link_href = 'individual_kpi.php?Emp_code=' . $emp_code . '&year=' . $kpi_year;
+                            $export_script = 'export_kpi.php';
+                        } elseif ($group_id == 2) {
+                            $edit_link_href = 'individualceo_kpi.php?Emp_code=' . $emp_code . '&year=' . $kpi_year;
+                            $export_script = 'export_kpi2.php';
+                        }
 
                     $status_msg = "";
                         $status_color = "";
@@ -121,7 +123,7 @@
                             $export_btn_html = '<span style="display: inline-block; padding: 10px 20px; background-color: #6c757d; color: white; border-radius: 4px; font-size: 12px; cursor: not-allowed; opacity: 0.6; font-weight: normal;"><i class="fas fa-file-excel"></i> Export</span>';
                         }
                     
-                        // ------------------------------------------
+                        
 
 
                     echo "<tr>";
