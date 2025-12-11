@@ -1,7 +1,8 @@
 <?php
 $page_title = "แก้ไขประเภทตัวชี้วัด";
 include 'templates/navbar.php'; 
-include 'config/conn.php'; // เชื่อมต่อ DB
+include 'config/conn.php';
+include 'config/academic_year_resolver.php';
 if (isset($_GET['KPI_type_id'])) {
     $KPI_type_id = mysqli_real_escape_string($conn, $_GET['KPI_type_id']);
 
@@ -10,7 +11,8 @@ if (isset($_GET['KPI_type_id'])) {
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($result);
 
-    $current_year = date("Y") + 543;
+
+    $current_year = $current_academic_year; 
     $is_editable = ($row['Academic'] == $current_year);
 
     // Style เพิ่มเติมสำหรับปุ่ม Disable

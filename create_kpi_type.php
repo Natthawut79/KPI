@@ -36,7 +36,7 @@ $json_all_kpi = json_encode($all_kpi_data); // แปลงเป็น JSON str
 
             <div class="form-group">
                 <label>ปีการศึกษา :</label>
-                <input type="number" name="Academic" id="academic_input" value="<?php echo date('Y') + 543; ?>" required>
+                <input type="number" name="Academic" id="academic_input" value="" required>
                     required>
             </div>
 

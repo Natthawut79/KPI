@@ -1,7 +1,8 @@
 <?php
 $page_title = "ประเภทตัวชี้วัด";
 include 'templates/navbar.php';
-include 'config/search_kpi_type.php'; // ✅ ดึงข้อมูลจากไฟล์แยก
+include 'config/search_kpi_type.php';
+include 'config/academic_year_resolver.php';
 ?>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -64,7 +65,7 @@ include 'config/search_kpi_type.php'; // ✅ ดึงข้อมูลจา�
             <tbody>
 <?php
 // [เพิ่ม] กำหนดปีปัจจุบัน (พ.ศ.) ไว้นอก Loop หรือใน Loop ก็ได้
-$current_year = date("Y") + 543;
+$current_year = $current_academic_year;
 
 if ($result_kpi === null) {
     echo "<tr><td colspan='8' class='text-center'>กรุณากรอกข้อมูล แล้วกดปุ่มค้นหา</td></tr>";
