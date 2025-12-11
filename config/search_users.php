@@ -7,7 +7,7 @@ $userType   = isset($_GET['userType']) ? trim($_GET['userType']) : '';
 $isSearch   = ($searchName !== '' || $userType !== ''); // ✅ เช็กว่ามีการค้นหาหรือไม่
 
 // ดึงประเภทผู้ใช้ทั้งหมด
-$sql_user_type = "SELECT Type_id, Type_name FROM user_type ORDER BY Type_id ASC";
+$sql_user_type = "SELECT Type_id, Type_name, Type_name_th FROM user_type ORDER BY Type_id ASC";
 $result_user_type = mysqli_query($conn, $sql_user_type);
 
 // ✅ ถ้าไม่มีการค้นหา → ไม่ต้อง query employee
@@ -36,7 +36,7 @@ if ($isSearch) {
     // ✅ แสดงข้อมูลตามเงื่อนไข (ทั้งหมด = ไม่กรองประเภท แต่ยังกรองชื่อ)
     $sql_employee = "
         SELECT e.Emp_code, t.Title_shortname, e.Fname_th, e.Lname_th, 
-               d.Department_name, ut.Type_name
+               d.Department_name, ut.Type_name, ut.Type_name_th
         FROM employee e
         JOIN department d ON e.Department_id = d.Department_id
         JOIN title t ON e.Title_id = t.Title_id

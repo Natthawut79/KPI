@@ -32,7 +32,7 @@ include 'config/search_users.php'; // ✅ ดึงข้อมูลจาก�
                         mysqli_data_seek($result_user_type, 0);
                         while ($type = mysqli_fetch_assoc($result_user_type)) {
                             $selected = ($userType == $type['Type_id']) ? 'selected' : '';
-                            echo '<option value="' . $type['Type_id'] . '" ' . $selected . '>' . htmlspecialchars($type['Type_name']) . '</option>';
+                            echo '<option value="' . $type['Type_id'] . '" ' . $selected . '>' . htmlspecialchars($type['Type_name_th']) . '</option>';
                         }
                     }
                     ?>
@@ -64,7 +64,7 @@ if ($result_employee === null) {
         echo "<tr>";
         echo "<td>" . $count++ . "</td>";
         echo "<td>" . $row['Title_shortname'] . $row['Fname_th'] . " " . $row['Lname_th'] . "</td>";
-        echo "<td>" . $row['Type_name'] . "</td>";
+        echo "<td>" . $row['Type_name_th'] . "</td>";
         echo "<td>" . $row['Department_name'] . "</td>";
         echo '<td class="text-center">
                 <a href="profile.php?Emp_code=' . $row['Emp_code'] . '" class="action-btn btn-edit">แก้ไข</a>
