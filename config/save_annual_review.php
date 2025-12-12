@@ -262,20 +262,16 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
         }
         
 
-        // --- [START EDIT] กำหนดสถานะ Approve ---
-        $approve_id_for_h1 = 1; // ค่าเริ่มต้น (สำหรับ User บันทึกเอง)
+       
+        $approve_id_for_h1 = 1; 
         $approve_id_for_h2 = 1; 
 
-        // ตรวจสอบว่า User ที่ Login ($current_emp_code) ตรงกับ เจ้าของข้อมูล ($emp_code_for_sql) หรือไม่
-        // ถ้าไม่ตรงกัน แสดงว่าเป็น Admin/Superadmin มาบันทึก -> เปลี่ยน Approve_id เป็น 3
+        
         if ($current_emp_code !== $emp_code_for_sql) {
             $approve_id_for_h1 = 3;
             $approve_id_for_h2 = 3;
         }
-        // --- [END EDIT] ---
-
-
-
+        
         // Process H1 (Submit Type 1)
         if (isset($topic_data[1])) {
             $goal_h1 = isset($topic_data[1]['Goal_job']) && $topic_data[1]['Goal_job'] !== '' ? $topic_data[1]['Goal_job'] : null;

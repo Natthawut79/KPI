@@ -270,6 +270,10 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
 
         $approve_id_for_h1 = 1;
         $approve_id_for_h2 = 1;
+        if ($current_emp_code !== $emp_code_for_sql) {
+            $approve_id_for_h1 = 3;
+            $approve_id_for_h2 = 3;
+        }
 
 
         // Process H1 (Submit Type 1)
