@@ -662,3 +662,85 @@
 .file-upload:active::before {
     background: #d0d0d0;
 }
+/* --- ส่วนจัดการ Layout ของ Tab และ User Info Box --- */
+
+/* คอนเทนเนอร์หลักของ Tab และข้อมูลผู้ใช้ */
+.tab-header-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 0;
+}
+
+/* กลุ่มปุ่ม Tab */
+.tabs-group-wrapper {
+    margin-bottom: -1px;
+}
+
+/* กล่องข้อมูลผู้ใช้ (User Info Box) */
+.user-info-card {
+    margin-bottom: 5px;
+    background-color: #ffffff;
+    border: 1px solid #d1d9e6;  /* เส้นขอบสีเทาตามโค้ด */
+    border-radius: 8px;         /* มุมมน 8px */
+    padding: 6px 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* เงาบาง */
+    font-family: 'Sarabun', sans-serif;
+}
+
+/* ส่วนแสดงรูปและชื่อ (ฝั่งซ้ายของกล่อง) */
+.user-profile-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-right: 1px solid #eee;
+    padding-right: 15px;
+}
+
+/* ไอคอนผู้ใช้ */
+.user-icon-badge {
+    width: 24px;
+    height: 24px;
+    background: #e3f2fd;
+    color: #1565c0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+}
+
+/* ชื่อผู้ใช้ */
+.user-name-label {
+    font-weight: 700;
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
+
+/* ส่วนแสดงปีและรอบ (ฝั่งขวาของกล่อง) */
+.user-period-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+/* ไอคอนปฏิทิน */
+.calendar-icon-gray {
+    color: #7f8c8d;
+    margin-right: 3px;
+}
+
+/* ป้ายกำกับรอบการประเมิน */
+.period-badge-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}

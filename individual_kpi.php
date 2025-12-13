@@ -521,7 +521,6 @@ $saved_okr_data = null; // Placeholder
 
 ?>
 
-<?php // Navbar is included at the top now ?>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="css/individualceo.css">
@@ -530,9 +529,7 @@ $saved_okr_data = null; // Placeholder
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
 
 <div class="container">
-
     <div class="status-header-bar"></div>
-
     <?php if (!$is_editable): ?>
         <div class="alert-warning"
             style="background-color: #fff3cd; color: #856404; padding: 15px; margin-bottom: 20px; border-radius: 5px; text-align: center; border: 1px solid #ffeeba;">
@@ -544,12 +541,43 @@ $saved_okr_data = null; // Placeholder
             <?php endif; ?>
         </div>
     <?php endif; ?>
-    <div class="tab-container">
-        <button class="tab-link active" data-tab="main-evaluation-form">ตัวชี้วัดผลสำเร็จของงาน</button>
-        <button class="tab-link" data-tab="define-kpi-form">แบบประเมินประจำปี</button>
-        <button class="tab-link" data-tab="okr-evaluation-form">แบบประเมินผลการปฏิบัติงาน (OKRs)</button>
-    </div>
 
+    <div class="tab-container tab-header-container">
+        <div class="tabs-group tabs-group-wrapper">
+            <button class="tab-link active" data-tab="main-evaluation-form">ตัวชี้วัดผลสำเร็จของงาน</button>
+            <button class="tab-link" data-tab="define-kpi-form">แบบประเมินประจำปี</button>
+            <button class="tab-link" data-tab="okr-evaluation-form">แบบประเมินผลการปฏิบัติงาน (OKRs)</button>
+        </div>
+
+        <?php if ($is_viewing_other): ?>
+            <div class="user-info-box user-info-card">
+                
+                <div class="user-profile-section">
+                    <div class="user-icon-badge">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="user-name-label">
+                        <?php echo htmlspecialchars($viewed_user_data['Fname_th'] . ' ' . $viewed_user_data['Lname_th']); ?>
+                    </span>
+                </div>
+
+                <div class="user-period-section">
+                    <span>
+                        <i class="fas fa-calendar calendar-icon-gray"></i> 
+                        ปี <?php echo htmlspecialchars($current_academic_year); ?>
+                    </span>
+                    
+                    <span class="period-badge-success">
+                        <?php 
+                            if ($active_submit_type_id == 1) echo 'ครึ่งปีแรก';
+                            elseif ($active_submit_type_id == 2) echo 'ครึ่งปีหลัง';
+                            else echo 'ผลงานทั้งปี';
+                        ?>
+                    </span>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
     <div id="main-evaluation-form" class="tab-content active">
         <div class="title-container">
             <div class="page-title-header text-center">
