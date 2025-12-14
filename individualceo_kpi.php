@@ -549,7 +549,7 @@ $saved_okr_data = null;
 
         <?php if ($is_viewing_other): ?>
             <div class="user-info-box user-info-card">
-                
+
                 <div class="user-profile-section">
                     <div class="user-icon-badge">
                         <i class="fas fa-user"></i>
@@ -561,15 +561,18 @@ $saved_okr_data = null;
 
                 <div class="user-period-section">
                     <span>
-                        <i class="fas fa-calendar calendar-icon-gray"></i> 
+                        <i class="fas fa-calendar calendar-icon-gray"></i>
                         ปี <?php echo htmlspecialchars($current_academic_year); ?>
                     </span>
-                    
+
                     <span class="period-badge-success">
-                        <?php 
-                            if ($active_submit_type_id == 1) echo 'ครึ่งปีแรก';
-                            elseif ($active_submit_type_id == 2) echo 'ครึ่งปีหลัง';
-                            else echo 'ผลงานทั้งปี';
+                        <?php
+                        if ($active_submit_type_id == 1)
+                            echo 'ครึ่งปีแรก';
+                        elseif ($active_submit_type_id == 2)
+                            echo 'ครึ่งปีหลัง';
+                        else
+                            echo 'ผลงานทั้งปี';
                         ?>
                     </span>
                 </div>
@@ -588,10 +591,10 @@ $saved_okr_data = null;
             <table class="table table-bordered kpi-table" id="kpi-evaluation-table">
                 <thead>
                     <tr>
-                        <th rowspan="2" style="width: 5%;">ลำดับ</th>
-                        <th rowspan="2" style="width: 20%;">ประเภทตัวชี้วัด</th>
-                        <th rowspan="2" style="width: 8%;">น้ำหนัก (%)</th>
-                        <th rowspan="2" style="width: 42%;">หัวข้อตัวชี้วัด</th>
+                        <th rowspan="2" style="width: 5%;  text-align: center; vertical-align: top;">ลำดับ</th>
+                        <th rowspan="2" style="width: 20%;  text-align: center; vertical-align: top;">ประเภทตัวชี้วัด</th>
+                        <th rowspan="2" style="width: 8%;  text-align: center; vertical-align: top;">น้ำหนัก (%)</th>
+                        <th rowspan="2" style="width: 42%;  text-align: center; vertical-align: top;">หัวข้อตัวชี้วัด</th>
                         <th colspan="3">ระดับความสำคัญ</th>
                     </tr>
                     <tr>
@@ -694,23 +697,29 @@ $saved_okr_data = null;
                 <h2>เกณฑ์การให้คะแนนประเมินประจำปี / Annual Review Rating</h2>
             </div>
             <div class="rating-scale-container">
-                <div class="rating-box"><strong>1</strong>
-                    <p>ต่ำกว่าเป้าหมายมาก<br>Very Low Achievement</p><span>ต่ำกว่า 40%</span>
-                </div>
-                <div class="rating-box"><strong>2</strong>
-                    <p>ต่ำกว่าเป้าหมายน้อย<br>Under Achievement</p><span>40%-59%</span>
-                </div>
-                <div class="rating-box"><strong>3</strong>
-                    <p>สำเร็จตามเป้าหมายพอควร<br>Partial Achievement</p><span>60%-79%</span>
-                </div>
-                <div class="rating-box"><strong>4</strong>
-                    <p>สำเร็จตามเป้าหมายส่วนใหญ่<br>Nearly Achievement of Target</p><span>80%-99%</span>
-                </div>
-                <div class="rating-box"><strong>5</strong>
-                    <p>สำเร็จตามเป้าหมาย<br>Achievement of Target</p><span>100%</span>
-                </div>
-            </div>
+                <?php
+                $sql_criteria = "SELECT * FROM criteria ORDER BY criteria_id ASC";
+                $result_criteria = $conn->query($sql_criteria);
 
+                if ($result_criteria && $result_criteria->num_rows > 0) {
+                    // วนลูปแสดงข้อมูลทีละแถว
+                    while ($row = $result_criteria->fetch_assoc()) {
+                        ?>
+                        <div class="rating-box">
+                            <strong><?php echo $row['criteria_id']; ?></strong>
+                            <p>
+                                <?php echo htmlspecialchars($row['criteria_tname']); ?><br>
+                                <?php echo htmlspecialchars($row['criteria_ename']); ?>
+                            </p>
+                            <span><?php echo htmlspecialchars($row['criteria_scale']); ?></span>
+                        </div>
+                        <?php
+                    }
+                } else {
+                    echo "<p>ไม่พบข้อมูลเกณฑ์การประเมิน</p>";
+                }
+                ?>
+            </div>
             <form action="config/save_annual_review.php" method="POST" id="annualReviewForm2"
                 enctype="multipart/form-data">
                 <input type="hidden" name="emp_code_to_save" value="<?php echo htmlspecialchars($current_emp_code); ?>">
@@ -751,12 +760,12 @@ $saved_okr_data = null;
                     </colgroup>
                     <thead>
                         <tr>
-                            <th rowspan="4">ข้อที่</th>
-                            <th rowspan="4">ตัวชี้วัดผลงาน</th>
-                            <th rowspan="4">หน่วยวัด</th>
-                            <th rowspan="4">เป้าหมาย<br>ทั้งปี</th>
-                            <th rowspan="4">เกณฑ์การให้คะแนน</th>
-                            <th rowspan="4">ค่าน้ำหนัก<br>(หัวข้อ)</th>
+                            <th rowspan="4" style="vertical-align: top; text-align: center;">ข้อที่</th>
+                            <th rowspan="4" style="vertical-align: top; text-align: center;">ตัวชี้วัดผลงาน</th>
+                            <th rowspan="4" style="vertical-align: top; text-align: center;">หน่วยวัด</th>
+                            <th rowspan="4" style="vertical-align: top; text-align: center;">เป้าหมาย<br>ทั้งปี</th>
+                            <th rowspan="4" style="vertical-align: top; text-align: center;">เกณฑ์การให้คะแนน</th>
+                            <th rowspan="4" style="vertical-align: top; text-align: center;">ค่าน้ำหนัก</th>
 
                             <th
                                 colspan="<?php echo ($active_submit_type_id == 1 || $active_submit_type_id == 2) ? '9' : '10'; ?>">
@@ -779,23 +788,23 @@ $saved_okr_data = null;
 
                         <tr>
                             <?php if ($active_submit_type_id != 2): ?>
-                                <th rowspan="2">ผลงานจริง<br>ครึ่งปีแรก</th>
+                                <th rowspan="2" style="vertical-align: top; text-align: center;">ผลงานจริง<br>ครึ่งปีแรก</th>
                             <?php endif; ?>
 
                             <?php if ($active_submit_type_id != 1): ?>
-                                <th rowspan="2">ผลงานจริง<br>ครึ่งปีหลัง</th>
+                                <th rowspan="2" style="vertical-align: top; text-align: center;">ผลงานจริง<br>ครึ่งปีหลัง</th>
                             <?php endif; ?>
 
-                            <th rowspan="2" style="<?php echo ($active_submit_type_id == 2) ? '' : 'display:none;'; ?>">
+                            <th rowspan="2" style="<?php echo ($active_submit_type_id == 2) ? '' : 'display:none;'; ?> text-align: center; vertical-align: top;">
                                 ผลงานจริง<br><u>ทั้งปี</u></th>
-                            <th rowspan="2">อัปโหลดไฟล์<br>(หลักฐาน)</th>
-                            <th rowspan="2">URL ไฟล์</th>
+                            <th rowspan="2" style="vertical-align: top; text-align: center;">อัปโหลดไฟล์<br>(หลักฐาน)</th>
+                            <th rowspan="2" style="vertical-align: top; text-align: center;">URL ไฟล์</th>
                             <th colspan="4">ผลเทียบเป้าหมาย</th>
-                            <th rowspan="2" style="width: 10%;">หมายเหตุ</th>
+                            <th rowspan="2" style="vertical-align: top; text-align: center;" style="width: 15%;">หมายเหตุ</th>
                         </tr>
                         <tr>
-                            <th> ค่าน้ำหนัก</th>
-                            <th>ผลคะแนน<br>(1-5)</th>
+                            <th style="vertical-align: top; text-align: center;"> ค่าน้ำหนัก</th>
+                            <th style="vertical-align: top; text-align: center;">ผลคะแนน<br>(1-5)</th>
                             <th colspan="2">คะแนนรวม<br>(น้ำหนักxผลคะแนน)</th>
                         </tr>
                     </thead>
@@ -943,7 +952,7 @@ $saved_okr_data = null;
                                         ?>
 
                                         <?php if ($active_submit_type_id != 2): ?>
-                                            <td>
+                                            <td style="vertical-align:top; text-align: center;">
                                                 <textarea class="form-control actual-h1" rows="3"
                                                     name="data[<?php echo $topic_id; ?>][1][Actual_work]" <?php echo $disable_all_attr; ?>><?php echo htmlspecialchars($actual_h1_value_to_show); ?></textarea>
                                             </td>
@@ -958,20 +967,20 @@ $saved_okr_data = null;
                                         </td>
 
                                         <?php if ($active_submit_type_id != 1): ?>
-                                            <td>
+                                            <td style="vertical-align:top; text-align: center;">
                                                 <textarea class="form-control actual-h2" rows="3"
                                                     name="data[<?php echo $topic_id; ?>][2][Actual_work]" placeholder="ผลงานจริง" <?php echo $disable_all_attr; ?>><?php echo htmlspecialchars($saved_h2['Actual_work'] ?? ''); ?></textarea>
                                             </td>
                                         <?php endif; ?>
 
-                                        <td style="<?php echo ($active_submit_type_id == 2) ? '' : 'display:none;'; ?>">
+                                        <td style="<?php echo ($active_submit_type_id == 2) ? '' : 'display:none;'; ?> text-align: center; vertical-align: top;">
                                             <textarea class="form-control actual-year" rows="3"
                                                 name="data[<?php echo $topic_id; ?>][Actual_work_all_year]" <?php
                                                    // เงื่อนไข: ถ้าเป็นรอบ 2 และระบบเปิด ($is_editable) ให้พิมพ์ได้ (ไม่ disable)
                                                    echo ($active_submit_type_id == 2 && $is_editable) ? '' : 'disabled';
                                                    ?>><?php echo htmlspecialchars($actual_work_all_year_value); ?></textarea>
                                         </td>
-                                        <td>
+                                        <td style="text-align: center; vertical-align: top;">
                                             <?php
                                             // 1. สร้างตัวแปรเก็บข้อมูลไฟล์ที่จะดึงมาแสดงใน input (Auto-fill)
                                             $files_to_prefill = [];
@@ -1048,7 +1057,7 @@ $saved_okr_data = null;
                                             </div>
 
                                         </td>
-                                        <td>
+                                        <td style="text-align: center; vertical-align: top;">
                                             <?php
                                             // เตรียม URL ที่จะดึงมาอัตโนมัติ (Auto-fill)
                                             $auto_filled_url = "";
@@ -1090,9 +1099,9 @@ $saved_okr_data = null;
                                             ?>
                                         </td>
 
-                                        <td><?php echo htmlspecialchars($item['weight']); ?></td>
+                                        <td style="vertical-align:top; text-align: center;"><?php echo htmlspecialchars($item['weight']); ?></td>
 
-                                        <td class="total-score-cell">
+                                        <td style="vertical-align:top; text-align: center;"class="total-score-cell">
                                             <select class="form-control score-input" name="data[<?php echo $topic_id; ?>][score]"
                                                 oninput="calculateRowScore(this)" <?php echo $disable_all_attr; ?>>
                                                 <option value="" <?php echo ($score_value == '') ? 'selected' : ''; ?>></option>
@@ -1104,14 +1113,14 @@ $saved_okr_data = null;
                                             </select>
                                         </td>
 
-                                        <td class="total-score-cell" colspan="2">
+                                        <td style="vertical-align:top; text-align: center;" class="total-score-cell" colspan="2">
                                             <input type="number" step="0.01" class="form-control total-score"
                                                 name="data[<?php echo $topic_id; ?>][total_score]"
                                                 value="<?php echo number_format(floatval($total_score_value), 2, '.', ''); ?>"
                                                 readonly style="background-color: #e9ecef;">
                                         </td>
 
-                                        <td>
+                                        <td style="vertical-align:top; text-align: center;">
                                             <input type="hidden" name="data[<?php echo $topic_id; ?>][Advice]"
                                                 value="<?php echo htmlspecialchars($latest_score_data['Advice'] ?? ''); ?>">
                                             <textarea class="form-control" rows="2" name="data[<?php echo $topic_id; ?>][Advice]"
@@ -1275,31 +1284,30 @@ $saved_okr_data = null;
                     <tbody>
                         <?php foreach ($kpi_data as $kpi_type_id => $kpi_type): ?>
                             <tr data-kpi-type-id="<?php echo $kpi_type_id; ?>">
-                                <td><?php echo htmlspecialchars($kpi_type['Order_No']); ?></td>
+                                <td style = "text-align: center; vertical-align: top;"><?php echo htmlspecialchars($kpi_type['Order_No']); ?></td>
                                 <td><?php echo htmlspecialchars($kpi_type['KPI_Type_Name_EN'] . '   ' . htmlspecialchars($kpi_type['KPI_Type_Name_TH'])); ?>
                                 </td>
-                                <td class="okr-type-weight"><?php echo htmlspecialchars($kpi_type['TypeWeight']); ?>
+                                <td style = "text-align: center; vertical-align: top;" class="okr-type-weight"><?php echo htmlspecialchars($kpi_type['TypeWeight']); ?>
                                 </td>
-                                <td><input type="text" class="form-control okr-section-score"
-                                        value="<?php echo number_format(floatval($saved_category_scores[$kpi_type_id] ?? 0), 2); ?>"
-                                        readonly></td>
+                                <td style = "text-align: right; vertical-align: top;" class="form-control okr-section-score"><?php echo number_format(floatval($saved_category_scores[$kpi_type_id] ?? 0), 2); ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                         <tr>
                             <td colspan="2" class="text-right"><strong>Score/คะแนนรวม (เต็ม
                                     <?php echo $max_possible_score_display; ?> คะแนน)</strong></td>
-                            <td colspan="2"><input type="text" id="okr-grand-total-score-500" class="form-control"
-                                    value="<?php echo number_format(floatval($saved_total_scores['Score_500_max'] ?? 0), 2); ?>"
-                                    readonly></td>
+                            <td style = "text-align: right; vertical-align: top;" colspan="2" id="okr-grand-total-score-500" class="form-control">
+                            <?php echo number_format(floatval($saved_total_scores['Score_500_max'] ?? 0), 2); ?>
+                            </td>
                         </tr>
                         <tr>
                             <td colspan="2" class="text-right"><strong>Score/คะแนนรวม (50 คะแนน)</strong></td>
-                            <td colspan="2"><input type="text" id="okr-grand-total-score-100" class="form-control"
-                                    value="<?php echo number_format(floatval($saved_total_scores['Score_100_max'] ?? 0), 2); ?>"
-                                    readonly></td>
+                            <td style = "text-align: right; vertical-align: top;" colspan="2"id="okr-grand-total-score-100" class="form-control">
+                                    <?php echo number_format(floatval($saved_total_scores['Score_100_max'] ?? 0), 2); ?>
+                            </td>
                         </tr>
                     </tbody>
-                </table>
+                <!-- </table>
                 <div class="section-title-bar">สรุปความคิดเห็นเพิ่มเติม (จากหัวหน้างาน/ผู้บังคับบัญชา)</div>
                 <table class="evaluation-table">
                     <thead>
@@ -2581,7 +2589,7 @@ $saved_okr_data = null;
                             <td><textarea class="form-control"></textarea></td>
                         </tr>
                     </tbody>
-                </table>
+                </table> -->
 
 
             </form>
