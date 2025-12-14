@@ -241,7 +241,7 @@ $loaded_kpi_type_id = isset($row['KPI_type_id']) ? $row['KPI_type_id'] : null;
                 <input type="text" name="criteria_1"
                     value="<?php echo isset($row['criteria_1']) ? htmlspecialchars($row['criteria_1']) : ''; ?>">
 
-                <label>เกณฑ์การให้คะแนนช่องที่ 2:</label>
+                <label>เกณฑ์การให้คะแนน ช่องที่ 2:</label>
                 <input type="text" name="criteria_2"
                     value="<?php echo isset($row['criteria_2']) ? htmlspecialchars($row['criteria_2']) : ''; ?>">
 
@@ -266,10 +266,9 @@ $loaded_kpi_type_id = isset($row['KPI_type_id']) ? $row['KPI_type_id'] : null;
 
             <div class="form-group">
                 <label>หมายเหตุ :</label>
-                <input type="text" name="Description_text"
-                    value="<?php echo isset($row['Description_text']) ? htmlspecialchars($row['Description_text']) : ''; ?>">
+                <textarea name="Description_text" row ="5"
+                    value="<?php echo isset($row['Description_text']) ? htmlspecialchars($row['Description_text']) : ''; ?>"></textarea>
             </div>
-
             <div class="form-group">
                 <label>ระดับความสำคัญ :</label>
                 <select name="Important_level_no" required>

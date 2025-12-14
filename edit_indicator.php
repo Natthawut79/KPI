@@ -204,7 +204,7 @@ if (isset($_GET['KPI_topic_id'])) {
                 <label>เกณฑ์การให้คะแนน ช่องที่ 3:</label>
                 <input type="text" name="criteria_3" value="<?php echo isset($row['criteria_3']) ? htmlspecialchars($row['criteria_3']) : ''; ?>">
 
-                <label>เกณฑ์การให้คะแน ช่องที่ 4:</label>
+                <label>เกณฑ์การให้คะแนน ช่องที่ 4:</label>
                 <input type="text" name="criteria_4" value="<?php echo isset($row['criteria_4']) ? htmlspecialchars($row['criteria_4']) : ''; ?>">
 
                 <label>เกณฑ์การให้คะแนน ช่องที่ 5:</label>
@@ -229,7 +229,7 @@ if (isset($_GET['KPI_topic_id'])) {
             </div>
             <div class="form-group">
                 <label>หมายเหตุ :</label>
-                <input type="text" name="Description_text" value="<?php echo htmlspecialchars($row['Description_text']); ?>">
+                <textarea name="Description_text" rows="5"><?php echo htmlspecialchars($row['Description_text']); ?></textarea>
             </div>
             <div class="button-container">
                 <button type="submit" class="save-btn"
