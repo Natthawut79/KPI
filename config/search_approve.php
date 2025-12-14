@@ -1,5 +1,5 @@
 <?php
-
+include 'config/academic_year_resolver.php';
 $filter_status = isset($_GET['status']) ? $_GET['status'] : 'not_approved'; 
 $search_name = isset($_GET['searchName']) ? mysqli_real_escape_string($conn, $_GET['searchName']) : '';
 $filter_user_type = isset($_GET['userType']) ? mysqli_real_escape_string($conn, $_GET['userType']) : 'all';
@@ -22,7 +22,7 @@ if (isset($_GET['search_button'])) {
 
     // 5.1 ดึงปีการศึกษาปัจจุบัน
     $current_year_ad = date('Y');
-    $current_academic_year = intval($current_year_ad) + 543;
+    $searchYear = $current_academic_year;
 
     // 5.2 SQL Query หลัก
     // [แก้ไข] เปลี่ยนเป็น INNER JOIN เพื่อดึงเฉพาะคนที่มีข้อมูลในปีปัจจุบัน และเชื่อมเงื่อนไขปีการศึกษาที่นี่เลย
