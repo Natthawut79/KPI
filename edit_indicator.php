@@ -99,9 +99,10 @@ if (isset($_GET['KPI_topic_id'])) {
         <form action="config/checkedit_indicator.php" method="POST" onsubmit="return confirm('คุณต้องการบันทึกการแก้ไขใช่หรือไม่?');">
             <input type="hidden" name="KPI_topic_id" value="<?php echo htmlspecialchars($row['KPI_topic_id']); ?>">
 
-            <div class="form-group">
-                <label>กลุ่มผู้ใช้ตัวชี้วัด :</label>
-                <div class="radio-container">
+            <div class="form-group" style="display: flex; flex-direction: row; align-items: center; flex-wrap: nowrap;">
+                <label style="margin: 0; margin-right: 15px; white-space: nowrap;">กลุ่มผู้ใช้ตัวชี้วัด :</label>
+                
+                <div class="radio-container" style="display: flex; flex-direction: row; align-items: center;">
                 <?php
                     // ดึงข้อมูลกลุ่มผู้ใช้จาก DB
                     $sql_groups = "SELECT Group_ID, Group_Name FROM group_use_kpis ORDER BY Group_ID ASC";
@@ -111,8 +112,13 @@ if (isset($_GET['KPI_topic_id'])) {
                         while ($group = mysqli_fetch_assoc($res_groups)) {
                             // ตรวจสอบว่าควร check radio ไหน
                             $checked = ($loaded_group_id == $group['Group_ID']) ? 'checked' : '';
-                            echo "<label style='display: inline-block; margin-right: 20px;'>";
-                            echo "<input type='radio' name='Group_ID' id='group_radio_{$group['Group_ID']}' value='{$group['Group_ID']}' $checked required> ";
+                            
+                            // Style ของแต่ละตัวเลือก:
+                            // display: flex -> จัด radio คู่กับข้อความ
+                            // white-space: nowrap -> ห้ามตัดคำขึ้นบรรทัดใหม่
+                            // margin-right: 25px -> เว้นระยะห่างระหว่างตัวเลือกที่ 1 กับ 2
+                            echo "<label style='display: flex; align-items: center; margin: 0; margin-right: 25px; cursor: pointer; white-space: nowrap;'>";
+                            echo "<input type='radio' name='Group_ID' id='group_radio_{$group['Group_ID']}' value='{$group['Group_ID']}' $checked required style='margin-right: 8px;'> ";
                             echo htmlspecialchars($group['Group_Name']);
                             echo "</label>";
                         }
@@ -188,6 +194,21 @@ if (isset($_GET['KPI_topic_id'])) {
             <div class="form-group">
                 <label>เกณฑ์การให้คะแนนตามผลงานที่ทำได้ :</label>
                 <textarea name="Score_criteria" rows="5"><?php echo htmlspecialchars($row['Score_criteria']); ?></textarea>
+                
+                <label>เกณฑ์การให้คะแนน ช่องที่ 1:</label>
+                <input type="text" name="criteria_1" value="<?php echo isset($row['criteria_1']) ? htmlspecialchars($row['criteria_1']) : ''; ?>">
+
+                <label>เกณฑ์การให้คะแนน ช่องที่ 2:</label>
+                <input type="text" name="criteria_2" value="<?php echo isset($row['criteria_2']) ? htmlspecialchars($row['criteria_2']) : ''; ?>">
+
+                <label>เกณฑ์การให้คะแนน ช่องที่ 3:</label>
+                <input type="text" name="criteria_3" value="<?php echo isset($row['criteria_3']) ? htmlspecialchars($row['criteria_3']) : ''; ?>">
+
+                <label>เกณฑ์การให้คะแน ช่องที่ 4:</label>
+                <input type="text" name="criteria_4" value="<?php echo isset($row['criteria_4']) ? htmlspecialchars($row['criteria_4']) : ''; ?>">
+
+                <label>เกณฑ์การให้คะแนน ช่องที่ 5:</label>
+                <input type="text" name="criteria_5" value="<?php echo isset($row['criteria_5']) ? htmlspecialchars($row['criteria_5']) : ''; ?>">
             </div>
             <div class="form-group">
                 <label>น้ำหนัก :</label>
