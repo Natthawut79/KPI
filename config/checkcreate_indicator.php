@@ -5,7 +5,6 @@ include "conn.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // --- ค่าที่มีอยู่เดิม ---
     $KPI_type_id = mysqli_real_escape_string($conn, $_POST['KPI_type_id']);
     $Order_no = mysqli_real_escape_string($conn, $_POST['Order_no']);
     $KPI_topic_name = mysqli_real_escape_string($conn, $_POST['KPI_topic_name']);
