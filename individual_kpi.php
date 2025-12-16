@@ -809,7 +809,7 @@ $saved_okr_data = null; // Placeholder
                             $current_type_weight = floatval($kpi_type['TypeWeight']);
                             $total_weight_sum_types += $current_type_weight;
                             ?>
-                            <tr class="section-header" data-kpi-type-id="<?php echo $kpi_type_id; ?>">
+                            <tr class="section-header" data-kpi-type-id="<?php echo $kpi_type_id; ?>"data-type-weight="<?php echo floatval($kpi_type['TypeWeight']); ?>">
                                 <td colspan="16">
                                     <?php echo htmlspecialchars($kpi_type['Order_No']) . '. ' . htmlspecialchars($kpi_type['KPI_Type_Name_EN'] . ' ' . $kpi_type['KPI_Type_Name_TH']); ?>
                                     <?php echo htmlspecialchars($current_type_weight); ?>
@@ -1123,6 +1123,7 @@ if (empty($actual_work_all_year_value)) {
                                     </tr>
 
                                 <?php endforeach; ?>
+                                
                                 <tr class="section-total-row" data-kpi-type-id="<?php echo $kpi_type_id; ?>">
     <td colspan="<?php echo ($active_submit_type_id == 1) ? '11' : '12'; ?>" class="text-right"><strong>รวมคะแนนประจำหมวด</strong></td>
     

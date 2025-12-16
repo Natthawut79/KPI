@@ -28,46 +28,68 @@ function calculateRowScore(scoreInput) {
     }
 }
 
-// Function คำนวณคะแนนรวมประจำหมวด
+// Function คำนวณคะแนนรวมประจำหมวด (แก้ไขสูตรใหม่)
 function calculateSectionTotal(kpiTypeId) {
+    // 1. ดึงแถวข้อมูลทั้งหมดในหมวดนี้
     const sectionRows = document.querySelectorAll(`#annual-review-table tbody tr[data-kpi-type-id="${kpiTypeId}"]:not(.section-total-row):not(.section-header)`);
-    let sectionTotal = 0;
+    
+    // 2. ดึงค่าน้ำหนักของหมวด (Type Weight) จากหัวตารางที่เราเพิ่งเพิ่มในจุดที่ 1
+    const headerRow = document.querySelector(`#annual-review-table tbody tr.section-header[data-kpi-type-id="${kpiTypeId}"]`);
+    const typeWeight = headerRow ? (parseFloat(headerRow.dataset.typeWeight) || 0) : 0;
+
+    let totalRawScore = 0;      // คะแนนดิบที่ทำได้รวมกัน
+    let totalMaxScore = 0;      // คะแนนเต็มที่เป็นไปได้ (น้ำหนักหัวข้อ x 5)
+
     sectionRows.forEach(row => {
+        // ดึงน้ำหนักของหัวข้อย่อย
+        const weightText = row.querySelector('.topic-weight')?.textContent;
+        const topicWeight = parseFloat(weightText) || 0;
+
+        // ดึงคะแนนที่ได้ (ที่เป็นตัวเงิน/คะแนนดิบ)
         const totalScoreInput = row.querySelector('.total-score');
         if (totalScoreInput) {
-            sectionTotal += parseFloat(totalScoreInput.value) || 0;
+            totalRawScore += parseFloat(totalScoreInput.value) || 0;
         }
+
+        // คำนวณคะแนนเต็มของหัวข้อนี้ (น้ำหนักหัวข้อ x 5 คะแนนเต็ม)
+        totalMaxScore += (topicWeight * 5);
     });
 
-    // Update Annual Review Tab
-    const sectionTotalInputAnnual = document.querySelector(`#annual-review-table .section-total-row[data-kpi-type-id="${kpiTypeId}"] .section-total-score`);
-    if (sectionTotalInputAnnual) {
-        sectionTotalInputAnnual.value = sectionTotal.toFixed(2);
+    // 3. เข้าสูตร: (คะแนนที่ได้ / คะแนนเต็ม) * น้ำหนักหมวด
+    let weightedSectionScore = 0;
+    if (totalMaxScore > 0) {
+        weightedSectionScore = (totalRawScore / totalMaxScore) * typeWeight;
     }
 
-    // ⚠️ [START] MODIFICATION - อัปเดต Tab OKRs ด้วย
+    // 4. แสดงผลลัพธ์
+    const sectionTotalInputAnnual = document.querySelector(`#annual-review-table .section-total-row[data-kpi-type-id="${kpiTypeId}"] .section-total-score`);
+    if (sectionTotalInputAnnual) {
+        sectionTotalInputAnnual.value = weightedSectionScore.toFixed(2);
+    }
+
+    // อัปเดต Tab OKRs ด้วย
     const okrSectionRow = document.querySelector(`#okr-summary-table tr[data-kpi-type-id="${kpiTypeId}"]`);
     if (okrSectionRow) {
         const sectionTotalInputOkr = okrSectionRow.querySelector('.okr-section-score');
         if (sectionTotalInputOkr) {
-            sectionTotalInputOkr.value = sectionTotal.toFixed(2);
+            sectionTotalInputOkr.value = weightedSectionScore.toFixed(2);
         }
     }
-    // ⚠️ [END] MODIFICATION
 }
 
-// Function คำนวณคะแนนรวมทั้งหมด
 function calculateGrandTotal() {
-    const allTotalScoreInputs = document.querySelectorAll('#annual-review-table tbody .total-score');
+    // [แก้ไข] เปลี่ยนจากดึง .total-score (คะแนนดิบ) มาดึง .section-total-score (คะแนนหมวด) แทน
+    const allSectionTotalInputs = document.querySelectorAll('#annual-review-table .section-total-score');
+    
     let grandTotal = 0;
-    allTotalScoreInputs.forEach(input => {
+    allSectionTotalInputs.forEach(input => {
         grandTotal += parseFloat(input.value) || 0;
     });
 
-    // Update Annual Review Tab (Total 500)
+    // Update Annual Review Tab (Total 500) -> ช่องนี้อาจจะตั้งชื่อ class ผิด หรือควรเป็น 100 คะแนน
     const grandTotalInput500Annual = document.getElementById('grand-total-score-500');
     if (grandTotalInput500Annual) {
-        grandTotalInput500Annual.value = grandTotal.toFixed(2);
+        grandTotalInput500Annual.value = (grandTotal * 5).toFixed(2);
     }
 
     // Calculate and Update Total 100%
@@ -77,7 +99,7 @@ function calculateGrandTotal() {
     
     // ⬇⬇⬇ [หมายเหตุ] ⬇⬇⬇
     // คงสูตร * 100 ไว้ตามคำขอ (ไม่แก้ไขส่วนนี้)
-    const grandTotalPercent = (maxPossibleScore > 0) ? (grandTotal / maxPossibleScore) * 100 : 0; 
+    const grandTotalPercent = (maxPossibleScore > 0) ? (grandTotal / maxPossibleScore) * 80 : 0; 
     
     // ⬇⬇⬇ [เพิ่ม] อัปเดต hidden input (เพื่อให้ส่งค่า 100 max ไป) ⬇⬇⬇
     // (โค้ดนี้เพิ่มเข้ามาเพื่อให้การบันทึกคะแนนรวมทำงานได้ถูกต้อง)
