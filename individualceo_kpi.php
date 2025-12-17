@@ -817,7 +817,7 @@ $saved_okr_data = null;
                             $current_type_weight = floatval($kpi_type['TypeWeight']);
                             $total_weight_sum_types += $current_type_weight;
                             ?>
-                            <tr class="section-header" data-kpi-type-id="<?php echo $kpi_type_id; ?>">
+                            <tr class="section-header" data-kpi-type-id="<?php echo $kpi_type_id; ?>" data-type-weight="<?php echo $current_type_weight; ?>">
                                 <td colspan="16">
                                     <?php echo htmlspecialchars($kpi_type['Order_No']) . '. ' . htmlspecialchars($kpi_type['KPI_Type_Name_EN'] . ' ' . $kpi_type['KPI_Type_Name_TH']); ?>
                                     <?php echo htmlspecialchars($current_type_weight); ?>
@@ -1301,7 +1301,7 @@ $saved_okr_data = null;
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2" class="text-right"><strong>Score/คะแนนรวม (50 คะแนน)</strong></td>
+                            <td colspan="2" class="text-right"><strong>Score/คะแนนรวม (อัตราส่วน 80)</strong></td>
                             <td style = "text-align: right; vertical-align: top;" colspan="2"id="okr-grand-total-score-100" class="form-control">
                                     <?php echo number_format(floatval($saved_total_scores['Score_100_max'] ?? 0), 2); ?>
                             </td>

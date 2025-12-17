@@ -1290,7 +1290,7 @@ if (empty($actual_work_all_year_value)) {
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2" class="text-right"><strong>Score/คะแนนรวม (100 คะแนน)</strong></td>
+                            <td colspan="2" class="text-right"><strong>Score/คะแนนรวม (อัตตราส่วน 80 )</strong></td>
                             <td style = "text-align: right; vertical-align: top;" colspan="2"id="okr-grand-total-score-100" class="form-control">
                                     <?php echo number_format(floatval($saved_total_scores['Score_100_max'] ?? 0), 2); ?>
                             </td>

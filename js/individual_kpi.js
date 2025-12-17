@@ -64,80 +64,37 @@ function calculateSectionTotal(kpiTypeId) {
     // 4. แสดงผลลัพธ์
     const sectionTotalInputAnnual = document.querySelector(`#annual-review-table .section-total-row[data-kpi-type-id="${kpiTypeId}"] .section-total-score`);
     if (sectionTotalInputAnnual) {
-        sectionTotalInputAnnual.value = weightedSectionScore.toFixed(2);
-    }
-
-    // อัปเดต Tab OKRs ด้วย
-    const okrSectionRow = document.querySelector(`#okr-summary-table tr[data-kpi-type-id="${kpiTypeId}"]`);
-    if (okrSectionRow) {
-        const sectionTotalInputOkr = okrSectionRow.querySelector('.okr-section-score');
-        if (sectionTotalInputOkr) {
-            sectionTotalInputOkr.value = weightedSectionScore.toFixed(2);
-        }
+        sectionTotalInputAnnual.value = (weightedSectionScore * 5).toFixed(2);
     }
 }
 
 function calculateGrandTotal() {
-    // [แก้ไข] เปลี่ยนจากดึง .total-score (คะแนนดิบ) มาดึง .section-total-score (คะแนนหมวด) แทน
     const allSectionTotalInputs = document.querySelectorAll('#annual-review-table .section-total-score');
     
-    let grandTotal = 0;
+    let grandTotal = 0; // นี่คือคะแนนรวมสเกล 100 (ตามน้ำหนัก)
     allSectionTotalInputs.forEach(input => {
         grandTotal += parseFloat(input.value) || 0;
+        
     });
+    
 
-    // Update Annual Review Tab (Total 500) -> ช่องนี้อาจจะตั้งชื่อ class ผิด หรือควรเป็น 100 คะแนน
+    // แสดงผลคะแนนเต็ม 500 (เอาสเกล 100 มาคูณ 5)
     const grandTotalInput500Annual = document.getElementById('grand-total-score-500');
     if (grandTotalInput500Annual) {
-        grandTotalInput500Annual.value = (grandTotal * 5).toFixed(2);
+        grandTotalInput500Annual.value = (grandTotal).toFixed(2);
     }
 
-    // Calculate and Update Total 100%
+    // คำนวณคะแนนเต็ม (Max Possible Score) สเกล 500
     const grandTotalWeightEl = document.getElementById('grand-total-weight');
     const totalWeight = parseFloat(grandTotalWeightEl?.textContent) || 0;
-    const maxPossibleScore = (totalWeight > 0) ? (totalWeight * 5) : 0;
+    const maxPossibleScore = (totalWeight > 0) ? (totalWeight * 5) : 0; // เช่น 100 * 5 = 500
+    const grandTotalPercent = (maxPossibleScore > 0) ? ((grandTotal) / maxPossibleScore) * 80 : 0; 
     
-    // ⬇⬇⬇ [หมายเหตุ] ⬇⬇⬇
-    // คงสูตร * 100 ไว้ตามคำขอ (ไม่แก้ไขส่วนนี้)
-    const grandTotalPercent = (maxPossibleScore > 0) ? (grandTotal / maxPossibleScore) * 80 : 0; 
-    
-    // ⬇⬇⬇ [เพิ่ม] อัปเดต hidden input (เพื่อให้ส่งค่า 100 max ไป) ⬇⬇⬇
-    // (โค้ดนี้เพิ่มเข้ามาเพื่อให้การบันทึกคะแนนรวมทำงานได้ถูกต้อง)
+    // ส่งค่าไปที่ Hidden Input เพื่อบันทึกลงฐานข้อมูล (Score_100_max)
     const hiddenTotal100Input = document.getElementById('grand-total-score-100-hidden');
     if (hiddenTotal100Input) {
         hiddenTotal100Input.value = grandTotalPercent.toFixed(2);
     }
-
-    
-    // ⚠️ [START] MODIFICATION - อัปเดต Tab OKRs ทั้ง 4 ช่อง
-    
-    // 1. Update OKR Tab (Summary Table)
-    const okrTotalInput500 = document.getElementById('okr-grand-total-score-500');
-    if (okrTotalInput500) {
-        okrTotalInput500.value = grandTotal.toFixed(2);
-    }
-    const okrTotalInput100 = document.getElementById('okr-grand-total-score-100');
-    if (okrTotalInput100) {
-        // ⬇⬇⬇ [แก้ไข] ⬇⬇⬇
-        // ใน Tab OKR ของหน้านี้ (ceo) ค่า 100 max ถูกแปลงเป็น 50
-        // เราจะใช้สูตร * 50 สำหรับการแสดงผลใน Tab OKR เท่านั้น
-        const grandTotalPercent_50 = (maxPossibleScore > 0) ? (grandTotal / maxPossibleScore) * 100 : 0;
-        okrTotalInput100.value = grandTotalPercent_50.toFixed(2);
-    }
-
-    // 2. Update OKR Tab (Final Summary Section)
-    const okrFinalInput500 = document.getElementById('okr-final-score-500');
-    if (okrFinalInput500) {
-        okrFinalInput500.value = grandTotal.toFixed(2);
-    }
-    const okrFinalInput100 = document.getElementById('okr-final-score-100');
-    if (okrFinalInput100) {
-        // ⬇⬇⬇ [แก้ไข] ⬇⬇⬇
-        // ใช้ค่า * 50 ที่นี่ด้วย
-        const grandTotalPercent_50 = (maxPossibleScore > 0) ? (grandTotal / maxPossibleScore) * 100 : 0;
-        okrFinalInput100.value = grandTotalPercent_50.toFixed(2);
-    }
-    // ⚠️ [END] MODIFICATION
 }
 
 
@@ -190,14 +147,12 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
             
 
-            const formData = new FormData(annualReviewForm); // ⬇⬇⬇ [แก้ไข] ⬇⬇⬇
-            // ⚠️ [END] MODIFICATION
-
+            const formData = new FormData(annualReviewForm);
             const submitButton = annualReviewForm.querySelector('button[type="submit"]');
             submitButton.disabled = true;
             submitButton.textContent = 'กำลังบันทึก...';
 
-            fetch('config/save_annual_review.php', { method: 'POST', body: formData }) // ⬇⬇⬇ [แก้ไข] ⬇⬇⬇
+            fetch('config/save_annual_review.php', { method: 'POST', body: formData })
             .then(response => {
                 if (!response.ok) {
                      return response.json().then(err => { throw new Error(err.message || 'เกิดข้อผิดพลาด HTTP: ' + response.status); });
@@ -222,14 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    
-
-
-    const okrForm = document.getElementById('okrEvaluationForm');
-     if (okrForm) {
-         const okrSubmitButton = okrForm.querySelector('button[type="submit"]');
-        
-     }
       const prefilledInputs = document.querySelectorAll('input[type="file"][data-prefill]');
         
         prefilledInputs.forEach(input => {
@@ -264,13 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         });
-        
-        // --------------------------------------------------------
-        // [LATEST FIX] ลบส่วนที่ดักจับ event 'input' เพื่อรวมข้อความออกไป
-        // เพื่อป้องกันการเขียนทับข้อความของผู้ใช้ที่หน้าเว็บ
-        // (ระบบจะใช้ Smart Append ที่ฝั่ง PHP Backend แทน)
-        // --------------------------------------------------------
-        
     });
 
 
@@ -292,7 +232,6 @@ function exportTableToCsv(tableId, filename) {
                  if (linkElement && inputElement.classList.contains('file-url')) {
                      cellText = inputElement.value;
                  }
-                 // ⚠️ [START] MODIFICATION - ปรับปรุงการดึงชื่อไฟล์สำหรับ Export
                  else if (inputElement.classList.contains('file-upload')) {
                      // พยายามดึงชื่อไฟล์จาก .existing-files ก่อน
                      let existingFiles = [];
@@ -311,7 +250,6 @@ function exportTableToCsv(tableId, filename) {
                          cellText = '';
                      }
                  }
-                 // ⚠️ [END] MODIFICATION
                  else if (inputElement.type === 'radio' || inputElement.type === 'checkbox') {
                      cellText = inputElement.checked ? inputElement.value : '';
                  } else {
@@ -355,9 +293,6 @@ function deleteFile(buttonElement, fileId) {
         alert('ไม่พบปีการศึกษาในฟอร์ม ไม่สามารถลบได้');
         return;
     }
-    // 
-    // ▼▼▼ ตรวจสอบส่วนนี้ให้ถูกต้อง ▼▼▼
-    //
     fetch('config/delete_kpi_file.php', {
         method: 'POST',                      
         headers: {

@@ -416,13 +416,29 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
         mysqli_stmt_close($stmt_delete_cat);
     }
     if ($all_queries_success) {
+        // [แก้ไขใหม่ตามต้นแบบ] ใช้ Subquery คำนวณแบบถ่วงน้ำหนัก
         $sql_insert_cat = "INSERT INTO score_evaluation (Emp_code, KPI_type_id, Academic, Submit_type_id, Category_score)
-                            SELECT
-                                  ik.Emp_code, kt.KPI_type_id, ik.Academic, 2, SUM(ik.total_score)
-                            FROM individual_kpi ik
-                            JOIN kpi_topic kt ON ik.KPI_topic_id = kt.KPI_topic_id
-                            WHERE ik.Emp_code = ? AND ik.Academic = ? AND ik.Submit_type_id = 2 AND ik.total_score IS NOT NULL
-                            GROUP BY ik.Emp_code, kt.KPI_type_id, ik.Academic";
+        SELECT
+              ik.Emp_code, 
+              kt.KPI_type_id, 
+              ik.Academic, 
+              2, 
+              (
+                (
+                    SUM(ik.total_score) / 
+                    (
+                        SELECT SUM(sub_kt.Weight) * 5 
+                        FROM kpi_topic sub_kt 
+                        WHERE sub_kt.KPI_type_id = kt.KPI_type_id
+                    )
+                ) * ktype.Weight
+              ) * 5
+        FROM individual_kpi ik
+        JOIN kpi_topic kt ON ik.KPI_topic_id = kt.KPI_topic_id
+        JOIN kpi_type ktype ON kt.KPI_type_id = ktype.KPI_type_id
+        WHERE ik.Emp_code = ? AND ik.Academic = ? AND ik.Submit_type_id = 2 AND ik.total_score IS NOT NULL
+        GROUP BY ik.Emp_code, kt.KPI_type_id, ik.Academic, ktype.Weight";
+
         $stmt_insert_cat = mysqli_prepare($conn, $sql_insert_cat);
         if (!$stmt_insert_cat) {
             throw new Exception("Prepare statement failed (insert score_evaluation): " . mysqli_error($conn));

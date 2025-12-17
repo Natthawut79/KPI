@@ -4,14 +4,19 @@ session_start();
 include 'conn.php';
 
 // (ฟังก์ชันนี้ถูกต้องแล้ว)
-function getFileTypeIdFromExtension($ext) {
+function getFileTypeIdFromExtension($ext)
+{
     switch (strtolower($ext)) {
-        case 'pdf': return 1;
+        case 'pdf':
+            return 1;
         case 'doc':
-        case 'docx': return 2;
+        case 'docx':
+            return 2;
         case 'xls':
-        case 'xlsx': return 3;
-        default: return 4; // อื่นๆ (ppt, jpg, png ฯลฯ)
+        case 'xlsx':
+            return 3;
+        default:
+            return 4; // อื่นๆ (ppt, jpg, png ฯลฯ)
     }
 }
 
@@ -64,7 +69,7 @@ $allowed_mime_types = [
     'image/jpeg',
     'image/png'
 ];
-$allowed_extensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'jpg', 'jpeg', 'png']; 
+$allowed_extensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'jpg', 'jpeg', 'png'];
 
 // --- Database Operations ---
 mysqli_begin_transaction($conn);
@@ -72,9 +77,9 @@ $all_queries_success = true;
 $errors = [];
 
 try {
-    
 
-$sql_upsert_individual = "INSERT INTO individual_kpi
+
+    $sql_upsert_individual = "INSERT INTO individual_kpi
                           (Emp_code, Academic, KPI_topic_id, Submit_type_id, Goal_job, Actual_work, Actual_work_all_year, score, total_score, File_path, File_url, Additional, Approve_id, Advice)
                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                           ON DUPLICATE KEY UPDATE
@@ -98,7 +103,7 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
         throw new Exception("Prepare statement failed (attach_file): " . mysqli_error($conn));
     }
     $table_id_kpi = 1; // 1 = individual_kpi
-    
+
 
     // ดึงค่าน้ำหนัก (weight)
     $topic_weights = [];
@@ -131,7 +136,7 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
 
         // [เพิ่มส่วนนี้] ตัวแปรสำหรับเก็บค่า H1 เพื่อนำไปรวมกับ H2
         $actual_h1_for_calc = null;
-        
+
         // 1. ดึง File_path_id_string เก่า (ถ้ามี)
         $old_file_path_string = null;
         $sql_get_old_path = "SELECT File_path FROM individual_kpi 
@@ -149,27 +154,27 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
         }
 
 
-        $new_file_path_ids = []; 
-        
-        $file_input_name = 'kpi_file_' . $topic_id; 
+        $new_file_path_ids = [];
+
+        $file_input_name = 'kpi_file_' . $topic_id;
 
         // ตรวจสอบว่ามีการอัปโหลดไฟล์สำหรับ Topic นี้หรือไม่
         if (isset($_FILES[$file_input_name]) && !empty($_FILES[$file_input_name]['name'][0])) {
-            
+
             $files_for_topic = $_FILES[$file_input_name];
             $file_count = count($files_for_topic['name']);
 
             // วนลูปทุกไฟล์
             for ($i = 0; $i < $file_count; $i++) {
-                
+
                 $fileName = $files_for_topic['name'][$i];
                 $fileTmpPath = $files_for_topic['tmp_name'][$i];
                 $fileSize = $files_for_topic['size'][$i];
                 $fileType = $files_for_topic['type'][$i];
                 $fileError = $files_for_topic['error'][$i];
-                
+
                 if ($fileError !== UPLOAD_ERR_OK) {
-                    continue; 
+                    continue;
                 }
 
                 $fileNameCmps = explode(".", $fileName);
@@ -180,33 +185,33 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
                     continue;
                 }
                 if (!in_array($fileType, $allowed_mime_types) || !in_array($fileExtension, $allowed_extensions)) {
-                     $errors[] = "ไฟล์ '$fileName' (Topic $topic_id) มีนามสกุลไฟล์ไม่ถูกต้อง";
-                     continue;
+                    $errors[] = "ไฟล์ '$fileName' (Topic $topic_id) มีนามสกุลไฟล์ไม่ถูกต้อง";
+                    continue;
                 }
 
                 $safe_basename = preg_replace("/[^a-zA-Z0-9.\-_]/", "_", basename($fileName));
-                
+
                 // ตรวจสอบไฟล์ซ้ำ
                 $sql_check_dup = "SELECT File_path FROM attach_file 
                                   WHERE Table_id = ? 
                                   AND Fk_table_id = ? 
                                   AND File_name LIKE ?";
-                                  
+
                 $stmt_dup = mysqli_prepare($conn, $sql_check_dup);
                 if ($stmt_dup) {
-                    $search_pattern = "%_" . $safe_basename; 
+                    $search_pattern = "%_" . $safe_basename;
                     mysqli_stmt_bind_param($stmt_dup, "iis", $table_id_kpi, $topic_id, $search_pattern);
                     mysqli_stmt_execute($stmt_dup);
                     mysqli_stmt_store_result($stmt_dup);
-                    
+
                     if (mysqli_stmt_num_rows($stmt_dup) > 0) {
                         mysqli_stmt_close($stmt_dup);
-                        continue; 
+                        continue;
                     }
                     mysqli_stmt_close($stmt_dup);
                 }
 
-                $newFileName = $topic_id . '_' . time() . '_' . $i . '_' . $safe_basename; 
+                $newFileName = $topic_id . '_' . time() . '_' . $i . '_' . $safe_basename;
                 $dest_path_relative = $academic_year . '/' . $emp_code_for_sql . '/' . $newFileName;
                 $dest_path_full = UPLOAD_DIR_BASE . $dest_path_relative;
                 $dest_dir = dirname($dest_path_full);
@@ -215,23 +220,23 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
                     if (!mkdir($dest_dir, 0777, true)) {
                         $errors[] = "ไม่สามารถสร้างโฟลเดอร์สำหรับอัปโหลดได้ (Topic $topic_id)";
                         $all_queries_success = false;
-                        break; 
+                        break;
                     }
                 }
-                
+
                 if (move_uploaded_file($fileTmpPath, $dest_path_full)) {
-                    
+
                     $file_type_id = getFileTypeIdFromExtension($fileExtension);
-                    
+
                     mysqli_stmt_bind_param(
                         $stmt_insert_file,
                         "siii",
-                        $dest_path_relative, 
-                        $table_id_kpi,       
-                        $file_type_id,       
-                        $topic_id            
+                        $dest_path_relative,
+                        $table_id_kpi,
+                        $file_type_id,
+                        $topic_id
                     );
-                    
+
                     if (mysqli_stmt_execute($stmt_insert_file)) {
                         $last_inserted_id = mysqli_insert_id($conn);
                         $new_file_path_ids[] = $last_inserted_id;
@@ -239,44 +244,44 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
                         $errors[] = "Error saving file '$fileName' to DB: " . mysqli_stmt_error($stmt_insert_file);
                         $all_queries_success = false;
                     }
-                    
+
                 } else {
                     $errors[] = "เกิดข้อผิดพลาดในการย้ายไฟล์ '$fileName' (Topic $topic_id)";
                     $all_queries_success = false;
                 }
             } // end for loop (ไฟล์ใน topic)
         }
-        
+
         // 2. รวม ID เก่าและ ID ใหม่
         $old_ids = [];
         if (!empty($old_file_path_string)) {
-            $old_ids = explode(';', $old_file_path_string); 
+            $old_ids = explode(';', $old_file_path_string);
         }
-        
+
         $all_ids = array_merge($old_ids, $new_file_path_ids);
         $all_ids_filtered = array_filter(array_unique($all_ids));
-        
+
         $final_file_path_string = null;
         if (!empty($all_ids_filtered)) {
-            $final_file_path_string = implode(';', $all_ids_filtered); 
+            $final_file_path_string = implode(';', $all_ids_filtered);
         }
-        
 
-       
-        $approve_id_for_h1 = 1; 
-        $approve_id_for_h2 = 1; 
 
-        
+
+        $approve_id_for_h1 = 1;
+        $approve_id_for_h2 = 1;
+
+
         if ($current_emp_code !== $emp_code_for_sql) {
             $approve_id_for_h1 = 3;
             $approve_id_for_h2 = 3;
         }
-        
+
         // Process H1 (Submit Type 1)
         if (isset($topic_data[1])) {
             $goal_h1 = isset($topic_data[1]['Goal_job']) && $topic_data[1]['Goal_job'] !== '' ? $topic_data[1]['Goal_job'] : null;
             $actual_h1 = isset($topic_data[1]['Actual_work']) && $topic_data[1]['Actual_work'] !== '' ? $topic_data[1]['Actual_work'] : null;
-            
+
             // [เพิ่มส่วนนี้] เก็บค่า H1 ไว้ใช้คำนวณ
             $actual_h1_for_calc = $actual_h1;
 
@@ -286,13 +291,13 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
             $file_url_h1 = null;  // H1 ไม่เก็บ url ไฟล์
             $submit_type_h1 = 1;
             $additional_h1 = '';
-            
+
             $file_path_h1 = null; // H1 ไม่เก็บ path ไฟล์
-            
+
             mysqli_stmt_bind_param(
                 $stmt_upsert_individual,
-                "siiisssidsssis", 
-                $emp_code_for_sql, 
+                "siiisssidsssis",
+                $emp_code_for_sql,
                 $academic_year,
                 $topic_id,
                 $submit_type_h1,
@@ -301,7 +306,7 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
                 $actual_work_all_year_h1,
                 $score_h1,
                 $total_score_h1,
-                $file_path_h1,   
+                $file_path_h1,
                 $file_url_h1,
                 $additional_h1,
                 $approve_id_for_h1,
@@ -320,11 +325,11 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
         $actual_h2 = isset($topic_data[2]['Actual_work']) && $topic_data[2]['Actual_work'] !== '' ? $topic_data[2]['Actual_work'] : null;
         $score_input = $topic_data['score'] ?? '';
         $score_value = ($score_input !== '' && is_numeric($score_input) && $score_input >= 1 && $score_input <= 5) ? intval($score_input) : null;
-        
+
         // =========================================================
         // [Logic ใหม่]: H1 + User Input + H2 (รวมแบบไม่ซ้ำ)
         // =========================================================
-        
+
         // 1. รับค่าข้อความปัจจุบันจากหน้าเว็บ (ซึ่งมีข้อความที่ User พิมพ์เพิ่มอยู่ด้วย)
         $user_manual_input = trim($topic_data['Actual_work_all_year'] ?? '');
         $h1_val_clean = trim($actual_h1_for_calc ?? ''); // H1 ที่แท้จริง
@@ -364,15 +369,15 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
 
         $total_score_value = ($score_value !== null) ? (floatval($topic_weight) * $score_value) : null;
         $file_url_input = $topic_data['File_url'] ?? '';
-        $file_url_value = ($file_url_input !== '' && trim($file_url_input) !== '') ? trim($file_url_input) : null; 
+        $file_url_value = ($file_url_input !== '' && trim($file_url_input) !== '') ? trim($file_url_input) : null;
         $additional_value_h2 = $topic_data['Additional'] ?? '';
         $submit_type_h2 = 2;
 
-        
+
         mysqli_stmt_bind_param(
             $stmt_upsert_individual,
-            "siiisssidsssis", 
-            $emp_code_for_sql, 
+            "siiisssidsssis",
+            $emp_code_for_sql,
             $academic_year,
             $topic_id,
             $submit_type_h2,
@@ -381,7 +386,7 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
             $actual_work_all_year_value,
             $score_value,
             $total_score_value,
-            $final_file_path_string, 
+            $final_file_path_string,
             $file_url_value,
             $additional_value_h2,
             $approve_id_for_h2,
@@ -394,7 +399,7 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
         }
     } // End foreach data
     mysqli_stmt_close($stmt_upsert_individual);
-    mysqli_stmt_close($stmt_insert_file); 
+    mysqli_stmt_close($stmt_insert_file);
 
     // --- 2. Recalculate and Update/Insert score_evaluation ---
     if ($all_queries_success) {
@@ -402,9 +407,9 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
         $stmt_delete_cat = mysqli_prepare($conn, $sql_delete_cat);
         if (!$stmt_delete_cat)
             throw new Exception("Prepare statement failed (delete score_evaluation): " . mysqli_error($conn));
-        
+
         mysqli_stmt_bind_param($stmt_delete_cat, "si", $emp_code_for_sql, $academic_year);
-        
+
         if (!mysqli_stmt_execute($stmt_delete_cat)) {
             $all_queries_success = false;
             $errors[] = "Error deleting old category scores: " . mysqli_stmt_error($stmt_delete_cat);
@@ -421,26 +426,28 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
               ik.Academic, 
               2, 
               (
-                SUM(ik.total_score) / 
                 (
-                    SELECT SUM(sub_kt.Weight) * 5 
-                    FROM kpi_topic sub_kt 
-                    WHERE sub_kt.KPI_type_id = kt.KPI_type_id
-                )
-              ) * ktype.Weight
+                    SUM(ik.total_score) / 
+                    (
+                        SELECT SUM(sub_kt.Weight) * 5 
+                        FROM kpi_topic sub_kt 
+                        WHERE sub_kt.KPI_type_id = kt.KPI_type_id
+                    )
+                ) * ktype.Weight
+              ) * 5    /* <--- เพิ่ม * 5 ตรงนี้ครับ */
         FROM individual_kpi ik
         JOIN kpi_topic kt ON ik.KPI_topic_id = kt.KPI_topic_id
         JOIN kpi_type ktype ON kt.KPI_type_id = ktype.KPI_type_id
         WHERE ik.Emp_code = ? AND ik.Academic = ? AND ik.Submit_type_id = 2 AND ik.total_score IS NOT NULL
-        GROUP BY ik.Emp_code, kt.KPI_type_id, ik.Academic, ktype.Weight"; // เพิ่ม ktype.Weight ใน Group by ตามมาตรฐาน SQL ใหม่
+        GROUP BY ik.Emp_code, kt.KPI_type_id, ik.Academic, ktype.Weight";
 
         $stmt_insert_cat = mysqli_prepare($conn, $sql_insert_cat);
         if (!$stmt_insert_cat) {
             throw new Exception("Prepare statement failed (insert score_evaluation): " . mysqli_error($conn));
         }
-        
+
         mysqli_stmt_bind_param($stmt_insert_cat, "si", $emp_code_for_sql, $academic_year);
-        
+
         if (!mysqli_stmt_execute($stmt_insert_cat)) {
             $all_queries_success = false;
             $errors[] = "Error calculating/saving category scores: " . mysqli_stmt_error($stmt_insert_cat);
@@ -452,7 +459,7 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
 
     if ($all_queries_success) {
         $grand_total_score_500 = isset($_POST['grand_total_score_500']) ? floatval($_POST['grand_total_score_500']) : 0.0;
-        $grand_total_score_100 = isset($_POST['grand_total_score_100']) ? floatval($_POST['grand_total_score_100']) : 0.0; 
+        $grand_total_score_100 = isset($_POST['grand_total_score_100']) ? floatval($_POST['grand_total_score_100']) : 0.0;
 
         $sql_upsert_total = "INSERT INTO total_score_evaluation 
                                (Emp_code, Academic, Submit_type_id, Score_500_max, Score_100_max) 
@@ -460,16 +467,16 @@ $sql_upsert_individual = "INSERT INTO individual_kpi
                              ON DUPLICATE KEY UPDATE
                                Score_500_max = VALUES(Score_500_max),
                                Score_100_max = VALUES(Score_100_max)";
-        
+
         $stmt_upsert_total = mysqli_prepare($conn, $sql_upsert_total);
-        
+
         if (!$stmt_upsert_total) {
             throw new Exception("Prepare statement failed (upsert total_score_evaluation): " . mysqli_error($conn));
         }
-        $submit_type_total = 2; 
-        
+        $submit_type_total = 2;
+
         mysqli_stmt_bind_param($stmt_upsert_total, "siidd", $emp_code_for_sql, $academic_year, $submit_type_total, $grand_total_score_500, $grand_total_score_100);
-        
+
         if (!mysqli_stmt_execute($stmt_upsert_total)) {
             $all_queries_success = false;
             $errors[] = "Error saving total score: " . mysqli_stmt_error($stmt_upsert_total);
