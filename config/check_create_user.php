@@ -43,14 +43,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         (?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt_employee = mysqli_prepare($conn, $sql_employee);
-        // --- **[แก้ไข]** เปลี่ยน type string ตัวที่ 6 เป็น 'b' และเตรียมส่ง $imgData ---
         mysqli_stmt_bind_param($stmt_employee, "sssssbss", $Emp_code, $Fname_th, $Lname_th, $Fname_eng, $Lname_eng, $imgData, $Title_id, $Department_id);
 
-        // --- **[แก้ไข]** ส่งข้อมูล BLOB ---
-        // For LONGBLOB, you might need to send data in packets if it's large
-        // Check if imgData is not null before sending
-        if ($imgData !== null) {
-            mysqli_stmt_send_long_data($stmt_employee, 5, $imgData); // Parameter index 5 is IMGname
+        //ถ้าไฟล์รูปเกินขนาดที่กำหนด จะไม่สามารถอัปโหลดได้
+       if ($imgData !== null) {
+            // กำหนดขนาดชิ้นข้อมูลที่จะส่ง (เช่น 8KB ต่อครั้ง)
+            $chunkSize = 8192; 
+            $length = strlen($imgData);
+            
+            for ($i = 0; $i < $length; $i += $chunkSize) {
+                // ตัดข้อมูลออกมาทีละส่วน
+                $chunk = substr($imgData, $i, $chunkSize);
+                // ส่งชิ้นส่วนนั้นไปยัง MySQL
+                mysqli_stmt_send_long_data($stmt_employee, 5, $chunk);
+            }
         }
         // --- **[สิ้นสุดการแก้ไข]** ---
 
