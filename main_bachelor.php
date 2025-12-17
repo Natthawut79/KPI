@@ -121,7 +121,7 @@ include 'config/search_bachelor.php';
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='5' class='text-center'>ไม่พบข้อมูลตามเงื่อนไขที่ค้นหา</td></tr>";
+                    echo "<tr><td colspan='7' class='text-center'>ไม่พบข้อมูลตามเงื่อนไขที่ค้นหา</td></tr>";
                 }
                 ?>
             </tbody>
