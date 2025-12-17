@@ -37,7 +37,7 @@ if (!empty($emp_code) && $approve_id_to_set != -1) {
     
     // 6. ดึงปีการศึกษาปัจจุบัน
     $current_year_ad = date('Y');
-    $current_academic_year = intval($current_year_ad) + 543;
+    $searchYear = $current_academic_year;
 
     // 7. สร้าง SQL UPDATE
     $sql = "UPDATE individual_kpi 
