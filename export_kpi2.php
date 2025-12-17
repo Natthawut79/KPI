@@ -1051,7 +1051,7 @@ if (!empty($kpi_data)) {
     $sheet3->getStyle('O' . $row)->applyFromArray($style_grand_total_value_array); // แก้ไขชื่อ Style
     $row++;
 
-    $sheet3->setCellValue('J' . $row, 'Score/คะแนนรวม (100 คะแนน)');
+    $sheet3->setCellValue('J' . $row, 'Score/คะแนนรวม (อัตราส่วน 80)');
     $sheet3->mergeCells('J' . $row . ':M' . $row);
     $sheet3->getStyle('J' . $row . ':M' . $row)->applyFromArray($style_grand_total_label_array); // แก้ไขชื่อ Style
     $sheet3->setCellValue('O' . $row, number_format(floatval($score_100), 2));
@@ -1493,7 +1493,7 @@ if (!empty($kpi_data)) {
 
     // --- 3. แถวคะแนน 100 ---
 // (ตัวแปร $score_100 ถูกกำหนดค่าไว้แล้วจากส่วน Footer ก่อนหน้านี้)
-    $sheet3->setCellValue('B' . $row, 'คะแนนของส่วนที่ 1 (อัตราส่วน 100) =');
+    $sheet3->setCellValue('B' . $row, 'คะแนนของส่วนที่ 1 (อัตราส่วน 80) =');
     $sheet3->mergeCells('B' . $row . ':G' . $row); // Label
     $sheet3->setCellValue('H' . $row, number_format(floatval($score_100), 2)); // Value
     $sheet3->mergeCells('H' . $row . ':J' . $row);
@@ -1523,7 +1523,7 @@ if (!empty($kpi_data)) {
     $row++;
 
     // --- แถวที่ 2: "คะแนนของส่วนที่ 2 (อัตราส่วน 40)..." ---
-    $sheet3->setCellValue('B' . $row, 'คะแนนของส่วนที่ 2 (อัตราส่วน 40) =');
+    $sheet3->setCellValue('B' . $row, 'คะแนนของส่วนที่ 2 (อัตราส่วน 20) =');
     $sheet3->mergeCells('B' . $row . ':G' . $row);
     $sheet3->getStyle('B' . $row . ':G' . $row)->applyFromArray($style_grand_total_label_array); // แก้ไขชื่อ Style
 
