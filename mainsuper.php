@@ -95,8 +95,8 @@ include 'config/search_mainsuper.php';
                     <th class='text-center'>สาขาวิชา</th>
                     <th class='text-center'>ปีการประเมิน</th>
                     <th class='text-center'>สถานะ</th>
-                    <th class='text-center'>ดาวน์โหลด</th> 
-                    <th class='text-center' >จัดการ</th>
+                    <th class='text-center'>ดาวน์โหลด</th>
+                    <th class='text-center'>จัดการ</th>
                 </tr>
             </thead>
             <tbody>
@@ -115,7 +115,7 @@ include 'config/search_mainsuper.php';
 
                         $edit_link_href = '#';
                         $export_script = 'export_kpi.php'; // Default
-
+                
                         if ($group_id == 1) {
                             $edit_link_href = 'individual_kpi.php?Emp_code=' . $emp_code . '&year=' . $kpi_year;
                             $export_script = 'export_kpi.php';
@@ -123,22 +123,20 @@ include 'config/search_mainsuper.php';
                             $edit_link_href = 'individualceo_kpi.php?Emp_code=' . $emp_code . '&year=' . $kpi_year;
                             $export_script = 'export_kpi2.php';
                         }
-                        
-                        // --- ส่วนจัดการสถานะ ---
-                        $status_msg = "";
+
+
+                        $status_msg = !empty($row['Status_approve_name']) ? $row['Status_approve_name'] : "-";
                         $status_color = "";
 
+                        // ยังคงใช้ ID เพื่อกำหนดสี (หรือถ้าใน DB มีคอลัมน์สีด้วย ก็ดึงมาใช้ได้เลย)
                         if ($row['Approve_id'] == 1) {
-                            $status_msg = "ยังไม่รับการอนุมัติ";
-                            $status_color = "color: #e0a800;"; // สีเหลืองเข้ม/ส้ม
+                            $status_color = "color: #e0a800;";
                         } elseif ($row['Approve_id'] == 2) {
-                            $status_msg = "ได้รับการอนุมัติ";
-                            $status_color = "color: #28a745;"; // สีเขียว
+                            $status_color = "color: #28a745;";
                         } elseif ($row['Approve_id'] == 3) {
-                            $status_msg = "รอการเเก้ไข";
-                            $status_color = "color: #dc3545;"; // สีแดง
+                            $status_color = "color: #dc3545;";
                         } else {
-                            $status_msg = "-";
+                            $status_color = "";
                         }
 
                         // --- สร้างปุ่ม Export (แยก logic ออกมา) ---
@@ -151,18 +149,18 @@ include 'config/search_mainsuper.php';
                             // ปุ่มสีเทา (Disabled)
                             $export_btn_html = '<span style="display: inline-block; padding: 10px 20px; background-color: #6c757d; color: white; border-radius: 4px; font-size: 12px; cursor: not-allowed; opacity: 0.6; font-weight: normal;"><i class="fas fa-file-excel"></i> Export</span>';
                         }
-                    
-                        // ------------------------------------------
 
+                        // ------------------------------------------
+                
                         echo "<tr>";
                         echo "<td>" . htmlspecialchars($row['Title_shortname'] . $row['Fname_th'] . " " . $row['Lname_th']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['Type_name_th']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['Department_name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['kpi_year']) . "</td>";
-                        
+
                         // แสดงสถานะ (Status)
                         echo '<td style="' . $status_color . ' font-weight: bold;">' . $status_msg . '</td>';
-                        
+
                         // แสดงปุ่ม Export ในช่องใหม่ (Download)
                         echo '<td class="text-center">' . $export_btn_html . '</td>';
 

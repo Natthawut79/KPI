@@ -96,20 +96,18 @@
                             $export_script = 'export_kpi2.php';
                         }
 
-                    $status_msg = "";
+                        $status_msg = !empty($row['Status_approve_name']) ? $row['Status_approve_name'] : "-";
                         $status_color = "";
 
+                        // ยังคงใช้ ID เพื่อกำหนดสี (หรือถ้าใน DB มีคอลัมน์สีด้วย ก็ดึงมาใช้ได้เลย)
                         if ($row['Approve_id'] == 1) {
-                            $status_msg = "ยังไม่รับการอนุมัติ";
-                            $status_color = "color: #e0a800;"; // สีเหลืองเข้ม/ส้ม
+                            $status_color = "color: #e0a800;";
                         } elseif ($row['Approve_id'] == 2) {
-                            $status_msg = "ได้รับการอนุมัติ";
-                            $status_color = "color: #28a745;"; // สีเขียว
+                            $status_color = "color: #28a745;";
                         } elseif ($row['Approve_id'] == 3) {
-                            $status_msg = "รอการเเก้ไข";
-                            $status_color = "color: #dc3545;"; // สีแดง
+                            $status_color = "color: #dc3545;";
                         } else {
-                            $status_msg = "-";
+                            $status_color = "";
                         }
 
                         // --- สร้างปุ่ม Export (แยก logic ออกมา) ---

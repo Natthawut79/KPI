@@ -1,6 +1,4 @@
 <?php
-// (ไฟล์นี้ถูกเรียกใช้โดย main_associate_dean.php)
-// (ซึ่ง $conn และ $current_emp_code ถูกประกาศไว้แล้ว)
 
 // 1. รับค่า Filter (1 ช่อง: ปี)
 $searchYear = isset($_GET['searchYear']) ? trim($_GET['searchYear']) : '';
@@ -18,7 +16,7 @@ if (isset($_GET['search_button'])) {
     $sql_kpi_list = "
         SELECT 
             e.Emp_code, t.Title_shortname, e.Fname_th, e.Lname_th, 
-            d.Department_name, uty.Type_name_th, ik.kpi_year,ik.Approve_id, gkm.Group_ID 
+            d.Department_name, uty.Type_name_th, ik.kpi_year,ik.Approve_id, sa.Status_approve_name, gkm.Group_ID 
         FROM (
             SELECT DISTINCT Emp_code, Academic AS kpi_year, Approve_id 
             FROM individual_kpi WHERE Academic IS NOT NULL AND Academic != 0
@@ -29,8 +27,8 @@ if (isset($_GET['search_button'])) {
         JOIN user u ON e.Emp_code = u.Emp_code
         LEFT JOIN user_type uty ON u.Type_id = uty.Type_id 
         JOIN group_kpi_mapping gkm ON u.Type_id = gkm.Type_id 
-        
-        -- 6. [แก้ไข] บังคับให้เป็น Emp_code ของตัวเองเท่านั้น
+        LEFT JOIN 
+            status_approve sa ON ik.Approve_id = sa.Approve_id
         WHERE ik.Emp_code = ? 
     ";
 

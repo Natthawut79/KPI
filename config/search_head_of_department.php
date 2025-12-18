@@ -33,7 +33,7 @@ if (isset($_GET['search_button'])) {
     $sql_kpi_list = "
         SELECT 
             e.Emp_code, t.Title_shortname, e.Fname_th, e.Lname_th, 
-            d.Department_name, uty.Type_name_th, ik.kpi_year, ik.Approve_id, gkm.Group_ID 
+            d.Department_name, uty.Type_name_th, ik.kpi_year, ik.Approve_id, sa.Status_approve_name, gkm.Group_ID 
         FROM (
             SELECT DISTINCT Emp_code, Academic AS kpi_year, Approve_id
             FROM individual_kpi WHERE Academic IS NOT NULL AND Academic != 0
@@ -43,8 +43,10 @@ if (isset($_GET['search_button'])) {
         JOIN title t ON e.Title_id = t.Title_id
         JOIN user u ON e.Emp_code = u.Emp_code
         LEFT JOIN user_type uty ON u.Type_id = uty.Type_id 
-        JOIN group_kpi_mapping gkm ON u.Type_id = gkm.Type_id 
-        WHERE u.Type_id != 1 -- ✅ [FIX] กลับไปใช้เงื่อนไขกว้าง (ไม่เอา Admin)
+        JOIN group_kpi_mapping gkm ON u.Type_id = gkm.Type_id
+        LEFT JOIN 
+            status_approve sa ON ik.Approve_id = sa.Approve_id 
+        WHERE u.Type_id != 1 
     ";
 
     // 8. สร้าง Arrayสำหรับ Bind

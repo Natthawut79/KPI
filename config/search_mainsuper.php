@@ -36,6 +36,7 @@ if (isset($_GET['search_button'])) {
             uty.Type_name_th, 
             ik.kpi_year,
             ik.Approve_id,
+            sa.Status_approve_name,
             gkm.Group_ID 
         FROM 
             (
@@ -56,7 +57,9 @@ if (isset($_GET['search_button'])) {
         LEFT JOIN 
             user_type uty ON u.Type_id = uty.Type_id 
         JOIN 
-            group_kpi_mapping gkm ON u.Type_id = gkm.Type_id 
+            group_kpi_mapping gkm ON u.Type_id = gkm.Type_id
+        LEFT JOIN 
+            status_approve sa ON ik.Approve_id = sa.Approve_id 
         WHERE
             u.Type_id != 1 
     ";
