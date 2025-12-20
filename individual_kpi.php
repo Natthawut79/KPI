@@ -515,7 +515,14 @@ if (!empty($current_emp_code)) {
         $stmt_pub->close();
     }
 }
-
+$criteria_list = [];
+$sql_criteria = "SELECT * FROM criteria ORDER BY score ASC";
+$query_criteria = $conn->query($sql_criteria);
+if ($query_criteria) {
+    while ($row_cri = $query_criteria->fetch_assoc()) {
+        $criteria_list[] = $row_cri;
+    }
+}
 // --- ดึงข้อมูล OKR (รอชื่อตาราง) --- (โค้ดเดิมของคุณ)
 $saved_okr_data = null; // Placeholder
 
@@ -702,7 +709,7 @@ $saved_okr_data = null; // Placeholder
         while ($row = $result_criteria->fetch_assoc()) {
             ?>
             <div class="rating-box">
-                <strong><?php echo $row['criteria_id']; ?></strong>
+                <strong><?php echo $row['score'] + 0; ?></strong>
                 <p>
                     <?php echo htmlspecialchars($row['criteria_tname']); ?><br>
                     <?php echo htmlspecialchars($row['criteria_ename']); ?>
@@ -955,7 +962,7 @@ if (empty($actual_work_all_year_value)) {
                                         <?php if ($active_submit_type_id != 1): // ถ้า *ไม่* ใช่ช่วง H1 (ให้แสดง H2) ?>
                                             <td style="vertical-align:top; text-align: center;">
                                                 <textarea class="form-control actual-h2" rows="3"
-                                                    name="data[<?php echo $topic_id; ?>][2][Actual_work]" placeholder="ผลงานจริง"
+                                                    name="data[<?php echo $topic_id; ?>][2][Actual_work]"
                                                     <?php echo $disable_all_attr; ?>><?php echo htmlspecialchars($saved_h2['Actual_work'] ?? ''); ?></textarea>
                                             </td>
                                         <?php endif; ?>
@@ -1093,12 +1100,22 @@ if (empty($actual_work_all_year_value)) {
                                         <td style="vertical-align:top; text-align: center;" class="total-score-cell">
                                             <select class="form-control score-input" name="data[<?php echo $topic_id; ?>][score]"
                                                 oninput="calculateRowScore(this)" <?php echo $disable_all_attr; ?>>
+
                                                 <option value="" <?php echo ($score_value == '') ? 'selected' : ''; ?>></option>
-                                                <option value="1" <?php echo ($score_value == '1') ? 'selected' : ''; ?>>1</option>
-                                                <option value="2" <?php echo ($score_value == '2') ? 'selected' : ''; ?>>2</option>
-                                                <option value="3" <?php echo ($score_value == '3') ? 'selected' : ''; ?>>3</option>
-                                                <option value="4" <?php echo ($score_value == '4') ? 'selected' : ''; ?>>4</option>
-                                                <option value="5" <?php echo ($score_value == '5') ? 'selected' : ''; ?>>5</option>
+
+                                                <?php foreach ($criteria_list as $cri): ?>
+                                                    <?php
+                                                    // แปลงค่า score (เช่น 1.00) ให้เป็นตัวเลขปกติ (เช่น 1)
+                                                    $s_val = $cri['score'] + 0;
+
+                                                    // ตรวจสอบค่าเพื่อเลือก option เดิม
+                                                    $selected = ($score_value == $s_val) ? 'selected' : '';
+                                                    ?>
+                                                    <option value="<?php echo htmlspecialchars($s_val); ?>" <?php echo $selected; ?>>
+                                                        <?php echo htmlspecialchars($s_val); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+
                                             </select>
                                         </td>
 
@@ -1246,21 +1263,28 @@ if (empty($actual_work_all_year_value)) {
 
                 <div class="section-title-bar">ส่วนที่ 1: เกณฑ์สำหรับการประเมินประจำปี</div>
                 <div class="rating-scale-container">
-                    <div class="rating-box"><strong>1</strong>
-                        <p>สำเร็จตามเป้าหมายน้อยมาก<br>Very Low Achievement</p><span>ต่ำกว่า 40%</span>
-                    </div>
-                    <div class="rating-box"><strong>2</strong>
-                        <p>สำเร็จตามเป้าหมายน้อย<br>Under Achievement</p><span>40%-59%</span>
-                    </div>
-                    <div class="rating-box"><strong>3</strong>
-                        <p>สำเร็จตามเป้าหมายพอควร<br>Partial Achievement</p><span>60%-79%</span>
-                    </div>
-                    <div class="rating-box"><strong>4</strong>
-                        <p>สำเร็จตามเป้าหมายส่วนใหญ่<br>Nearly Achievement of Target</p><span>80%-99%</span>
-                    </div>
-                    <div class="rating-box"><strong>5</strong>
-                        <p>สำเร็จตามเป้าหมาย<br>Achievement of Target</p><span>100%</span>
-                    </div>
+                <?php
+                $sql_criteria = "SELECT * FROM criteria ORDER BY criteria_id ASC";
+                $result_criteria = $conn->query($sql_criteria);
+
+                if ($result_criteria && $result_criteria->num_rows > 0) {
+                    // วนลูปแสดงข้อมูลทีละแถว
+                    while ($row = $result_criteria->fetch_assoc()) {
+                        ?>
+                        <div class="rating-box">
+                            <strong><?php echo $row['score'] + 0; ?></strong>
+                            <p>
+                                <?php echo htmlspecialchars($row['criteria_tname']); ?><br>
+                                <?php echo htmlspecialchars($row['criteria_ename']); ?>
+                            </p>
+                            <span><?php echo htmlspecialchars($row['criteria_scale']); ?></span>
+                        </div>
+                        <?php
+                    }
+                } else {
+                    echo "<p>ไม่พบข้อมูลเกณฑ์การประเมิน</p>";
+                }
+                ?>
                 </div>
 
                 <table class="evaluation-table summary-table" id="okr-summary-table">

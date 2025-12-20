@@ -296,7 +296,7 @@ try {
 
             mysqli_stmt_bind_param(
                 $stmt_upsert_individual,
-                "siiisssidsssis",
+                "siiisssddsssis",
                 $emp_code_for_sql,
                 $academic_year,
                 $topic_id,
@@ -324,7 +324,7 @@ try {
         $goal_h2 = isset($topic_data[2]['Goal_job']) && $topic_data[2]['Goal_job'] !== '' ? $topic_data[2]['Goal_job'] : null;
         $actual_h2 = isset($topic_data[2]['Actual_work']) && $topic_data[2]['Actual_work'] !== '' ? $topic_data[2]['Actual_work'] : null;
         $score_input = $topic_data['score'] ?? '';
-        $score_value = ($score_input !== '' && is_numeric($score_input) && $score_input >= 1 && $score_input <= 5) ? intval($score_input) : null;
+        $score_value = ($score_input !== '' && is_numeric($score_input) && $score_input >= 1 && $score_input <= 5) ? floatval($score_input) : null;
 
         // =========================================================
         // [Logic ใหม่]: H1 + User Input + H2 (รวมแบบไม่ซ้ำ)
@@ -376,7 +376,7 @@ try {
 
         mysqli_stmt_bind_param(
             $stmt_upsert_individual,
-            "siiisssidsssis",
+            "siiisssddsssis",
             $emp_code_for_sql,
             $academic_year,
             $topic_id,

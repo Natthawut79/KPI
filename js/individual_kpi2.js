@@ -8,7 +8,7 @@ function calculateRowScore(scoreInput) {
     if (!totalScoreInput) return;
 
     if (scoreInput.value !== '') {
-        score = Math.max(1, Math.min(score, 5));
+        score = Math.max(1, score);
         if (parseFloat(scoreInput.value) !== score) {
            scoreInput.value = score;
         }
