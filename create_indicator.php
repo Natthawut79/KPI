@@ -1,7 +1,6 @@
 <?php
-
 if (isset($_GET['group_id'])) {
-    include 'config/conn.php'; // เชื่อมต่อ DB
+    include 'config/conn.php';
     include 'config/academic_year_resolver.php';
 
     $group_id = intval($_GET['group_id']);
@@ -9,7 +8,7 @@ if (isset($_GET['group_id'])) {
 
     if ($group_id > 0) {
         $current_academic = $current_academic_year;
-        // 2. ดึงข้อมูล KPI Type โดยกรองทั้ง Group_ID และ Academic (ปีปัจจุบัน)
+        // ดึงข้อมูล KPI Type โดยกรองทั้ง Group_ID และ Academic (ปีปัจจุบัน)
         $sql = "SELECT KPI_type_id, KPI_Type_Name_EN, KPI_Type_Name_TH 
                 FROM kpi_type 
                 WHERE Group_ID = ? AND Academic = ? 
@@ -29,18 +28,46 @@ if (isset($_GET['group_id'])) {
     }
     mysqli_close($conn);
 
-    // ส่งข้อมูลกลับเป็น JSON และจบการทำงานทันที
     header('Content-Type: application/json');
     echo json_encode($types);
     exit();
 }
-
-// === [ ส่วนที่ 2: ดึง Order_no ล่าสุด ] ===
-if (isset($_GET['kpi_type_id'])) {
-    include 'config/conn.php'; // เชื่อมต่อ DB
+if (isset($_GET['get_subjects']) && isset($_GET['kpi_type_id'])) {
+    include 'config/conn.php';
 
     $kpi_type_id = intval($_GET['kpi_type_id']);
-    $next_order = 1; // ค่าเริ่มต้น
+    $subjects = [];
+
+    if ($kpi_type_id > 0) {
+        // ดึง Subject Topic ที่ผูกกับ KPI_type_id นั้นๆ
+        $sql = "SELECT subject_id, subject_name 
+                FROM subject_topic 
+                WHERE KPI_type_id = ? 
+                ORDER BY subject_order ASC";
+
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "i", $kpi_type_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $subjects[] = $row;
+            }
+        }
+        mysqli_stmt_close($stmt);
+    }
+    mysqli_close($conn);
+
+    header('Content-Type: application/json');
+    echo json_encode($subjects);
+    exit();
+}
+if (isset($_GET['kpi_type_id'])) {
+    include 'config/conn.php';
+
+    $kpi_type_id = intval($_GET['kpi_type_id']);
+    $next_order = 1;
 
     if ($kpi_type_id > 0) {
         // ค้นหา Order_no ที่มากที่สุดของ KPI_type_id ที่เลือก
@@ -67,8 +94,6 @@ if (isset($_GET['kpi_type_id'])) {
     exit();
 }
 
-
-// โค้ด HTML เริ่มต้น
 $page_title = "สร้างตัวชี้วัด";
 include 'templates/navbar.php';
 include 'config/conn.php';
@@ -76,7 +101,6 @@ include 'config/conn.php';
 
 $KPI_topic_id = isset($_GET['KPI_topic_id']) ? $_GET['KPI_topic_id'] : '';
 
-// Query นี้อาจจะคืนค่า null ถ้าไม่มี $KPI_topic_id (กรณีสร้างใหม่) ซึ่งไม่เป็นไรเพราะมีการเช็ค isset ใน value แล้ว
 $sql = "SELECT kt.*, 
                t.KPI_type_id, 
                t.KPI_Type_Name_EN,
@@ -92,9 +116,7 @@ $sql = "SELECT kt.*,
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($result);
 
-// ตั้งค่า Group ID เริ่มต้น (ถ้าเป็นการสร้างใหม่ ให้เลือกกลุ่มที่ 1)
 $loaded_group_id = isset($row['Group_ID']) ? $row['Group_ID'] : 1;
-// ตั้งค่า KPI Type ID เริ่มต้น (สำหรับการโหลดครั้งแรก)
 $loaded_kpi_type_id = isset($row['KPI_type_id']) ? $row['KPI_type_id'] : null;
 ?>
 
@@ -112,19 +134,13 @@ $loaded_kpi_type_id = isset($row['KPI_type_id']) ? $row['KPI_type_id'] : null;
                 
                 <div class="radio-container" style="display: flex; flex-direction: row; align-items: center;">
                 <?php
-                    // ดึงข้อมูลกลุ่มผู้ใช้จาก DB
                     $sql_groups = "SELECT Group_ID, Group_Name FROM group_use_kpis ORDER BY Group_ID ASC";
                     $res_groups = mysqli_query($conn, $sql_groups);
 
                     if ($res_groups && mysqli_num_rows($res_groups) > 0) {
                         while ($group = mysqli_fetch_assoc($res_groups)) {
-                            // ตรวจสอบว่าควร check radio ไหน
                             $checked = ($loaded_group_id == $group['Group_ID']) ? 'checked' : '';
                             
-                            // Style ของแต่ละตัวเลือก:
-                            // display: flex -> จัด radio คู่กับข้อความ
-                            // white-space: nowrap -> ห้ามตัดคำขึ้นบรรทัดใหม่
-                            // margin-right: 25px -> เว้นระยะห่างระหว่างตัวเลือกที่ 1 กับ 2
                             echo "<label style='display: flex; align-items: center; margin: 0; margin-right: 25px; cursor: pointer; white-space: nowrap;'>";
                             echo "<input type='radio' name='Group_ID' id='group_radio_{$group['Group_ID']}' value='{$group['Group_ID']}' $checked required style='margin-right: 8px;'> ";
                             echo htmlspecialchars($group['Group_Name']);
@@ -139,6 +155,13 @@ $loaded_kpi_type_id = isset($row['KPI_type_id']) ? $row['KPI_type_id'] : null;
                 <label>ชื่อประเภทตัวชี้วัด :</label>
                 <select name="KPI_type_id" id="kpi_type_select" data-loaded-type-id="<?php echo $loaded_kpi_type_id; ?>"
                     required>
+                    <option value="">--- กรุณาเลือก ---</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>ชื่อหัวข้อตัวชี้วัด :</label>
+                <select name="subject_id" id="subject_select" data-loaded-subject-id="<?php echo isset($row['subject_id']) ? $row['subject_id'] : ''; ?>">
                     <option value="">--- กรุณาเลือก ---</option>
                 </select>
             </div>

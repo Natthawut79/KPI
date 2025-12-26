@@ -1,22 +1,15 @@
 <?php
 $page_title = "เปิด-ปิดรอบการบันทึกผลงาน";
-include 'templates/navbar.php';       // 1. เรียก Navbar
-// (สมมติว่าหน้านี้สำหรับ Admin หรือ Super Admin)
-include 'config/auth_admin.php'; // 2. ตรวจสอบสิทธิ์ (หรือใช้ auth_superadmin.php ถ้าต้องการ)
-include 'config/conn.php';            // 3. เชื่อมต่อฐานข้อมูล
-
-// 4. เรียกใช้ไฟล์ Logic ใหม่
+include 'templates/navbar.php';
+include 'config/auth_admin.php';
+include 'config/conn.php';
 include 'config/search_toggles.php';
-// (ไฟล์นี้จะสร้างตัวแปร: $searchYear, $filter_submit_type, $result_submit_types,
-// $result_toggles, $search_error_message)
-
-// ฟังก์ชันแปลงวันที่เป็น พ.ศ.
 function formatDateThai($date) {
     if (!$date || $date == '0000-00-00') {
         return '-';
     }
     $timestamp = strtotime($date);
-    $year = date('Y', $timestamp) + 543; // บวก 543 ปี
+    $year = date('Y', $timestamp) + 543;
     $month = date('m', $timestamp);
     $day = date('d', $timestamp);
     return $day . '/' . $month . '/' . $year;
@@ -47,11 +40,9 @@ function formatDateThai($date) {
                 <select id="submitType" name="submitType">
                     <option value="all">ทั้งหมด</option>
                     <?php
-                    // (ใช้ $result_submit_types จากไฟล์ logic)
                     if ($result_submit_types && mysqli_num_rows($result_submit_types) > 0) {
                         mysqli_data_seek($result_submit_types, 0); 
                         while ($type = mysqli_fetch_assoc($result_submit_types)) {
-                            // ($type['Submit_type_id'] คือ 1 หรือ 2)
                             $selected = ($filter_submit_type == $type['Submit_type_id']) ? 'selected' : '';
                             echo '<option value="' . $type['Submit_type_id'] . '" ' . $selected . '>' . htmlspecialchars($type['Submit_type_name']) . '</option>';
                         }
@@ -79,7 +70,6 @@ function formatDateThai($date) {
             </thead>
             <tbody>
 <?php
-// 10. ตรรกะการแสดงผล
 if (isset($search_error_message)) {
      echo "<tr><td colspan='6' class='text-center'>" . htmlspecialchars($search_error_message) . "</td></tr>";
 }
@@ -88,21 +78,14 @@ elseif ($result_toggles === null) {
 } 
 elseif ($result_toggles && mysqli_num_rows($result_toggles) > 0) {
     while ($row = mysqli_fetch_assoc($result_toggles)) {
-        
-        // 10.1 กำหนดสไตล์ให้สถานะ
         $status_class = ($row['Status'] == 'เปิด') ? 'status-open' : 'status-closed';
         
         echo "<tr>";
         echo "<td>" . htmlspecialchars($row['Academic']) . "</td>";
         echo "<td>" . htmlspecialchars($row['Submit_type_name']) . "</td>";
-        
-        // แก้ไข: เรียกใช้ฟังก์ชัน formatDateThai เพื่อแสดงวันที่เป็น พ.ศ.
         echo "<td>" . htmlspecialchars(formatDateThai($row['Start_date'])) . "</td>";
         echo "<td>" . htmlspecialchars(formatDateThai($row['End_date'])) . "</td>";
-        
         echo "<td class='{$status_class}'>" . htmlspecialchars($row['Status']) . "</td>";
-        
-        // 10.2 ปุ่มจัดการ (เหมือน indicators.php)
         echo '<td class="text-center">
                 <a href="edit_toggle.php?id=' . $row['Toggles_id'] . '" class="action-btn btn-edit">แก้ไข</a>
                 <a href="config/delete_toggle.php?id=' . $row['Toggles_id'] . '" class="action-btn btn-delete" 

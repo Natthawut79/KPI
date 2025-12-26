@@ -64,7 +64,6 @@ include 'config/academic_year_resolver.php';
             </thead>
             <tbody>
 <?php
-// [เพิ่ม] กำหนดปีปัจจุบัน (พ.ศ.) ไว้นอก Loop หรือใน Loop ก็ได้
 $current_year = $current_academic_year;
 
 if ($result_kpi === null) {
@@ -82,10 +81,9 @@ if ($result_kpi === null) {
         
         echo '<td class="text-center">';
 
-        // ปุ่มแก้ไข (แสดงปกติ)
         echo '<a href="edit_kpi_type.php?KPI_type_id=' . $row['KPI_type_id'] . '" class="action-btn btn-edit">แก้ไข</a> ';
         
-        // [แก้ไข] เงื่อนไขตรวจสอบปีการศึกษาสำหรับปุ่มลบ
+        // เงื่อนไขตรวจสอบปีการศึกษาสำหรับปุ่มลบ
         if ($row['Academic'] == $current_year) {
             // กรณีปีตรงกับปีปัจจุบัน -> แสดงปุ่มลบปกติ
             echo '<a href="config/checkdelete_kpi_type.php?KPI_type_id=' . $row['KPI_type_id'] . '" class="action-btn btn-delete"

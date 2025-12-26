@@ -1,11 +1,10 @@
 <?php
-include 'conn.php'; // เชื่อมต่อฐานข้อมูล
+include 'conn.php';
 
 // ตรวจสอบว่ามีการส่ง KPI_type_id มาหรือไม่
 if (isset($_GET['KPI_type_id'])) {
     $KPI_type_id = mysqli_real_escape_string($conn, $_GET['KPI_type_id']);
 
-    // สร้างคำสั่งลบ
     $sql = "DELETE FROM kpi_type WHERE KPI_type_id = '$KPI_type_id'";
 
     if (mysqli_query($conn, $sql)) {

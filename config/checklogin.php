@@ -5,7 +5,6 @@ include "conn.php";
 $Emp_code = $_POST['Emp_code'];
 $Password = $_POST['Password'];
 
-// Prepare and execute the statement to prevent SQL injection
 $stmt = $conn->prepare("SELECT * FROM user WHERE Emp_code = ?");
 $stmt->bind_param("s", $Emp_code);
 $stmt->execute();

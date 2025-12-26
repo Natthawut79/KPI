@@ -1,8 +1,8 @@
 <?php
-include 'conn.php'; // เรียกไฟล์เชื่อมต่อ DB
+include 'conn.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // --- ค่าที่มีอยู่เดิม ---
+    
     $KPI_topic_id = mysqli_real_escape_string($conn, $_POST['KPI_topic_id']);
     $KPI_type_id = mysqli_real_escape_string($conn, $_POST['KPI_type_id']);
     $Order_no = mysqli_real_escape_string($conn, $_POST['Order_no']);
@@ -14,40 +14,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $Important_level_no = mysqli_real_escape_string($conn, $_POST['Important_level_no']);
     $Description_text = mysqli_real_escape_string($conn, $_POST['Description_text']);
     
-    $Additional = mysqli_real_escape_string($conn, $_POST['fill_data']); // ค่าจาก "กรอกข้อมูลเพิ่มหรือไม่"
-    $Retrieve = mysqli_real_escape_string($conn, $_POST['fetch_data']); // ค่าจาก "ดึงข้อมูลจากฐานข้อมูลหรือไม่"
+    $Additional = mysqli_real_escape_string($conn, $_POST['fill_data']); 
+    $Retrieve = mysqli_real_escape_string($conn, $_POST['fetch_data']); 
 
-    // --- [เพิ่ม] รับค่าเกณฑ์ย่อย 1-5 ---
     $criteria_1 = isset($_POST['criteria_1']) ? mysqli_real_escape_string($conn, $_POST['criteria_1']) : '';
     $criteria_2 = isset($_POST['criteria_2']) ? mysqli_real_escape_string($conn, $_POST['criteria_2']) : '';
     $criteria_3 = isset($_POST['criteria_3']) ? mysqli_real_escape_string($conn, $_POST['criteria_3']) : '';
     $criteria_4 = isset($_POST['criteria_4']) ? mysqli_real_escape_string($conn, $_POST['criteria_4']) : '';
     $criteria_5 = isset($_POST['criteria_5']) ? mysqli_real_escape_string($conn, $_POST['criteria_5']) : '';
 
+    $subject_id_sql_set = "subject_id = NULL"; // ค่าเริ่มต้น
+    if (isset($_POST['subject_id']) && $_POST['subject_id'] !== '' && is_numeric($_POST['subject_id'])) {
+        $subject_id_sql_set = "subject_id = " . intval($_POST['subject_id']);
+    }
 
-    // 3. เตรียมค่า Table_id (สำหรับคอลัมน์ INT)
-    $Table_id_sql_set; // เราจะสร้างส่วนของ SQL UPDATE
-    if ($Retrieve === 'yes' && isset($_POST['Table_id']) && is_numeric($_POST['Table_id'])) {
+    $Table_id_sql_set = "Table_id = NULL"; 
+    if ($Retrieve === 'yes' && isset($_POST['Table_id']) && $_POST['Table_id'] !== '' && is_numeric($_POST['Table_id'])) {
         $Table_id_sql_set = "Table_id = " . intval($_POST['Table_id']);
-    } else {
-        // ถ้าไม่ดึงข้อมูล หรือไม่มีค่าส่งมา ให้ตั้งเป็น NULL
-        $Table_id_sql_set = "Table_id = NULL"; 
     }
 
-    // 4. เตรียมค่า Publication_type_id (สำหรับคอลัมน์ INT)
-    $Publication_type_id_sql_set;
+    $Publication_type_id_sql_set = "Publication_type_id = NULL";
     if ($Retrieve === 'yes' && isset($_POST['Table_id']) && $_POST['Table_id'] == '3' && 
-        isset($_POST['Publication_type_id']) && is_numeric($_POST['Publication_type_id'])) {
-        
+        isset($_POST['Publication_type_id']) && $_POST['Publication_type_id'] !== '' && is_numeric($_POST['Publication_type_id'])) {
         $Publication_type_id_sql_set = "Publication_type_id = " . intval($_POST['Publication_type_id']);
-    } else {
-        // ถ้าเงื่อนไขไม่ตรง (ไม่ใช่ publication หรือ ไม่มีค่าส่งมา) ให้ตั้งเป็น NULL
-        $Publication_type_id_sql_set = "Publication_type_id = NULL";
     }
 
-
-    // === [ แก้ไข SQL UPDATE ] ===
-    // เพิ่ม criteria_1 ถึง criteria_5 เข้าไปใน Query
     $sql = "UPDATE kpi_topic 
             SET KPI_type_id = '$KPI_type_id',
                 Order_no = '$Order_no',
@@ -65,13 +56,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 criteria_3 = '$criteria_3',
                 criteria_4 = '$criteria_4',
                 criteria_5 = '$criteria_5',
+                $subject_id_sql_set,
                 $Table_id_sql_set,
                 $Publication_type_id_sql_set
             WHERE KPI_topic_id = '$KPI_topic_id'";
 
-
     if (mysqli_query($conn, $sql)) {
-        // อัปเดตสำเร็จ กลับไปที่หน้าแสดงข้อมูล
         echo "<script>
                 alert('อัปเดตข้อมูลเรียบร้อยแล้ว');
                 window.location.href='../indicators.php';

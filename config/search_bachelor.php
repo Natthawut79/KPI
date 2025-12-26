@@ -1,18 +1,12 @@
 <?php
 
-// 1. รับค่า Filter (1 ช่อง: ปี)
 $searchYear = isset($_GET['searchYear']) ? trim($_GET['searchYear']) : '';
-
-// 2. (ไม่มี Dropdown ให้ Query)
-
-// 3. ตั้งค่าผลลัพธ์เริ่มต้น
 $result_kpi_list = null;
 $search_error_message = null; 
 
 // 4. ตรวจสอบว่ากด "ค้นหา"
 if (isset($_GET['search_button'])) {
 
-    // 5. สร้าง SQL Query หลัก (เหมือน mainsuper)
     $sql_kpi_list = "
     SELECT 
         e.Emp_code, t.Title_shortname, e.Fname_th, e.Lname_th, 
@@ -33,11 +27,9 @@ if (isset($_GET['search_button'])) {
     WHERE ik.Emp_code = ? 
 ";
 
-    // 7. สร้าง Array สำหรับ Bind
     $bind_params_values = []; 
-    $bind_params_values[] = $current_emp_code; // 1. Bind รหัสของคนที่ล็อกอิน
+    $bind_params_values[] = $current_emp_code;
 
-    // 8. Filters (มีแค่ปี)
     if ($searchYear !== '') {
         $sql_kpi_list .= " AND CAST(ik.kpi_year AS CHAR) LIKE ?";
         $bind_params_values[] = $searchYear . "%";
@@ -45,7 +37,6 @@ if (isset($_GET['search_button'])) {
     
     $sql_kpi_list .= " ORDER BY ik.kpi_year DESC";
 
-    // 9. รัน Query
     $stmt = mysqli_prepare($conn, $sql_kpi_list);
     
     if ($stmt === false) {

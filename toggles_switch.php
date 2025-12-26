@@ -4,7 +4,6 @@
     include 'config/auth_admin.php'; 
     include 'config/conn.php';
 
-    // ดึงประเภทการส่งข้อมูล
     $sql_submit_types = "SELECT Submit_type_id, Submit_type_name FROM submit_type ORDER BY Submit_type_id";
     $result_submit_types = $conn->query($sql_submit_types);
 ?>

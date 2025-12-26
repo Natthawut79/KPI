@@ -221,7 +221,7 @@ $spreadsheet->getDefaultStyle()->getFont()->setName('TH Sarabun New')->setSize(1
 
 //  กำหนด Style Arrays ที่จะใช้ (จากโค้ดเดิมและโค้ดที่ผู้ใช้ให้มา)
 $style_title_array = [
-    'font' => ['bold' => true, 'size' => 18], // 18-20 is good
+    'font' => ['bold' => true, 'size' => 18],
     'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER]
 ];
 
@@ -309,7 +309,7 @@ $style_rating_box_grey = [
 ];
 
 // ===================================================================
-// TAB 1: 1.หัวข้อตัวชี้วัด (โค้ดที่ผู้ใช้ให้มา)
+// TAB 1: 1.หัวข้อตัวชี้วัด
 // ===================================================================
 $sheet1 = $spreadsheet->getActiveSheet();
 $sheet1->setTitle('1.หัวข้อตัวชี้วัด');
@@ -354,13 +354,11 @@ $sheet1->getColumnDimension('D')->setWidth(100);
 $sheet1->getColumnDimension('E')->setWidth(10);
 $sheet1->getColumnDimension('F')->setWidth(10);
 $sheet1->getColumnDimension('G')->setWidth(10);
-$sheet1->getRowDimension(4)->setRowHeight(60); // เพิ่มความสูงให้แถวบนของหัวตาราง
-$sheet1->getRowDimension(5)->setRowHeight(30); // แถวล่างของหัวตาราง
+$sheet1->getRowDimension(4)->setRowHeight(60);
+$sheet1->getRowDimension(5)->setRowHeight(30);
 
-// --- ส่วนข้อมูล (วนลูปจาก $kpi_data) ---
-// [START] (*** EDITED ***)
 $row = 6; // <-- แก้ไขแถวเริ่มต้นข้อมูลเป็น 6
-// [END] (*** EDITED ***)
+
 if (!empty($kpi_data)) {
     foreach ($kpi_data as $kpi_type_id => $kpi_type) {
         $topics_in_type = $kpi_type['topics'] ?? [];
@@ -421,23 +419,17 @@ if (!empty($kpi_data)) {
         }
     }
 } else {
-    // [START] (*** EDITED ***)
-    $sheet1->setCellValue('A6', '--- ไม่พบข้อมูลตัวชี้วัดสำหรับผู้ใช้และปีการศึกษานี้ ---'); // <-- แก้ไขแถวเป็น A6
-    $sheet1->mergeCells('A6:G6'); // <-- แก้ไขแถวเป็น A6:G6
-    $sheet1->getStyle('A6:G6')->applyFromArray($style_all_borders_array); // <-- แก้ไขแถวเป็น A6:G6
-    // [END] (*** EDITED ***)
+    $sheet1->setCellValue('A6', '--- ไม่พบข้อมูลตัวชี้วัดสำหรับผู้ใช้และปีการศึกษานี้ ---');
+    $sheet1->mergeCells('A6:G6');
+    $sheet1->getStyle('A6:G6')->applyFromArray($style_all_borders_array);
 }
-// --- จบส่วนข้อมูล Tab 1 (โค้ดผู้ใช้) ---
 
 
 // === [ TAB 2: 2.แบบกำหนดรายละเอียด KPIs ] ===
 $sheet2 = $spreadsheet->createSheet();
 $sheet2->setTitle('2.แบบกำหนดรายละเอียด KPIs');
-
-// +++ [START] NEW TABLE FROM IMAGE (เพิ่มส่วนนี้) +++
 $row = 1;
 
-// --- Define Styles for this new table ---
 $style_sig_header = [
     'font' => ['bold' => true],
     'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
@@ -474,8 +466,6 @@ $style_review_box_yellow = [
     'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FFFFF7CC']] // Light Yellow
 ];
 
-// [START] (*** NEW ***) Modify merge ranges to span A-O
-// --- Row 1: Signature Headers (Beige) ---
 $sheet2->setCellValue('A'.$row, 'รอบการประเมิน');
 $sheet2->mergeCells('A'.$row.':C'.$row); // 3 cols
 $sheet2->setCellValue('D'.$row, 'ลายมือชื่อพนักงาน');
@@ -484,9 +474,8 @@ $sheet2->setCellValue('I'.$row, 'ลายมือชื่อผู้บั�
 $sheet2->mergeCells('I'.$row.':O'.$row); // 7 cols
 $sheet2->getStyle('A'.$row.':O'.$row)->applyFromArray($style_sig_header); // Span A-O
 $sheet2->getRowDimension($row)->setRowHeight(30);
-$row++; // $row = 2
+$row++;
 
-// --- Row 2: Mid-Year (Yellow) ---
 $sheet2->setCellValue('A'.$row, 'การประเมินผลกลางปี (เดือนมกราคม 2568)');
 $sheet2->mergeCells('A'.$row.':C'.$row); // 3 cols
 $sheet2->getStyle('A'.$row.':C'.$row)->applyFromArray($style_sig_label_yellow);
@@ -540,12 +529,11 @@ $sheet2->getStyle('J'.$row.':O'.$row)->applyFromArray($style_align_center_array)
 $sheet2->getStyle('J'.$row.':O'.$row)->getFont()->setBold(true); // ทำตัวหนา
 $sheet2->getRowDimension($row)->setRowHeight(32.5); // (130 / 4)
 $row++; // $row = 8
-// [END] (*** NEW ***)
-// --- ( *** END EDIT *** ) ---
 
 
-// [START] (*** NEW ***) Add Rating Scale Table from Image (แทนที่ $row++;)
-$row = 9; // Start at row 9
+
+
+$row = 9;
 
 // --- Row 1: Orange Title Bar ---
 $sheet2->setCellValue('A'.$row, 'ส่วนที่ 1 : SECTION FIRST-GOAL SETTING AND EVALUATION/การประเมินผลตามเป้าหมายที่กำหนด');
@@ -588,16 +576,10 @@ $sheet2->mergeCells('L'.$row.':O'.$row); // 4 cols
 $sheet2->getStyle('A'.$row.':O'.$row)->applyFromArray($style_rating_box_grey); // Span A-O
 $sheet2->getRowDimension($row)->setRowHeight(100); // Set height for 4 lines of text
 
-$row++; // $row = 12
-
-// --- Add a blank row for spacing ---
-$row++; // $row = 13. The main table will start here.
-
-// [END] (*** NEW ***)
-// --- [END] NEW TABLE FROM IMAGE ---
+$row++;
 
 
-// [START] (*** NEW ***) // หัวตาราง (ตอนนี้ 15 คอลัมน์ A-O)
+$row++;
 $row_num = $row; // (แก้ไข) เริ่มตารางหลักที่แถวถัดไป (ตอนนี้ $row = 13)
 $sheet2->setCellValue('A'.$row_num, 'ลำดับ');
 $sheet2->setCellValue('B'.$row_num, 'ตัวชี้วัด (KPIs)');
@@ -605,27 +587,23 @@ $sheet2->setCellValue('C'.$row_num, 'หน่วยนับ');
 $sheet2->setCellValue('D'.$row_num, 'เป้าหมาย'); 
 $sheet2->setCellValue('E'.$row_num, 'เกณฑ์การให้คะแนน');
 $sheet2->setCellValue('F'.$row_num, 'น้ำหนัก'); 
-$sheet2->setCellValue('G'.$row_num, 'เป้าหมายครึ่งปีแรก'); // (*** NEW COLUMN ***)
-$sheet2->setCellValue('H'.$row_num, 'ผลงานครึ่งปีแรก'); // (was G)
-$sheet2->setCellValue('I'.$row_num, 'เป้าหมายครึ่งปีหลัง'); // (was H)
-$sheet2->setCellValue('J'.$row_num, 'ผลงานครึ่งปีหลัง'); // (was I)
-$sheet2->setCellValue('K'.$row_num, 'ผลงานรวม'); // (was J)
-$sheet2->setCellValue('L'.$row_num, 'ค่าน้ำหนัก'); // (was K)
-$sheet2->setCellValue('M'.$row_num, 'ผลคะแนน'); // (was L)
-$sheet2->setCellValue('N'.$row_num, 'คะแนนรวมน้ำหนักxผลคะแนน'); // (was M)
+$sheet2->setCellValue('G'.$row_num, 'เป้าหมายครึ่งปีแรก');
+$sheet2->setCellValue('H'.$row_num, 'ผลงานครึ่งปีแรก');
+$sheet2->setCellValue('I'.$row_num, 'เป้าหมายครึ่งปีหลัง');
+$sheet2->setCellValue('J'.$row_num, 'ผลงานครึ่งปีหลัง');
+$sheet2->setCellValue('K'.$row_num, 'ผลงานรวม');
+$sheet2->setCellValue('L'.$row_num, 'ค่าน้ำหนัก');
+$sheet2->setCellValue('M'.$row_num, 'ผลคะแนน');
+$sheet2->setCellValue('N'.$row_num, 'คะแนนรวมน้ำหนักxผลคะแนน');
 $sheet2->setCellValue('O'.$row_num, 'หมายเหตุ'); // (was N)
-//  แก้ไข: ปรับ range
 $sheet2->getStyle('A'.$row_num.':O'.$row_num)->applyFromArray($header_style_array); // (A-O)
 $sheet2->getRowDimension($row_num)->setRowHeight(60); // (Increased height)
-// [END] (*** NEW ***)
 
 
-// ลูปข้อมูลผลงาน (จาก $kpi_data และ $saved_review_data)
-$row_num = $row_num + 1; // (แก้ไข) ต้องบวก 1 เพื่อเริ่มแถวข้อมูล (e.g., 14)
-$data_start_row = $row_num; // [*** NEW ***] Dynamically set the start row
+$row_num = $row_num + 1;
+$data_start_row = $row_num;
 $type_order = 1;
 foreach ($kpi_data as $type_id => $kpi_type) {
-    // [START] (*** EDITED ***)
     // ชื่อหมวด
     $sheet2->setCellValue('A' . $row_num, $type_order . '.'); 
     
@@ -668,7 +646,6 @@ foreach ($kpi_data as $type_id => $kpi_type) {
             $saved_h1 = $saved_review_data[$topic_id . "_1"] ?? null; 
             $saved_h2 = $saved_review_data[$topic_id . "_2"] ?? null; 
 
-            // --- [1] เตรียมข้อมูลชื่อ KPI และ รายละเอียดเพิ่มเติม ---
             $kpi_name_display = $topic['name'];
             
             // ตรวจสอบว่าต้องมี Additional หรือไม่
@@ -677,8 +654,6 @@ foreach ($kpi_data as $type_id => $kpi_type) {
                 // นำข้อความมาต่อท้ายในตัวแปรเดียวกัน (ใช้ \n เพื่อขึ้นบรรทัดใหม่ใน Excel)
                 $kpi_name_display .= "\n\nคณะกรรมการชุดที่ :\n(ระบุ).................................................................." . $add_text;
             }
-
-            // --- [2] เขียนข้อมูลลงในแถว ---
             $sheet2->setCellValue('A' . $row_num, $topic['id']);
             
             // ใส่ข้อมูลที่รวมแล้วลงในช่อง B ช่องเดียว
@@ -703,13 +678,13 @@ foreach ($kpi_data as $type_id => $kpi_type) {
             $advice_text = $saved_h2['Advice'] ?? ($saved_h1['Advice'] ?? '');
             $sheet2->setCellValue('O' . $row_num, $advice_text);
 
-            // --- [3] จัดรูปแบบ (Style) ---
+            // --- จัดรูปแบบ (Style) ---
             $sheet2->getStyle('A' . $row_num . ':O' . $row_num)->applyFromArray($style_all_borders_array);
 
-            // 1. ตั้งค่าพื้นฐาน: ให้ทุกช่องชิดขอบบน (Vertical Top)
+            //  ตั้งค่าพื้นฐาน: ให้ทุกช่องชิดขอบบน (Vertical Top)
             $sheet2->getStyle('A' . $row_num . ':O' . $row_num)->getAlignment()->setVertical(Alignment::VERTICAL_TOP);
 
-            // 2. จัดกึ่งกลาง (Center) เฉพาะคอลัมน์ที่ต้องการ
+            // จัดกึ่งกลาง (Center) เฉพาะคอลัมน์ที่ต้องการ
             // A=ลำดับ, C=หน่วยนับ, D=เป้าหมาย, F=น้ำหนัก
             $sheet2->getStyle('A' . $row_num)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $sheet2->getStyle('C' . $row_num . ':D' . $row_num)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
@@ -718,7 +693,7 @@ foreach ($kpi_data as $type_id => $kpi_type) {
             // จัดกึ่งกลางสำหรับส่วนคะแนนท้ายตาราง (L, M, N)
             $sheet2->getStyle('L' . $row_num . ':N' . $row_num)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-            // 3. จัดชิดซ้าย (Left) เฉพาะคอลัมน์ที่ข้อความยาว
+            // จัดชิดซ้าย (Left) เฉพาะคอลัมน์ที่ข้อความยาว
             // E=เกณฑ์การให้คะแนน
             $sheet2->getStyle('E' . $row_num)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
             
@@ -744,7 +719,6 @@ foreach ($kpi_data as $type_id => $kpi_type) {
         $row_num++;
     }
 
-    // [START] (*** EDITED ***)
     // สรุปคะแนนท้ายหมวด
     $sheet2->mergeCells('A' . $row_num . ':M' . $row_num); // (was A-L)
     $sheet2->setCellValue('A' . $row_num, 'รวมคะแนนประจำหมวด');
@@ -753,16 +727,10 @@ foreach ($kpi_data as $type_id => $kpi_type) {
     
     $sheet2->setCellValue('N' . $row_num, $saved_category_scores[$type_id] ?? '0.00'); // (was M)
     $sheet2->getStyle('N' . $row_num)->getFont()->setBold(true);
-    
-    // $sheet2->getStyle('A' . $row_num . ':O' . $row_num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFE0E0E0'); // (*** EDITED ***) ลบสีเทาออก
-    // [END] (*** EDITED ***)
-    
     $row_num++;
 }
 
-// [START] (*** NEW ***)
-//  เพิ่ม: แถบสีส้มตามรูปภาพ (แก้ไข Layout)
-// ส่วนซ้าย
+
 $sheet2->mergeCells('A' . $row_num . ':E' . $row_num); // (No change)
 $sheet2->setCellValue('A' . $row_num, 'รวมน้ำหนักด้านผลสำเร็จของงาน');
 $sheet2->getStyle('A' . $row_num)->getFont()->setBold(true)->setSize(18);
@@ -786,22 +754,19 @@ $sheet2->getStyle('N' . $row_num)->getAlignment()->setHorizontal(Alignment::HORI
 
 // Set Orange background color
 $sheet2->getStyle('A'.$row_num.':O'.$row_num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFFCD5B4'); // (was A-N)
-// [END] (*** NEW ***)
+
 
 
 // สรุปคะแนนรวมทั้งหมด (Green Rows)
 $row_num += 1;
 
-
-// [START] (*** NEW ***)
-// Set Column Widths (Sheet 2) (ตอนนี้ 15 คอลัมน์ A-O)
 $sheet2->getColumnDimension('A')->setWidth(20); 
 $sheet2->getColumnDimension('B')->setWidth(15);
 $sheet2->getColumnDimension('C')->setWidth(15);
 $sheet2->getColumnDimension('D')->setWidth(20); 
 $sheet2->getColumnDimension('E')->setWidth(15);
 $sheet2->getColumnDimension('F')->setWidth(15);
-$sheet2->getColumnDimension('G')->setWidth(25); // (Signature G/H/I area)
+$sheet2->getColumnDimension('G')->setWidth(25);
 $sheet2->getColumnDimension('H')->setWidth(15); 
 $sheet2->getColumnDimension('I')->setWidth(15); 
 $sheet2->getColumnDimension('J')->setWidth(15); // (NEW) (was I)
@@ -819,11 +784,7 @@ $sheet2->getColumnDimension('G')->setWidth(30); // (*** NEW ***) G-เป้า�
 $sheet2->getColumnDimension('H')->setWidth(30); // (was G) H-ผลงาน H1
 $sheet2->getColumnDimension('I')->setWidth(30); // (was H) I-เป้าหมาย H2
 $sheet2->getColumnDimension('J')->setWidth(30); // (was I) J-ผลงาน H2
-// [END] (*** NEW ***)
 
-
-// [START] (*** NEW ***)
-// Enable Wrap Text
 $sheet2->getStyle('B'.$data_start_row.':B'.$row_num)->getAlignment()->setWrapText(true); // B-ตัวชี้วัด
 $sheet2->getStyle('D'.$data_start_row.':D'.$row_num)->getAlignment()->setWrapText(true); // D-เป้าหมาย
 $sheet2->getStyle('E'.$data_start_row.':E'.$row_num)->getAlignment()->setWrapText(true); // E-เกณฑ์
@@ -831,7 +792,6 @@ $sheet2->getStyle('G'.$data_start_row.':G'.$row_num)->getAlignment()->setWrapTex
 $sheet2->getStyle('H'.$data_start_row.':H'.$row_num)->getAlignment()->setWrapText(true); // (was G) H-ผลงาน H1
 $sheet2->getStyle('J'.$data_start_row.':K'.$row_num)->getAlignment()->setWrapText(true); // (was I-J) J-ผลงาน H2, K-ผลงานรวม
 $sheet2->getStyle('O'.$data_start_row.':O'.$row_num)->getAlignment()->setWrapText(true); // (was N) O-หมายเหตุ
-// [END] (*** NEW ***)
 
 
 // Set Vertical Alignment to Top for all data rows
@@ -870,12 +830,7 @@ $sheet2->getStyle('N' . $data_start_row . ':N' . $row_num)
     ->getAlignment()
     ->setHorizontal(Alignment::HORIZONTAL_CENTER)
     ->setVertical(Alignment::VERTICAL_TOP);
-// [END] (*** EDITED ***)
 
-
-// ===================================================================
-// START:  โค้ด TAB 3 ใหม่ (จากผู้ใช้)
-// ===================================================================
 $sheet3 = $spreadsheet->createSheet();
 $sheet3->setTitle('3.แบบประเมินผลการปฏิบัติ');
 
@@ -896,8 +851,7 @@ $sheet3->getColumnDimension('M')->setWidth(15);
 $sheet3->getColumnDimension('N')->setWidth(15);
 $sheet3->getColumnDimension('O')->setWidth(15);
 
-// [START] (*** EDITED ***)
-// [START] (แก้ไข) ส่วนที่ 1: เกณฑ์สำหรับการประเมินประจำปี (อัปเดตข้อความตาม individual_kpi.php)
+
 $row = 1; // (CSV Row 15) <-- เปลี่ยนจาก 15 เป็น 1
 $sheet3->setCellValue('A' . $row, 'ส่วนที่ 1: เกณฑ์สำหรับการประเมินประจำปี');
 // [END] (*** EDITED ***)
@@ -943,15 +897,13 @@ foreach ($criteria_data_tab3 as $score => $definition) {
 }
 $criteria_end_row = $row - 1; // 21
 
-// --- ใช้ Style กับข้อมูลเกณฑ์ ---
-// จัดกลางให้คะแนน (A-C)
-//  แก้ไข: ใช้ Style Array
+
 $sheet3->getStyle('A' . $criteria_start_row . ':C' . $criteria_end_row)->applyFromArray($style_align_center_array);
 // จัดชิดซ้ายบนและตัดคำให้คำนิยาม (D-O)
 //  แก้ไข: ใช้ Style Array
 $sheet3->getStyle('D' . $criteria_start_row . ':O' . $criteria_end_row)->applyFromArray($style_align_wrap_text_array);
 
-// --- เว้นว่าง 2 แถว ตาม CSV (Rows 22, 23) ---
+
 $row++; // 22
 $row++; // 23
 // [END] จบส่วนเกณฑ์การประเมิน
@@ -1237,7 +1189,7 @@ if (!empty($kpi_data)) {
     $sheet3->getStyle('A28:O28')->applyFromArray($style_all_borders_array);
     $row = 29; // ตั้งค่า $row เผื่อกรณีไม่มีข้อมูล
 }
-// --- [END] จบส่วนข้อมูลหลัก Tab 3 ---
+
 
 // --- ส่วนที่ 2: แผนการพัฒนา (Development Plan) (เพิ่มตาม CSV) ---
 $sheet3->setCellValue('A' . $row, 'ส่วนที่ 2 : แผนการพัฒนา /SECTION THIRD – DEVELOPMENT PLAN');
@@ -1274,9 +1226,7 @@ $sheet3->getRowDimension($headerRow)->setRowHeight(80);
 $row++;
 
 
-// เราจะวน 3 "ชุด"
-// โดยใช้ $i = 1 (ชุดที่ 1), $i = 3 (ชุดที่ 2), $i = 5 (ชุดที่ 3)
-// $i += 2 หมายถึง ให้ $i เพิ่มทีละ 2
+
 for ($i = 1; $i <= 5; $i += 2) {
 
     // --- แถว "แผน" (ใช้ $i) ---
@@ -1378,15 +1328,7 @@ for ($i = 1; $i <= 5; $i += 2) {
 
     $row++;
 }
-// --- [END] จบส่วนข้อมูล Tab 3 ---
-// ===================================================================
-// ⬆⬆⬆ [END] โค้ดที่แก้ไขสำหรับ TAB 3 (โครงสร้างใหม่) ⬆⬆⬆
-// ===================================================================
 
-
-// 6. ส่งไฟล์ให้ User
-// -----------------------------------------------------------------
-// ตั้งค่า Active Sheet เป็นแผ่นแรก
 $spreadsheet->setActiveSheetIndex(0);
 
 // ตั้งชื่อไฟล์

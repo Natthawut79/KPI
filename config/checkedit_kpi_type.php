@@ -1,5 +1,5 @@
 <?php
-include 'conn.php'; // เรียกไฟล์เชื่อมต่อ DB
+include 'conn.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // รับค่าที่ส่งมาจากฟอร์ม
@@ -12,7 +12,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $Academic          = mysqli_real_escape_string($conn, $_POST['Academic']);
     $Group_ID          = mysqli_real_escape_string($conn, $_POST['Group_ID']);
 
-    // เขียนคำสั่ง SQL สำหรับอัปเดตข้อมูล
     $sql = "UPDATE kpi_type 
             SET KPI_Type_Name_EN = '$KPI_Type_Name_EN',
                 KPI_Type_Name_TH = '$KPI_Type_Name_TH',

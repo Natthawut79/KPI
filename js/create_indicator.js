@@ -1,27 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // ==========================================
-    // 1. ประกาศตัวแปรและอ้างอิง Element
-    // ==========================================
+
     const kpiTypeSelect = document.getElementById('kpi_type_select');
     const radioButtons = document.querySelectorAll('input[name="Group_ID"]');
     const orderNoInput = document.getElementById('order_no_input');
+    
+    // เพิ่มตัวแปรสำหรับ Subject Topic
+    const subjectSelect = document.getElementById('subject_select');
     
     const articleTypeSelect = document.getElementById('article_type_select');
     const publicationOptionsGroup = document.getElementById('publication_options_group');
     const fetchDataRadios = document.querySelectorAll('input[name="fetch_data"]');
     const articleTypeGroup = document.getElementById('article_type_group'); 
 
-    // อ่านค่าเริ่มต้นจาก HTML data attributes (ถ้ามี)
     const loadedKpiTypeId = kpiTypeSelect ? kpiTypeSelect.getAttribute('data-loaded-type-id') : null;
     const loadedOrderNo = orderNoInput ? orderNoInput.getAttribute('data-loaded-order-no') : '';
+    const loadedSubjectId = subjectSelect ? subjectSelect.getAttribute('data-loaded-subject-id') : null;
 
-    // ==========================================
-    // 2. ฟังก์ชันสำหรับดึงข้อมูล (AJAX)
-    // ==========================================
-
-    // ฟังก์ชันโหลด Order No ถัดไป
     function loadNextOrderNo(kpiTypeId) {
-        // ดึงค่าใหม่เฉพาะตอนสร้าง (ไม่มี loadedKpiTypeId) และมีการเลือกค่า
         if (kpiTypeId && !loadedKpiTypeId) { 
             fetch('create_indicator.php?kpi_type_id=' + kpiTypeId)
                 .then(response => response.json())
@@ -30,9 +25,45 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .catch(error => console.error('Error loading next Order_no:', error));
         } else if (!kpiTypeId && !loadedKpiTypeId) {
-            // ถ้าเลือกกลับไปที่ค่าว่าง ให้ล้างช่อง
             if(orderNoInput) orderNoInput.value = '';
         }
+    }
+
+    function loadSubjects(kpiTypeId) {
+        if (!subjectSelect) return;
+
+        if (!kpiTypeId) {
+            subjectSelect.innerHTML = '<option value="">--- กรุณาเลือก ---</option>';
+            return;
+        }
+
+        fetch(`create_indicator.php?get_subjects=1&kpi_type_id=${kpiTypeId}`)
+            .then(response => response.json())
+            .then(data => {
+                // ล้างตัวเลือกเก่า
+                subjectSelect.innerHTML = '<option value="">--- กรุณาเลือก ---</option>';
+
+                if (data && data.length > 0) {
+                    data.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.subject_id;
+                        option.textContent = item.subject_name;
+
+                        // เลือกค่าเดิมอัตโนมัติ (กรณีแก้ไข หรือโหลดครั้งแรก)
+                        if (loadedSubjectId && item.subject_id == loadedSubjectId) {
+                            option.selected = true;
+                        }
+                        subjectSelect.appendChild(option);
+                    });
+                } else {
+                    // กรณีไม่มีข้อมูล
+                    const option = document.createElement('option');
+                    option.value = "";
+                    option.textContent = "- ไม่มีหัวข้อตัวชี้วัด -";
+                    subjectSelect.appendChild(option);
+                }
+            })
+            .catch(error => console.error('Error loading subjects:', error));
     }
 
     // ฟังก์ชันโหลด KPI Types ตามกลุ่ม
@@ -52,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     data.forEach(kpiType => {
                         const option = document.createElement('option');
                         option.value = kpiType.KPI_type_id;
-                        // เลือกแสดงชื่อภาษาไทย (TH) หรืออังกฤษ (EN) ตามต้องการ
                         option.textContent = kpiType.KPI_Type_Name_EN; 
                         
                         // เลือกค่าเดิมอัตโนมัติ (กรณีแก้ไข)
@@ -61,31 +91,33 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                         kpiTypeSelect.appendChild(option);
                     });
+
+                    // หลังจากโหลด KPI Type เสร็จ ให้โหลด Subject ต่อทันที ถ้ามีค่าเลือกอยู่
+                    if (kpiTypeSelect.value) {
+                        loadSubjects(kpiTypeSelect.value);
+                    } else {
+                        loadSubjects("");
+                    }
                 }
 
                 // จัดการช่อง Order No
                 if (orderNoInput) {
                     if (loadedKpiTypeId) {
-                        orderNoInput.value = loadedOrderNo; // กรณีแก้ไข ใช้ค่าเดิม
+                        orderNoInput.value = loadedOrderNo;
                     } else {
-                        orderNoInput.value = ''; // กรณีสร้างใหม่ ล้างค่ารอเลือก KPI Type
+                        orderNoInput.value = '';
                     }
                 }
             })
             .catch(error => console.error('Error loading KPI types:', error));
     }
-
-    // ==========================================
-    // 3. ฟังก์ชันสำหรับซ่อน/แสดงฟิลด์ (Toggle)
-    // ==========================================
-
     // เช็คประเภทการตีพิมพ์ (แสดงเมื่อเลือก publication)
     function togglePublicationOptions() {
         if (!articleTypeSelect || !publicationOptionsGroup) return;
 
         // เช็คว่าเป็น publication (ID 3) หรือไม่
         if (articleTypeSelect.value == '3') { 
-            publicationOptionsGroup.style.display = 'grid'; // หรือ block แล้วแต่ CSS
+            publicationOptionsGroup.style.display = 'grid';
         } else {
             publicationOptionsGroup.style.display = 'none';
         }
@@ -105,10 +137,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // ==========================================
-    // 4. กำหนด Event Listeners
-    // ==========================================
-
     // เมื่อเปลี่ยนกลุ่ม KPI (Radio Group)
     radioButtons.forEach(radio => {
         radio.addEventListener('change', function() {
@@ -118,10 +146,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // เมื่อเปลี่ยน KPI Type (Dropdown) -> ไปดึง Order No
+    // เมื่อเปลี่ยน KPI Type (Dropdown) -> ไปดึง Order No และ Subject
     if(kpiTypeSelect) {
         kpiTypeSelect.addEventListener('change', function() {
             loadNextOrderNo(this.value);
+            loadSubjects(this.value); // [เพิ่มใหม่] เรียกโหลด Subject เมื่อเปลี่ยน KPI Type
         });
     }
 
@@ -134,12 +163,8 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchDataRadios.forEach(radio => {
         radio.addEventListener('change', toggleArticleOptions);
     });
-
-    // ==========================================
-    // 5. เริ่มทำงานเมื่อโหลดหน้าเว็บ (Initial Run)
-    // ==========================================
     
-    // 5.1 โหลด KPI Types ตามกลุ่มที่เลือกไว้เริ่มต้น
+    // โหลด KPI Types ตามกลุ่มที่เลือกไว้เริ่มต้น
     const checkedGroupRadio = document.querySelector('input[name="Group_ID"]:checked');
     if (checkedGroupRadio) {
         loadKpiTypes(checkedGroupRadio.value);
@@ -149,6 +174,6 @@ document.addEventListener('DOMContentLoaded', function() {
         loadKpiTypes(radioButtons[0].value);
     }
 
-    // 5.2 ปรับสถานะการซ่อน/แสดงฟิลด์
+    //ปรับสถานะการซ่อน/แสดงฟิลด์
     toggleArticleOptions();
 });

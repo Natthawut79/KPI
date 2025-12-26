@@ -72,12 +72,10 @@
                 <label>ประเภทผู้ใช้:</label>
                 <select name="Type_id" required>
                     <?php
-                    // แก้ไข SQL เพื่อดึง Type_name_th มาด้วย
                     $sql_type = "SELECT Type_id, Type_name, Type_name_th FROM user_type";
                     $res_type = mysqli_query($conn, $sql_type);
 
                     while ($type = mysqli_fetch_assoc($res_type)) {
-                        // กำหนดการแสดงผลเป็น: ชื่อภาษาไทย (ชื่อภาษาอังกฤษ)
                         $display_name = htmlspecialchars($type['Type_name_th']) . " (" . htmlspecialchars($type['Type_name']) . ")";
 
                         echo "<option value='{$type['Type_id']}'>{$display_name}</option>";

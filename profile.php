@@ -2,7 +2,6 @@
 session_start();
 include 'config/conn.php';
 
-// ถ้ามี Emp_code ส่งมาผ่าน URL (GET) ให้ใช้ค่านั้นก่อน
 if (isset($_GET['Emp_code'])) {
     $Emp_code = mysqli_real_escape_string($conn, $_GET['Emp_code']);
 } elseif (isset($_SESSION['Emp_code'])) {
@@ -13,7 +12,6 @@ if (isset($_GET['Emp_code'])) {
     exit();
 }
 
-// === [ 1. ตรวจสอบว่าผู้ใช้ที่ล็อกอินอยู่เป็น Admin (Type_id = 1) หรือไม่ ] ===
 $is_admin = (isset($_SESSION['Type_id']) && $_SESSION['Type_id'] == 1);
 
 
@@ -106,20 +104,15 @@ include 'templates/navbar.php';
                 <label for="Type_id">ประเภทผู้ใช้</label>
 
                 <?php
-                // กำหนด attribute 'disabled' ถ้าผู้ใช้ที่ล็อกอินไม่ใช่ Admin
                 $disabled_attr = $is_admin ? '' : 'disabled';
                 ?>
 
                 <select name="Type_id" id="Type_id" required <?php echo $disabled_attr; ?>>
                     <?php
-                    // แก้ไข SQL เพื่อดึง Type_name_th มาด้วย
                     $sql_type = "SELECT Type_id, Type_name, Type_name_th FROM user_type";
                     $res_type = mysqli_query($conn, $sql_type);
                     while ($type = mysqli_fetch_assoc($res_type)) {
-                        // กำหนดการแสดงผลเป็น: ชื่อภาษาไทย (ชื่อภาษาอังกฤษ)
                         $display_name = htmlspecialchars($type['Type_name_th']) . " (" . htmlspecialchars($type['Type_name']) . ")";
-
-                        // ตรวจสอบว่า Type_id ของ option ตรงกับ Type_id ของ user ที่กำลังดูหรือไม่
                         $selected = ($type['Type_id'] == $viewed_user_type_id) ? "selected" : "";
 
                         echo "<option value='{$type['Type_id']}' $selected>{$display_name}</option>";

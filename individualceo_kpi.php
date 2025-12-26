@@ -10,15 +10,11 @@ if (!isset($_SESSION['Emp_code'])) {
     exit();
 }
 $is_viewing_other = false;
-
-// ตรวจสอบว่ามีการส่ง Emp_code และ year มาจาก URL (mainsuper.php) หรือไม่
 if (isset($_GET['Emp_code']) && !empty($_GET['Emp_code']) && isset($_GET['year']) && !empty($_GET['year'])) {
 
     $is_viewing_other = true;
     $current_emp_code = $_GET['Emp_code'];
     $current_academic_year = $_GET['year'];
-
-    // **สำคัญ:** ต้องค้นหา Type_id ของ User ที่กำลังดูข้อมูล
     $sql_get_user_type = "SELECT Type_id FROM user WHERE Emp_code = ? LIMIT 1";
     $stmt_get_type = $conn->prepare($sql_get_user_type);
 
@@ -30,7 +26,6 @@ if (isset($_GET['Emp_code']) && !empty($_GET['Emp_code']) && isset($_GET['year']
         if ($row_type = $result_get_type->fetch_assoc()) {
             $user_type_id = $row_type['Type_id'];
         } else {
-            // ไม่พบ User นี้
             echo "<p>Error: ไม่พบข้อมูลผู้ใช้ (Emp_code: " . htmlspecialchars($current_emp_code) . ").</p>";
             exit();
         }
@@ -41,19 +36,10 @@ if (isset($_GET['Emp_code']) && !empty($_GET['Emp_code']) && isset($_GET['year']
     }
 
 } else {
-    // --- 2. ดูข้อมูลของตัวเอง (Login) ---
     $current_emp_code = $_SESSION['Emp_code'];
     $user_type_id = $_SESSION['Type_id'];
-
-    // --- กำหนดปีการศึกษา (ดึงปีปัจจุบัน พ.ศ.) ---
-    // $current_year_ad = date('Y'); // ดึงปี ค.ศ. ปัจจุบัน
-    // $current_academic_year = intval($current_year_ad) + 543; // แปลงเป็น พ.ศ.
-
 }
 $is_approved = false;
-
-// เตรียมคำสั่ง SQL เพื่อนับว่ามี KPI ที่อนุมัติแล้วหรือไม่
-// (เราจะเช็คเฉพาะ Submit_type_id = 2 ซึ่งคือการส่งรอบสุดท้าย)
 $sql_check_approve = "SELECT COUNT(*) as approval_count
                       FROM individual_kpi
                       WHERE Emp_code = ?
@@ -67,8 +53,6 @@ if ($stmt_check) {
     $stmt_check->execute();
     $result_check = $stmt_check->get_result();
     $row_check = $result_check->fetch_assoc();
-
-    // ถ้าพบนับได้มากกว่า 0 แถว แปลว่าอนุมัติแล้ว
     if ($row_check && $row_check['approval_count'] > 0) {
         $is_approved = true;
     }
@@ -90,34 +74,22 @@ if ($stmt_get_info) {
 }
 
 if ($viewed_user_data === null) {
-    // ถ้าไม่พบข้อมูล (ซึ่งไม่ควรเกิดขึ้นถ้าโค้ดก่อนหน้าทำงานถูก)
     $viewed_user_data = ['Fname_th' => 'ไม่พบ', 'Lname_th' => 'ข้อมูล'];
 }
 
-// 1. ตั้งค่าโซนเวลาประเทศไทย
+// ตั้งค่าโซนเวลาประเทศไทย
 date_default_timezone_set('Asia/Bangkok');
 $current_datetime_str = date('Y-m-d H:i:s');
 
-// 2. ตั้งค่าตัวแปรเริ่มต้น (Default = ปิด)
+// ตั้งค่าตัวแปรเริ่มต้น (Default = ปิด)
 $is_editable = false;
 $active_submit_type_id = 0;
 $active_period_name = "นอกช่วงเวลาทำการ";
 
-
-
-// ตรวจสอบว่ามี mode=edit ส่งมาจาก URL (จาก approve_kpi.php) หรือไม่
 $is_admin_edit_mode = (isset($_GET['mode']) && $_GET['mode'] === 'edit');
-
-// (ดึงปีปัจจุบันจริงๆ มาเทียบ)
 $actual_current_year_ph = $system_current_academic_year;
 
-// กรณีที่ 1: Admin กดแก้ไข (มาจาก approve_kpi.php)
-// ($is_viewing_other คือ true เพราะมี Emp_code ใน URL)
 if ($is_viewing_other && $is_admin_edit_mode) {
-
-    // นี่คือ Admin ที่กด "แก้ไข"
-    // เราจะตรวจสอบว่า "ระบบเปิดให้บันทึกหรือไม่" (เพื่อให้ Admin แก้ไขได้เฉพาะช่วงเวลาที่กำหนด)
-
     $sql_check_active_period = "SELECT ts.Status, ts.Submit_type_id, st.Submit_type_name
                                 FROM toggles_switch ts
                                 JOIN submit_type st ON ts.Submit_type_id = st.Submit_type_id
@@ -151,20 +123,16 @@ if ($is_viewing_other && $is_admin_edit_mode) {
     }
 
 }
-// กรณีที่ 2: ดูของคนอื่น (มาจาก mainsuper.php (ไม่มี mode=edit))
 elseif ($is_viewing_other) {
     $is_editable = false; // ห้ามแก้ไขเด็ดขาด
     $active_period_name = "โหมดดูข้อมูล (Read-Only)";
 }
-// กรณีที่ 3: ดูของตัวเอง (แต่เป็นปีเก่า)
-// ($current_academic_year คือปีที่กำลังดูอยู่ (ซึ่งอาจเป็นปีเก่าจาก mainsuper หรือปีปัจจุบันจาก session))
+
 elseif ($current_academic_year != $actual_current_year_ph) {
     $is_editable = false; // ห้ามแก้ไขเด็ดขาด
     $active_period_name = "ดูข้อมูลย้อนหลัง (Read-Only)";
 }
-// กรณีที่ 4: ดูของตัวเอง (ปีปัจจุบัน)
 else {
-    // (ใช้โค้ดเดิมที่ตรวจสอบ toggles_switch ตามปกติ)
     $sql_check_active_period = "SELECT ts.Status, ts.Submit_type_id, st.Submit_type_name
                                 FROM toggles_switch ts
                                 JOIN submit_type st ON ts.Submit_type_id = st.Submit_type_id
@@ -185,25 +153,16 @@ else {
             if ($row['Status'] === 'เปิด') {
                 $is_editable = true; // สถานะเป็น "เปิด"
             }
-            // (ถ้าไม่เจอ หรือ Status ปิด $is_editable จะยังเป็น false ตามค่าเริ่มต้น)
         }
-        // (ถ้าไม่เจอช่วงเวลา $is_editable จะยังเป็น false ตามค่าเริ่มต้น)
         $stmt_check->close();
     } else {
         $is_editable = false;
         $active_period_name = "ระบบขัดข้อง";
     }
 }
-
-
-// 6. สร้างตัวแปรสำหรับ disable แค่ชุดเดียว
 $disable_all_attr = !$is_editable ? 'disabled' : '';
 $disable_all_title = !$is_editable ? 'title="ระบบปิดรับการบันทึก"' : 'title="ระบบเปิดให้บันทึก"';
 
-
-
-
-// --- ดึงข้อมูล KPI Types และ Topics ที่เกี่ยวข้องกับ User Type และปี --- 
 $kpi_data = []; // เก็บข้อมูล Type และ Topics
 $all_topic_ids_flat = []; // เก็บ Topic ID ทั้งหมดที่ต้องแสดง
 $topic_details_for_calc = []; // เก็บ Weight และ Type ID ของแต่ละ Topic
@@ -228,8 +187,6 @@ if ($result_kpi_types) {
     while ($type_row = mysqli_fetch_assoc($result_kpi_types)) {
         $current_kpi_type_id = $type_row['KPI_type_id'];
         $topics = [];
-
-        // [แก้ไข 1] เพิ่มการดึง Retrieve, Table_id และ Publication_type_id
         $sql_topics = "SELECT
                                 kt.KPI_topic_id,
                                 CONCAT(ktype.Order_no, '.', kt.Order_no) as id,
@@ -293,9 +250,6 @@ if (isset($user_type_id)) {
         echo "<p>Error fetching user type data.</p>";
     }
 }
-
-
-// --- ดึงข้อมูลที่บันทึกไว้จาก individual_kpi --- 
 $saved_review_data = [];
 
 if (!empty($all_topic_ids_flat)) {
@@ -380,9 +334,6 @@ $saved_attach_files = [];
 if (!empty($all_topic_ids_flat) && !empty($current_emp_code)) {
     $topic_ids_placeholder_files = implode(',', array_fill(0, count($all_topic_ids_flat), '?'));
 
-    // ค้นหาไฟล์ที่ Table_id = 1 (หน้านี้)
-    // และ File_name LIKE '%/Emp_code/%' (เพื่อกรอง User)
-    // และ Fk_table_id อยู่ใน Topic ID ที่แสดง
     $sql_files = "SELECT File_path, File_name, Fk_table_id 
                   FROM attach_file 
                   WHERE Table_id = ? 
@@ -391,10 +342,10 @@ if (!empty($all_topic_ids_flat) && !empty($current_emp_code)) {
 
     $stmt_files = mysqli_prepare($conn, $sql_files);
     if ($stmt_files) {
-        $table_id_kpi = 1; // 1 = individual_kpi
-        $like_pattern = "%/" . $current_emp_code . "/%"; // เช่น '%/19891105/%'
+        $table_id_kpi = 1;
+        $like_pattern = "%/" . $current_emp_code . "/%";
 
-        $types = "is" . str_repeat('i', count($all_topic_ids_flat)); // i, s, i, i, i...
+        $types = "is" . str_repeat('i', count($all_topic_ids_flat));
         $params = array_merge([$table_id_kpi, $like_pattern], $all_topic_ids_flat);
 
         mysqli_stmt_bind_param($stmt_files, $types, ...$params);
@@ -402,19 +353,15 @@ if (!empty($all_topic_ids_flat) && !empty($current_emp_code)) {
         mysqli_stmt_execute($stmt_files);
         $res_files = mysqli_stmt_get_result($stmt_files);
         while ($file_row = mysqli_fetch_assoc($res_files)) {
-            // จัดกลุ่มไฟล์ตาม Fk_table_id (topic_id)
             $saved_attach_files[$file_row['Fk_table_id']][] = $file_row;
         }
         mysqli_stmt_close($stmt_files);
     }
 }
-// [จุดที่ 2] --- ดึงข้อมูลไฟล์งานวิจัย (Table_id = 2) ---
-// [MODIFIED] ดึงข้อมูลงานวิจัย พร้อมรายชื่อนักวิจัยทุกคน (Subquery)
 $user_research_details = [];
 $user_research_files = [];
 
 if (!empty($current_emp_code)) {
-    // ใช้ Subquery ดึงชื่อนักวิจัยทั้งหมดที่เกี่ยวข้องกับ Research_id นั้นๆ มาต่อกันด้วยจุลภาค
     $sql_get_research = "SELECT 
                             r.Research_id,
                             r.Project_name_th,
@@ -444,8 +391,6 @@ if (!empty($current_emp_code)) {
             if (!empty($row['File_name'])) {
                 $user_research_files[] = $row;
             }
-            // เก็บรายละเอียดสำหรับ APA
-            // (เช็คซ้ำเพื่อไม่ให้แสดงโปรเจกต์เดิมหลายรอบกรณีมีหลายไฟล์แนบ)
             $found = false;
             foreach ($user_research_details as $exist) {
                 if ($exist['Research_id'] == $row['Research_id']) {
@@ -462,7 +407,7 @@ if (!empty($current_emp_code)) {
 }
 
 $user_publications_details = [];
-$user_publications = []; // เก็บ URL/File สำหรับ logic เดิม
+$user_publications = [];
 
 if (!empty($current_emp_code)) {
     $sql_get_pub = "SELECT 
@@ -494,10 +439,7 @@ if (!empty($current_emp_code)) {
         $stmt_pub->execute();
         $res_pub = $stmt_pub->get_result();
         while ($row_pub = $res_pub->fetch_assoc()) {
-            // เก็บข้อมูลสำหรับ Logic เดิม (URL, File)
             $user_publications[$row_pub['Status']][] = $row_pub;
-
-            // เก็บรายละเอียดสำหรับ APA (แยกตาม Status เช่นเดิม)
             $is_duplicate = false;
             if (isset($user_publications_details[$row_pub['Status']])) {
                 foreach ($user_publications_details[$row_pub['Status']] as $existing_pub) {
@@ -851,8 +793,6 @@ $saved_okr_data = null;
 
 
                                     $actual_work_all_year_value = $latest_score_data['Actual_work_all_year'] ?? '';
-
-                                    // ถ้าใน DB ว่างเปล่า ให้ลองเอาค่า H1 + H2 มาต่อกันเป็นค่าเริ่มต้น (Optional)
                                     if (empty($actual_work_all_year_value)) {
                                         $h1_val = $saved_h1['Actual_work'] ?? '';
                                         $h2_val = $saved_h2['Actual_work'] ?? '';
@@ -901,10 +841,9 @@ $saved_okr_data = null;
                                         </td>
 
                                         <?php
-                                        // ย้าย Logic การเตรียมข้อมูลออกมาข้างนอก if เพื่อให้ทำงานทุกกรณี
                                         $apa_auto_text = "";
 
-                                        // 1. กรณีงานวิจัย (Table_id = 2)
+                                        // กรณีงานวิจัย (Table_id = 2)
                                         if (isset($item['Retrieve']) && $item['Retrieve'] === 'yes' && isset($item['Table_id']) && $item['Table_id'] == 2) {
                                             if (!empty($user_research_details)) {
                                                 $lines = [];
@@ -930,7 +869,7 @@ $saved_okr_data = null;
                                             }
                                         }
 
-                                        // 2. กรณีงานตีพิมพ์ (Table_id = 3)
+                                        // กรณีงานตีพิมพ์ (Table_id = 3)
                                         if (isset($item['Retrieve']) && $item['Retrieve'] === 'yes' && isset($item['Table_id']) && $item['Table_id'] == 3) {
                                             $req_type = $item['Publication_type_id'] ?? null;
                                             if ($req_type && isset($user_publications_details[$req_type])) {
@@ -961,8 +900,6 @@ $saved_okr_data = null;
                                                 $apa_auto_text = implode("\n\n", $lines);
                                             }
                                         }
-
-                                        // เลือกค่าที่จะแสดง
                                         $actual_h1_value_to_show = !empty($saved_h1['Actual_work']) ? $saved_h1['Actual_work'] : $apa_auto_text;
                                         ?>
 
@@ -992,16 +929,12 @@ $saved_okr_data = null;
                                             style="<?php echo ($active_submit_type_id == 2) ? '' : 'display:none;'; ?> text-align: center; vertical-align: top;">
                                             <textarea class="form-control actual-year" rows="3"
                                                 name="data[<?php echo $topic_id; ?>][Actual_work_all_year]" <?php
-                                                   // เงื่อนไข: ถ้าเป็นรอบ 2 และระบบเปิด ($is_editable) ให้พิมพ์ได้ (ไม่ disable)
                                                    echo ($active_submit_type_id == 2 && $is_editable) ? '' : 'disabled';
                                                    ?>><?php echo htmlspecialchars($actual_work_all_year_value); ?></textarea>
                                         </td>
                                         <td style="text-align: center; vertical-align: top;">
                                             <?php
-                                            // 1. สร้างตัวแปรเก็บข้อมูลไฟล์ที่จะดึงมาแสดงใน input (Auto-fill)
                                             $files_to_prefill = [];
-
-                                            // --- กรณี A: งานวิจัย (Table_id = 2) ---
                                             if (isset($item['Retrieve']) && $item['Retrieve'] === 'yes' && isset($item['Table_id']) && $item['Table_id'] == 2 && !empty($user_research_files)) {
                                                 foreach ($user_research_files as $res_file) {
                                                     $files_to_prefill[] = [
@@ -1011,8 +944,6 @@ $saved_okr_data = null;
                                                     ];
                                                 }
                                             }
-
-                                            // --- กรณี B: งานตีพิมพ์ (Table_id = 3) --- [เพิ่มใหม่]
                                             if (isset($item['Retrieve']) && $item['Retrieve'] === 'yes' && isset($item['Table_id']) && $item['Table_id'] == 3) {
 
                                                 // ดึงค่า Publication_type_id ที่กำหนดใน KPI หัวข้อนี้
@@ -1032,8 +963,6 @@ $saved_okr_data = null;
                                                     }
                                                 }
                                             }
-
-                                            // แปลงข้อมูลเป็น JSON เพื่อใส่ใน attribute
                                             $files_json_attr = "";
                                             if (!empty($files_to_prefill)) {
                                                 $files_json_attr = "data-prefill='" . htmlspecialchars(json_encode($files_to_prefill), ENT_QUOTES, 'UTF-8') . "'";
@@ -1075,14 +1004,11 @@ $saved_okr_data = null;
                                         </td>
                                         <td style="text-align: center; vertical-align: top;">
                                             <?php
-                                            // เตรียม URL ที่จะดึงมาอัตโนมัติ (Auto-fill)
                                             $auto_filled_url = "";
 
                                             // เงื่อนไขงานตีพิมพ์ (Table_id = 3)
                                             if (isset($item['Retrieve']) && $item['Retrieve'] === 'yes' && isset($item['Table_id']) && $item['Table_id'] == 3) {
                                                 $required_pub_type = $item['Publication_type_id'] ?? null;
-
-                                                // ใช้ตัวแปร $user_publications ที่เราแก้ในจุดที่ 1
                                                 if ($required_pub_type && isset($user_publications[$required_pub_type])) {
                                                     $url_list = [];
                                                     foreach ($user_publications[$required_pub_type] as $pub_item) {
@@ -1093,8 +1019,6 @@ $saved_okr_data = null;
                                                     $auto_filled_url = implode("\n", $url_list);
                                                 }
                                             }
-
-                                            // กำหนดค่าที่จะแสดง (ถ้ามีของเดิม ให้ใช้ของเดิม)
                                             $text_area_value = !empty($file_url_value) ? $file_url_value : $auto_filled_url;
                                             ?>
 
@@ -1102,7 +1026,6 @@ $saved_okr_data = null;
                                                 name="data[<?php echo $topic_id; ?>][File_url]" placeholder="URL..." <?php echo $disable_all_attr; ?>><?php echo htmlspecialchars($text_area_value); ?></textarea>
 
                                             <?php
-                                            // ปุ่มเปิดลิงก์ (แสดงเฉพาะตอนบันทึกแล้ว)
                                             if (!empty($file_url_value)) {
                                                 $urls_to_show = explode("\n", $file_url_value);
                                                 foreach ($urls_to_show as $url_line) {
@@ -1126,10 +1049,7 @@ $saved_okr_data = null;
 
                                                 <?php foreach ($criteria_list as $cri): ?>
                                                     <?php
-                                                    // แปลงค่า score (เช่น 1.00) ให้เป็นตัวเลขปกติ (เช่น 1)
                                                     $s_val = $cri['score'] + 0;
-
-                                                    // ตรวจสอบค่าเพื่อเลือก option เดิม
                                                     $selected = ($score_value == $s_val) ? 'selected' : '';
                                                     ?>
                                                     <option value="<?php echo htmlspecialchars($s_val); ?>" <?php echo $selected; ?>>

@@ -1,7 +1,34 @@
 <?php
-// === [ ส่วน PHP AJAX ] ===
+if (isset($_GET['get_subjects']) && isset($_GET['kpi_type_id'])) {
+    include 'config/conn.php';
+    $kpi_type_id = intval($_GET['kpi_type_id']);
+    $subjects = [];
+
+    if ($kpi_type_id > 0) {
+        $sql = "SELECT subject_id, subject_name 
+                FROM subject_topic 
+                WHERE KPI_type_id = ? 
+                ORDER BY subject_order ASC";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "i", $kpi_type_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $subjects[] = $row;
+            }
+        }
+        mysqli_stmt_close($stmt);
+    }
+    mysqli_close($conn);
+
+    header('Content-Type: application/json');
+    echo json_encode($subjects);
+    exit();
+}
 if (isset($_GET['group_id'])) {
-    include 'config/conn.php'; // เชื่อมต่อ DB เฉพาะเมื่อเป็น AJAX request
+    include 'config/conn.php'; 
     include 'config/academic_year_resolver.php';
 
     $group_id = intval($_GET['group_id']);
@@ -27,26 +54,19 @@ if (isset($_GET['group_id'])) {
     }
     mysqli_close($conn);
 
-    // ส่งข้อมูลกลับเป็น JSON แล้วหยุดการทำงานทันที
     header('Content-Type: application/json');
     echo json_encode($types);
     exit(); 
 }
-// === [ สิ้นสุดส่วน PHP AJAX ] ===
 
-
-// โค้ดเดิมของ edit_indicator.php
 $page_title = "แก้ไขตัวชี้วัด";
 include 'templates/navbar.php'; 
 include 'config/conn.php';
 include 'config/academic_year_resolver.php'; 
 
-// รับค่า KPI_topic_id จาก URL
 if (isset($_GET['KPI_topic_id'])) {
     $KPI_topic_id = mysqli_real_escape_string($conn, $_GET['KPI_topic_id']);
 
-    // ดึงข้อมูลจาก DB พร้อม Group_ID และข้อมูลสำหรับ radio buttons
-    // [v] เพิ่ม Table_id และ Publication_type_id ใน SELECT
     $sql = "SELECT kt.*,
                    t.KPI_type_id,
                    t.Group_ID,
@@ -65,23 +85,17 @@ if (isset($_GET['KPI_topic_id'])) {
         exit();
     }
 
-    // [เพิ่ม] ตรวจสอบสิทธิ์การแก้ไข (ปีปัจจุบันหรือไม่)
     $current_year = $current_academic_year;
     $is_editable = ($row['Academic'] == $current_year);
 
-    // กำหนด Style พื้นฐาน และ Style สำหรับ Disable
     $btn_base_style = "min-width: 100px; text-align: center; justify-content: center; display: inline-flex; align-items: center; margin-right: 10px;";
     $disabled_style = "background-color: #cccccc !important; border-color: #cccccc !important; color: #666666 !important; cursor: not-allowed; pointer-events: none; opacity: 0.8; box-shadow: none;";
     
-    // เก็บ Group ID และ KPI Type ID ที่โหลดมา
     $loaded_group_id = $row['Group_ID'];
     $loaded_kpi_type_id = $row['KPI_type_id'];
 
-    // === [ เพิ่มส่วนนี้: เตรียมค่าสำหรับ Radio Buttons ] ===
-    // 'no' เป็นค่าเริ่มต้นหากใน DB เป็น NULL หรือค่าว่าง
     $additional_value = (isset($row['Additional']) && $row['Additional'] == 'yes') ? 'yes' : 'no';
     $retrieve_value = (isset($row['Retrieve']) && $row['Retrieve'] == 'yes') ? 'yes' : 'no';
-    // === [ สิ้นสุดการเพิ่ม ] ===
 
 } else {
     echo "<p>ไม่พบรหัส KPI_topic_id</p>";
@@ -104,19 +118,12 @@ if (isset($_GET['KPI_topic_id'])) {
                 
                 <div class="radio-container" style="display: flex; flex-direction: row; align-items: center;">
                 <?php
-                    // ดึงข้อมูลกลุ่มผู้ใช้จาก DB
                     $sql_groups = "SELECT Group_ID, Group_Name FROM group_use_kpis ORDER BY Group_ID ASC";
                     $res_groups = mysqli_query($conn, $sql_groups);
 
                     if ($res_groups && mysqli_num_rows($res_groups) > 0) {
                         while ($group = mysqli_fetch_assoc($res_groups)) {
-                            // ตรวจสอบว่าควร check radio ไหน
                             $checked = ($loaded_group_id == $group['Group_ID']) ? 'checked' : '';
-                            
-                            // Style ของแต่ละตัวเลือก:
-                            // display: flex -> จัด radio คู่กับข้อความ
-                            // white-space: nowrap -> ห้ามตัดคำขึ้นบรรทัดใหม่
-                            // margin-right: 25px -> เว้นระยะห่างระหว่างตัวเลือกที่ 1 กับ 2
                             echo "<label style='display: flex; align-items: center; margin: 0; margin-right: 25px; cursor: pointer; white-space: nowrap;'>";
                             echo "<input type='radio' name='Group_ID' id='group_radio_{$group['Group_ID']}' value='{$group['Group_ID']}' $checked required style='margin-right: 8px;'> ";
                             echo htmlspecialchars($group['Group_Name']);
@@ -132,6 +139,13 @@ if (isset($_GET['KPI_topic_id'])) {
                      <option value="">--- กรุณาเลือก ---</option>
                 </select>
             </div>
+
+            <div class="form-group">
+                <label>ชื่อหัวข้อตัวชี้วัด :</label>
+                <select name="subject_id" id="subject_select" data-loaded-subject-id="<?php echo isset($row['subject_id']) ? $row['subject_id'] : ''; ?>">
+                    <option value="">--- กรุณาเลือก ---</option>
+                </select>
+            </div>
             
             <div class="form-group">
                 <label>กรอกข้อมูลเพิ่มหรือไม่ :</label>
@@ -142,14 +156,11 @@ if (isset($_GET['KPI_topic_id'])) {
                     <label style="display: inline-block; margin-right: 20px; font-weight: normal; padding-top: 0; font-size: 1.3rem;">
                         <input type="radio" name="fill_data" value="yes" style="width: auto; vertical-align: middle; margin-right: 5px;" <?php echo ($additional_value == 'yes') ? 'checked' : ''; ?>> กรอกข้อมูล
                     </label>
-                    
-                    
                 </div>
             </div>
             <div class="form-group">
                 <label>ดึงข้อมูลจากฐานข้อมูลหรือไม่ :</label>
                 <div>
-        
                     <label style="display: inline-block; font-weight: normal; padding-top: 0; font-size: 1.3rem;">
                         <input type="radio" name="fetch_data" value="no" style="width: auto; vertical-align: middle; margin-right: 5px;" <?php echo ($retrieve_value == 'no') ? 'checked' : ''; ?>> ไม่ดึงข้อมูล
                     </label>

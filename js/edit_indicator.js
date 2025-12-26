@@ -1,17 +1,51 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-    // --- [ส่วนที่ 1: Logic เดิมสำหรับโหลด KPI Types] ---
     const kpiTypeSelect = document.getElementById('kpi_type_select');
     const radioButtons = document.querySelectorAll('input[name="Group_ID"]');
+    const subjectSelect = document.getElementById('subject_select');
     
-    // รับค่าจาก data-attributes ที่ฝังไว้ใน HTML
-    // (เราต้องแก้ PHP ให้ส่งค่าเหล่านี้มาทาง HTML attribute แทนการ echo ใส่ JS โดยตรง)
-    const formContainer = document.querySelector('.form-wrapper'); // หรือ element อื่นที่ครอบอยู่
-    let loadedKpiTypeId = kpiTypeSelect.getAttribute('data-loaded-id');
+    // รับค่าจาก data-attributes
+    let loadedKpiTypeId = kpiTypeSelect ? kpiTypeSelect.getAttribute('data-loaded-id') : null;
     const initialGroupId = document.querySelector('input[name="Group_ID"]:checked')?.value;
+    const loadedSubjectId = subjectSelect ? subjectSelect.getAttribute('data-loaded-subject-id') : null;
 
+    // ฟังก์ชันโหลด Subject Topic
+    function loadSubjects(kpiTypeId, selectedSubjectId = null) {
+        if (!subjectSelect) return;
+
+        if (!kpiTypeId) {
+            subjectSelect.innerHTML = '<option value="">--- กรุณาเลือก ---</option>';
+            return;
+        }
+
+        fetch(`edit_indicator.php?get_subjects=1&kpi_type_id=${kpiTypeId}`)
+            .then(response => response.json())
+            .then(data => {
+                subjectSelect.innerHTML = '<option value="">--- กรุณาเลือก ---</option>';
+                
+                if (data && data.length > 0) {
+                    data.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.subject_id;
+                        option.textContent = item.subject_name;
+
+                        if (selectedSubjectId && item.subject_id == selectedSubjectId) {
+                            option.selected = true;
+                        }
+                        subjectSelect.appendChild(option);
+                    });
+                } else {
+                     const option = document.createElement('option');
+                     option.value = "";
+                     option.textContent = "- ไม่มีหัวข้อตัวชี้วัด -";
+                     subjectSelect.appendChild(option);
+                }
+            })
+            .catch(error => console.error('Error loading subjects:', error));
+    }
+
+    // ฟังก์ชันโหลด KPI Types
     function loadKpiTypes(groupId, selectedKpiTypeId = null) {
-        // ชี้ไปที่ไฟล์ PHP (edit_indicator.php) เพื่อดึงข้อมูล JSON
         fetch('edit_indicator.php?group_id=' + groupId)
             .then(response => {
                 if (!response.ok) {
@@ -31,6 +65,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     kpiTypeSelect.appendChild(option);
                 });
+                
+                // หลังจากโหลด Type เสร็จ ถ้ามี Type ถูกเลือกอยู่แล้ว ให้โหลด Subject ต่อ
+                if (kpiTypeSelect.value) {
+                    const subjIdToLoad = (selectedKpiTypeId == loadedKpiTypeId) ? loadedSubjectId : null;
+                    loadSubjects(kpiTypeSelect.value, subjIdToLoad);
+                } else {
+                    loadSubjects("");
+                }
             })
             .catch(error => console.error('Error loading KPI types:', error));
     }
@@ -38,26 +80,26 @@ document.addEventListener('DOMContentLoaded', function() {
     radioButtons.forEach(radio => {
         radio.addEventListener('change', function() {
             if (this.checked) {
-                // เมื่อเปลี่ยนกลุ่ม, ไม่ต้องเลือก Type ID เดิม
                 loadKpiTypes(this.value, null); 
+                // เมื่อเปลี่ยน Group -> kpi type เปลี่ยน -> subject ควรเคลียร์รอ type ใหม่
             }
         });
     });
 
-    // --- [ส่วนที่ 2: Logic ใหม่สำหรับซ่อน/แสดงฟิลด์] ---
-    
+    if (kpiTypeSelect) {
+        kpiTypeSelect.addEventListener('change', function() {
+            // เมื่อเปลี่ยน Type -> โหลด Subject ใหม่ (ไม่ต้องเลือกค่าเดิม เพราะเป็น type ใหม่แล้ว)
+            loadSubjects(this.value, null);
+        });
+    }
+
     const articleTypeSelect = document.getElementById('article_type_select');
     const publicationOptionsGroup = document.getElementById('publication_options_group');
     const fetchDataRadios = document.querySelectorAll('input[name="fetch_data"]');
     const articleTypeGroup = document.getElementById('article_type_group');
 
-    // (ฟังก์ชันสลับ "ประเภทการตีพิมพ์")
     function togglePublicationOptions() {
-        // ตรวจสอบว่ามี element นี้อยู่จริงหรือไม่ก่อนเรียกใช้
         if (!articleTypeSelect || !publicationOptionsGroup) return;
-
-        // เช็ค Value ของ Table ID ที่เป็น publication (ในโค้ดเดิมคือ value="3")
-        // ควรตรวจสอบให้แน่ใจว่าค่า value ใน HTML ตรงกับ Database จริงๆ
         if (articleTypeSelect.value === '3') { 
             publicationOptionsGroup.style.display = 'grid'; 
         } else {
@@ -65,9 +107,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // (ฟังก์ชันสลับ "ประเภทบทความ")
     function toggleArticleOptions() {
-        const selectedFetchData = document.querySelector('input[name="fetch_data"]:checked').value;
+        const selectedFetchRadio = document.querySelector('input[name="fetch_data"]:checked');
+        if (!selectedFetchRadio) return;
+        
+        const selectedFetchData = selectedFetchRadio.value;
 
         if (selectedFetchData === 'yes') {
             if (articleTypeGroup) articleTypeGroup.style.display = 'grid'; 
@@ -78,8 +122,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- [ส่วนที่ 3: Event Listeners และ Initial Calls] ---
-
     if (articleTypeSelect) {
         articleTypeSelect.addEventListener('change', togglePublicationOptions);
     }
@@ -87,14 +129,10 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchDataRadios.forEach(radio => {
         radio.addEventListener('change', toggleArticleOptions);
     });
-
-    // --- Run on page load ---
     
-    // โหลด KPI Type ครั้งแรก
     if (initialGroupId) {
         loadKpiTypes(initialGroupId, loadedKpiTypeId);
     }
 
-    // เรียกใช้ฟังก์ชันซ่อน/แสดงผลครั้งแรก
     toggleArticleOptions(); 
 });

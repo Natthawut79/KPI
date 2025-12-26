@@ -15,8 +15,6 @@ use PhpOffice\PhpSpreadsheet\Style\Font;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-// 2. ตรวจสอบผู้ใช้และปี (ตรรกะเดียวกับ individualceo_kpi.php)
-// -----------------------------------------------------------------
 if (!isset($_SESSION['Emp_code']) && !isset($_GET['Emp_code'])) {
     die("Error: กรุณา Login");
 }
@@ -60,8 +58,6 @@ if (isset($_GET['Emp_code']) && !empty($_GET['Emp_code']) && isset($_GET['year']
     }
 }
 
-// 3. [แก้ไข] ดึงข้อมูลผู้ใช้ (ชื่อ, ตำแหน่ง, แผนก)
-// -----------------------------------------------------------------
 $sql_get_user_info = "SELECT e.Emp_code, t.Title_name, e.Fname_th, e.Lname_th, d.Department_name
                       FROM employee e
                       LEFT JOIN title t ON e.Title_id = t.Title_id
@@ -79,10 +75,6 @@ if (!$viewed_user_data) {
     die("Error: ไม่พบข้อมูลพนักงานสำหรับ Emp_code: " . htmlspecialchars($current_emp_code));
 }
 
-// 4. [แก้ไข] ดึงข้อมูล KPI ทั้งหมด (ตรรกะเดียวกับ individualceo_kpi.php)
-// -----------------------------------------------------------------
-
-// --- [START] ส่วนที่ 1: ดึง KPI Types และ Topics (เหมือนใน individualceo_kpi.php) ---
 $kpi_data = [];
 $all_topic_ids_flat = [];
 $topic_details_for_calc = [];
@@ -222,10 +214,7 @@ if ($stmt_total_scores) {
     die("Error: ไม่สามารถเตรียมคำสั่งดึงข้อมูล total_score_evaluation ได้: " . $conn->error);
 }
 
-// [START] (*** NEW ***)
-// เพิ่มตัวแปรนี้เพื่อให้ Tab 3 ใหม่ทำงานได้
 $saved_okr_data = [];
-// [END] (*** NEW ***)
 
 $spreadsheet = new Spreadsheet();
 $spreadsheet->getProperties()
@@ -325,9 +314,7 @@ $style_rating_box_grey = [
     'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FFF2F2F2']] // Light Grey
 ];
 
-// ===================================================================
-// TAB 1: 1.หัวข้อตัวชี้วัด (โค้ดที่ผู้ใช้ให้มา)
-// ===================================================================
+
 $sheet1 = $spreadsheet->getActiveSheet();
 $sheet1->setTitle('1.หัวข้อตัวชี้วัด');
 
@@ -374,8 +361,7 @@ $sheet1->getColumnDimension('G')->setWidth(10);
 $sheet1->getRowDimension(4)->setRowHeight(60); // เพิ่มความสูงให้แถวบนของหัวตาราง
 $sheet1->getRowDimension(5)->setRowHeight(30); // แถวล่างของหัวตาราง
 
-// --- ส่วนข้อมูล (วนลูปจาก $kpi_data) ---
-// [START] (*** EDITED ***)
+
 $row = 6; // <-- แก้ไขแถวเริ่มต้นข้อมูลเป็น 6
 // [END] (*** EDITED ***)
 if (!empty($kpi_data)) {
@@ -448,7 +434,7 @@ if (!empty($kpi_data)) {
     $sheet1->getStyle('A6:G6')->applyFromArray($style_all_borders_array); // <-- แก้ไขแถวเป็น A6:G6
     // [END] (*** EDITED ***)
 }
-// --- จบส่วนข้อมูล Tab 1 (โค้ดผู้ใช้) ---
+
 
 
 // === [ TAB 2: 2.แบบกำหนดรายละเอียด KPIs ] ===
@@ -611,14 +597,10 @@ $sheet2->getRowDimension($row)->setRowHeight(100); // Set height for 4 lines of 
 
 $row++; // $row = 12
 
-// --- Add a blank row for spacing ---
-$row++; // $row = 13. The main table will start here.
 
-// [END] (*** NEW ***)
-// --- [END] NEW TABLE FROM IMAGE ---
+$row++;
 
 
-// [START] (*** NEW ***) // หัวตาราง (ตอนนี้ 15 คอลัมน์ A-O)
 $row_num = $row; // (แก้ไข) เริ่มตารางหลักที่แถวถัดไป (ตอนนี้ $row = 13)
 $sheet2->setCellValue('A' . $row_num, 'ลำดับ');
 $sheet2->setCellValue('B' . $row_num, 'ตัวชี้วัด (KPIs)');
@@ -638,12 +620,12 @@ $sheet2->setCellValue('O' . $row_num, 'หมายเหตุ'); // (was N)
 //  แก้ไข: ปรับ range
 $sheet2->getStyle('A' . $row_num . ':O' . $row_num)->applyFromArray($header_style_array); // (A-O)
 $sheet2->getRowDimension($row_num)->setRowHeight(60); // (Increased height)
-// [END] (*** NEW ***)
+
 
 
 // ลูปข้อมูลผลงาน (จาก $kpi_data และ $saved_review_data)
-$row_num = $row_num + 1; // (แก้ไข) ต้องบวก 1 เพื่อเริ่มแถวข้อมูล (e.g., 14)
-$data_start_row = $row_num; // [*** NEW ***] Dynamically set the start row
+$row_num = $row_num + 1;
+$data_start_row = $row_num;
 $type_order = 1;
 foreach ($kpi_data as $type_id => $kpi_type) {
     // [START] (*** EDITED ***)
@@ -682,9 +664,6 @@ foreach ($kpi_data as $type_id => $kpi_type) {
     $row_num++;
     $type_order++;
 
-    // รายการตัวชี้วัด (แก้ไขเฉพาะ Sheet 2)
-    // รายการตัวชี้วัด (Sheet 2)
-    // รายการตัวชี้วัด (แก้ไข Sheet 2: รวมรายละเอียดเพิ่มเติมไว้ในช่องเดียวกับ KPI)
     if (!empty($kpi_type['topics'])) {
         foreach ($kpi_type['topics'] as $topic_id => $topic) {
 
@@ -726,8 +705,6 @@ foreach ($kpi_data as $type_id => $kpi_type) {
             $advice_text = $saved_h2['Advice'] ?? ($saved_h1['Advice'] ?? '');
             $sheet2->setCellValue('O' . $row_num, $advice_text);
             
-
-            // --- [3] จัดรูปแบบ (Style) ---
             $sheet2->getStyle('A' . $row_num . ':O' . $row_num)->applyFromArray($style_all_borders_array);
 
             // 1. ตั้งค่าพื้นฐาน: ให้ทุกช่องชิดขอบบน (Vertical Top)
@@ -895,12 +872,7 @@ $sheet2->getStyle('N' . $data_start_row . ':N' . $row_num)
     ->getAlignment()
     ->setHorizontal(Alignment::HORIZONTAL_CENTER)
     ->setVertical(Alignment::VERTICAL_TOP);
-// [END] (*** EDITED ***)
 
-
-// ===================================================================
-// START:  โค้ด TAB 3 ใหม่ (จากผู้ใช้)
-// ===================================================================
 
 $sheet3 = $spreadsheet->createSheet();
 $sheet3->setTitle('3.แบบประเมินการปฏิบัติงาน');
@@ -922,20 +894,12 @@ $sheet3->getColumnDimension('M')->setWidth(15);
 $sheet3->getColumnDimension('N')->setWidth(15);
 $sheet3->getColumnDimension('O')->setWidth(15);
 
-
-// [START] (*** โค้ด Tab 3 ใหม่ของคุณที่แก้ไขแล้ว ***)
-
-
-
-
-// [START] (แก้ไข) ส่วนที่ 1: เกณฑ์สำหรับการประเมินประจำปี (อัปเดตข้อความตาม individual_kpi.php)
 $row = 1;
 $sheet3->setCellValue('A' . $row, 'ส่วนที่ 1: เกณฑ์สำหรับการประเมินประจำปี');
 $sheet3->getStyle('A' . $row)->getFont()->setBold(true);
 $sheet3->mergeCells('A' . $row . ':O' . $row);
 $row++; // 16
 
-// --- หัวตารางเกณฑ์ ---
 $headerCriteriaRow = $row;
 $sheet3->setCellValue('A' . $headerCriteriaRow, 'เกณฑ์การให้คะแนน');
 $sheet3->mergeCells('A' . $headerCriteriaRow . ':C' . $headerCriteriaRow);

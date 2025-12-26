@@ -4,17 +4,10 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include 'config/conn.php';
 
-// === [ 1. ดึงชื่อไฟล์ของหน้าปัจจุบัน ] ===
 $current_page = basename($_SERVER['PHP_SELF']);
-// === [ สิ้นสุดการเพิ่มเติม ] ===
-
-
-// ตรวจสอบการ login และดึงข้อมูลผู้ใช้จากฐานข้อมูล
 $user = null;
 if(isset($_SESSION['Emp_code'])){
     $Emp_code = $_SESSION['Emp_code'];
-
-    // ดึงข้อมูลเพื่อแสดงใน Navbar
     $sql = "SELECT e.Emp_code, e.Fname_th, e.Lname_th, t.Title_name, e.IMGname, ut.Type_name_th
             FROM employee e
             LEFT JOIN title t ON e.Title_id = t.Title_id
@@ -32,7 +25,7 @@ if(isset($_SESSION['Emp_code'])){
     }
 
     $user = mysqli_fetch_assoc($result);
-    mysqli_stmt_close($stmt); // ปิด statement หลังจากใช้งานเสร็จ
+    mysqli_stmt_close($stmt);
 }
 ?>
 <!DOCTYPE html>
@@ -58,10 +51,8 @@ if(isset($_SESSION['Emp_code'])){
         <nav>
             <?php if (isset($_SESSION['Type_id'])): ?>
                 <?php
-                // === [ 2. ตรวจสอบ $current_page กับ href ของแต่ละลิงก์ ] ===
                 switch ($_SESSION['Type_id']) {
                     case 1: // Admin Menu
-                        // ตรวจสอบว่าหน้าปัจจุบันตรงกับกลุ่มลิงก์หรือไม่
                         $active_main = ($current_page == 'mainadmin.php') ? 'active-nav' : '';
                         $active_users = (in_array($current_page, ['manage_users.php', 'create_user.php', 'profile.php'])) ? 'active-nav' : '';
                         $active_kpi_type = (in_array($current_page, ['kpi_type.php', 'create_kpi_type.php', 'edit_kpi_type.php'])) ? 'active-nav' : '';
@@ -79,17 +70,17 @@ if(isset($_SESSION['Emp_code'])){
                         $active_main = ($current_page == 'mainsuper.php') ? 'active-nav' : '';
                         $active_kpi_type = (in_array($current_page, ['kpi_type.php', 'create_kpi_type.php', 'edit_kpi_type.php'])) ? 'active-nav' : '';
                         $active_indicators = (in_array($current_page, ['indicators.php', 'create_indicator.php', 'edit_indicator.php'])) ? 'active-nav' : '';
+                        $active_subject = ($current_page == 'subject_topic.php' || $current_page == 'create_subject.php' || $current_page == 'edit_subject.php') ? 'active-nav' : '';
                         $active_kpi_ceo = ($current_page == 'individualceo_kpi.php') ? 'active-nav' : '';
-                        
-                        // --- START: แก้ไขส่วนนี้ ---
-                        $active_approve = ($current_page == 'approve_kpi.php') ? 'active-nav' : ''; // <-- เพิ่มบรรทัดนี้
+                        $active_approve = ($current_page == 'approve_kpi.php') ? 'active-nav' : '';
 
                         echo "<a href=\"mainsuper.php\" class=\"$active_main\">หน้าหลัก</a> |
                               <a href=\"kpi_type.php\" class=\"$active_kpi_type\">ประเภทตัวชี้วัด</a> |
+                              <a href=\"subject_topic.php\" class=\"$active_subject\">หัวข้อตัวชี้วัด</a> |
                               <a href=\"indicators.php\" class=\"$active_indicators\">ตัวชี้วัด</a> |
                               <a href=\"individualceo_kpi.php\" class=\"$active_kpi_ceo\">บันทึกผลการดำเนินงาน</a> |
-                              <a href=\"approve_kpi.php\" class=\"$active_approve\">การอนุมัติผลงาน</a>"; // <-- แก้ไข href จาก #
-                        // --- END: แก้ไขส่วนนี้ ---
+                              <a href=\"approve_kpi.php\" class=\"$active_approve\">การอนุมัติผลงาน</a>";
+                        
                         break;  
 
                     case 3: // bachelor Menu
@@ -103,7 +94,7 @@ if(isset($_SESSION['Emp_code'])){
                         break;
 
                     case 4: // Associate_Dean Menu
-                        $active_main = ($current_page == 'main_associate_dean.php') ? 'active-nav' : ''; // ตามโค้ดเดิมที่ link ไป main_bachelor.php
+                        $active_main = ($current_page == 'main_associate_dean.php') ? 'active-nav' : '';
                         $active_profile = ($current_page == 'profile.php') ? 'active-nav' : '';
                         $active_kpi_ceo = ($current_page == 'individualceo_kpi.php') ? 'active-nav' : '';
 
@@ -128,8 +119,7 @@ if(isset($_SESSION['Emp_code'])){
     </div>
     <div class="user-box">
         <a href="profile.php?Emp_code=<?php echo htmlspecialchars($Emp_code ?? ''); ?>">
-        <?php // --- **[แก้ไข]** ส่วนแสดงรูปภาพ ---
-            // ตรวจสอบว่ามีข้อมูลรูปภาพ (BLOB) หรือไม่
+        <?php
             if ($user && !empty($user['IMGname'])) {
                 // แสดงรูปภาพจากข้อมูล BLOB ที่เข้ารหัส Base64
                 echo '<img src="data:image/jpeg;base64,' . base64_encode($user['IMGname']) . '" alt="Profile Picture" style="cursor: pointer;">';

@@ -1,7 +1,7 @@
 <?php
 $page_title = "จัดการบัญชีผู้ใช้";
 include 'templates/navbar.php';
-include 'config/search_users.php'; // ✅ ดึงข้อมูลจากไฟล์แยก
+include 'config/search_users.php';
 ?>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">

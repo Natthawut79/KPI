@@ -28,12 +28,11 @@ function calculateRowScore(scoreInput) {
     }
 }
 
-// Function คำนวณคะแนนรวมประจำหมวด (แก้ไขสูตรใหม่)
+// Function คำนวณคะแนนรวมประจำหมวด
 function calculateSectionTotal(kpiTypeId) {
-    // 1. ดึงแถวข้อมูลทั้งหมดในหมวดนี้
     const sectionRows = document.querySelectorAll(`#annual-review-table tbody tr[data-kpi-type-id="${kpiTypeId}"]:not(.section-total-row):not(.section-header)`);
     
-    // 2. ดึงค่าน้ำหนักของหมวด (Type Weight) จากหัวตารางที่เราเพิ่งเพิ่มในจุดที่ 1
+    // ดึงค่าน้ำหนักของหมวด (Type Weight)
     const headerRow = document.querySelector(`#annual-review-table tbody tr.section-header[data-kpi-type-id="${kpiTypeId}"]`);
     const typeWeight = headerRow ? (parseFloat(headerRow.dataset.typeWeight) || 0) : 0;
 
@@ -45,7 +44,7 @@ function calculateSectionTotal(kpiTypeId) {
         const weightText = row.querySelector('.topic-weight')?.textContent;
         const topicWeight = parseFloat(weightText) || 0;
 
-        // ดึงคะแนนที่ได้ (ที่เป็นตัวเงิน/คะแนนดิบ)
+        // ดึงคะแนนที่ได้ (/คะแนนดิบ)
         const totalScoreInput = row.querySelector('.total-score');
         if (totalScoreInput) {
             totalRawScore += parseFloat(totalScoreInput.value) || 0;
@@ -55,13 +54,13 @@ function calculateSectionTotal(kpiTypeId) {
         totalMaxScore += (topicWeight * 5);
     });
 
-    // 3. เข้าสูตร: (คะแนนที่ได้ / คะแนนเต็ม) * น้ำหนักหมวด
+    // (คะแนนที่ได้ / คะแนนเต็ม) * น้ำหนักหมวด
     let weightedSectionScore = 0;
     if (totalMaxScore > 0) {
         weightedSectionScore = (totalRawScore / totalMaxScore) * typeWeight;
     }
 
-    // 4. แสดงผลลัพธ์
+    // แสดงผลลัพธ์
     const sectionTotalInputAnnual = document.querySelector(`#annual-review-table .section-total-row[data-kpi-type-id="${kpiTypeId}"] .section-total-score`);
     if (sectionTotalInputAnnual) {
         sectionTotalInputAnnual.value = (weightedSectionScore * 5).toFixed(2);
@@ -78,7 +77,7 @@ function calculateGrandTotal() {
     });
     
 
-    // แสดงผลคะแนนเต็ม 500 (เอาสเกล 100 มาคูณ 5)
+    // แสดงผลคะแนนเต็ม 500 
     const grandTotalInput500Annual = document.getElementById('grand-total-score-500');
     if (grandTotalInput500Annual) {
         grandTotalInput500Annual.value = (grandTotal).toFixed(2);
@@ -87,7 +86,7 @@ function calculateGrandTotal() {
     // คำนวณคะแนนเต็ม (Max Possible Score) สเกล 500
     const grandTotalWeightEl = document.getElementById('grand-total-weight');
     const totalWeight = parseFloat(grandTotalWeightEl?.textContent) || 0;
-    const maxPossibleScore = (totalWeight > 0) ? (totalWeight * 5) : 0; // เช่น 100 * 5 = 500
+    const maxPossibleScore = (totalWeight > 0) ? (totalWeight * 5) : 0;
     const grandTotalPercent = (maxPossibleScore > 0) ? ((grandTotal) / maxPossibleScore) * 80 : 0; 
     
     // ส่งค่าไปที่ Hidden Input เพื่อบันทึกลงฐานข้อมูล (Score_100_max)
@@ -99,18 +98,12 @@ function calculateGrandTotal() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initial Calculations on Page Load
-    // ทำให้แน่ใจว่าทุกแถวถูกคำนวณตอนโหลดหน้า
     document.querySelectorAll('#annual-review-table .score-input').forEach(input => {
         if (input.value) { // คำนวณเฉพาะแถวที่มีค่าอยู่แล้ว
             calculateRowScore(input);
         }
     });
-    // คำนวณคะแนนรวมทั้งหมด 1 ครั้งตอนโหลด
     calculateGrandTotal();
-
-
-    // Tab Handling Logic
     const tabLinks = document.querySelectorAll('.tab-link');
     const tabContents = document.querySelectorAll('.tab-content');
 
@@ -141,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // AJAX Submission for Annual Review Form
-    const annualReviewForm = document.getElementById('annualReviewForm'); // ⬇⬇⬇ [แก้ไข] ⬇⬇⬇
+    const annualReviewForm = document.getElementById('annualReviewForm');
     if (annualReviewForm) {
         annualReviewForm.addEventListener('submit', function(event) {
             event.preventDefault();
@@ -180,11 +173,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const prefilledInputs = document.querySelectorAll('input[type="file"][data-prefill]');
         
         prefilledInputs.forEach(input => {
-            // 2. อ่านข้อมูล JSON รายชื่อไฟล์
+            //อ่านข้อมูล JSON รายชื่อไฟล์
             const filesData = JSON.parse(input.dataset.prefill);
             
             if (filesData && filesData.length > 0) {
-                const dataTransfer = new DataTransfer(); // เครื่องมือจำลองการเลือกไฟล์
+                const dataTransfer = new DataTransfer();
                 
                 // 3. วนลูปไปดึงไฟล์จริงจาก Server (Fetch)
                 const fetchPromises = filesData.map(fileInfo => 
@@ -201,8 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 4. เมื่อดึงครบทุกไฟล์แล้ว ให้ยัดใส่เข้าไปใน input
                 Promise.all(fetchPromises).then(() => {
                     input.files = dataTransfer.files;
-                    
-                    // (Option) แสดงข้อความแจ้งเตือนสีเขียวว่ามีไฟล์ถูกเลือกแล้ว
                     const fileNameDisplay = document.getElementById('filename-' + input.getAttribute('data-topic-id'));
                     if (fileNameDisplay) {
                         fileNameDisplay.textContent = input.files.length + " ไฟล์ที่ถูกดึง";
@@ -233,13 +224,12 @@ function exportTableToCsv(tableId, filename) {
                      cellText = inputElement.value;
                  }
                  else if (inputElement.classList.contains('file-upload')) {
-                     // พยายามดึงชื่อไฟล์จาก .existing-files ก่อน
                      let existingFiles = [];
                      cellElement.querySelectorAll('.existing-files .file-link-wrapper a').forEach(a => {
                          existingFiles.push(a.textContent.trim());
                      });
                      if (existingFiles.length > 0) {
-                         cellText = existingFiles.join('; '); // หากมีหลายไฟล์
+                         cellText = existingFiles.join('; ');
                      } else if (inputElement.files && inputElement.files.length > 0) {
                          let newFiles = [];
                          for(let f = 0; f < inputElement.files.length; f++) {
@@ -301,14 +291,11 @@ function deleteFile(buttonElement, fileId) {
         body: JSON.stringify({ 
             file_path_id: fileId,
             academic_year: academicYear 
-        }) // <-- 4. ต้องส่งเป็น JSON body
+        })
     })
 
     .then(response => {
-        // (เพิ่มการตรวจสอบ response.ok)
         if (!response.ok) {
-             // ถ้า server ตอบกลับมาว่ามีปัญหา (เช่น 404, 500)
-             // เราต้องอ่าน text เพื่อดูว่า error คืออะไร
              return response.json().then(err => { 
                  throw new Error(err.message || 'Server error'); 
              });
@@ -328,7 +315,6 @@ function deleteFile(buttonElement, fileId) {
     })
     .catch(error => {
         console.error('Error deleting file:', error);
-        // แสดง error ที่มาจาก server (ถ้ามี)
         alert('เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message);
     });
 }

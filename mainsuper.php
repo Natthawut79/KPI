@@ -114,21 +114,19 @@ include 'config/search_mainsuper.php';
                         $kpi_year = $row['kpi_year'];
 
                         $edit_link_href = '#';
-                        $export_script = 'export_kpi.php'; // Default
+                        $export_script = 'new_export.php'; // Default
                 
                         if ($group_id == 1) {
                             $edit_link_href = 'individual_kpi.php?Emp_code=' . $emp_code . '&year=' . $kpi_year;
-                            $export_script = 'export_kpi.php';
+                            $export_script = 'new_export.php';
                         } elseif ($group_id == 2) {
                             $edit_link_href = 'individualceo_kpi.php?Emp_code=' . $emp_code . '&year=' . $kpi_year;
-                            $export_script = 'export_kpi2.php';
+                            $export_script = 'new_export.php';
                         }
 
 
                         $status_msg = !empty($row['Status_approve_name']) ? $row['Status_approve_name'] : "-";
                         $status_color = "";
-
-                        // ยังคงใช้ ID เพื่อกำหนดสี (หรือถ้าใน DB มีคอลัมน์สีด้วย ก็ดึงมาใช้ได้เลย)
                         if ($row['Approve_id'] == 1) {
                             $status_color = "color: #e0a800;";
                         } elseif ($row['Approve_id'] == 2) {
@@ -138,8 +136,6 @@ include 'config/search_mainsuper.php';
                         } else {
                             $status_color = "";
                         }
-
-                        // --- สร้างปุ่ม Export (แยก logic ออกมา) ---
                         $export_btn_html = "";
                         if ($row['Approve_id'] == 2) {
                             // ปุ่มสีเขียว (Export ได้)
@@ -150,8 +146,7 @@ include 'config/search_mainsuper.php';
                             $export_btn_html = '<span style="display: inline-block; padding: 10px 20px; background-color: #6c757d; color: white; border-radius: 4px; font-size: 12px; cursor: not-allowed; opacity: 0.6; font-weight: normal;"><i class="fas fa-file-excel"></i> Export</span>';
                         }
 
-                        // ------------------------------------------
-                
+
                         echo "<tr>";
                         echo "<td>" . htmlspecialchars($row['Title_shortname'] . $row['Fname_th'] . " " . $row['Lname_th']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['Type_name_th']) . "</td>";

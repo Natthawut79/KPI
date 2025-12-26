@@ -17,11 +17,10 @@ $result_user_types = mysqli_query($conn, $sql_user_types);
 $sql_departments = "SELECT Department_id, Department_name FROM department ORDER BY Department_name";
 $result_departments = mysqli_query($conn, $sql_departments);
 
-// 4. ตั้งค่าผลลัพธ์เริ่มต้นเป็น null
 $result_kpi_list = null;
 $search_error_message = null;
 
-// 5. ตรวจสอบว่ามีการกดปุ่ม "ค้นหา" หรือไม่
+// ตรวจสอบว่ามีการกดปุ่ม "ค้นหา" หรือไม่
 if (isset($_GET['search_button'])) {
 
     // 6. สร้าง Query
@@ -64,11 +63,9 @@ if (isset($_GET['search_button'])) {
             u.Type_id != 1 
     ";
 
-    // 7. สร้าง Array สำหรับ Bind (วิธีเดียวกับ approve_kpi.php)
     $bind_params_values = [];
 
-    // 7.1 View Mode
-    // ($current_emp_code ถูกประกาศไว้ใน mainsuper.php ก่อน include ไฟล์นี้)
+    // View Mode
     if ($is_my_work) {
         $sql_kpi_list .= " AND ik.Emp_code = ?";
         $bind_params_values[] = $current_emp_code;
@@ -77,7 +74,7 @@ if (isset($_GET['search_button'])) {
         $bind_params_values[] = $current_emp_code;
     }
 
-    // 7.2 Filters
+    // Filters
     if ($searchName !== '') {
         $sql_kpi_list .= " AND (e.Fname_th LIKE ? OR e.Lname_th LIKE ?)";
         $bind_params_values[] = $searchName . "%";
@@ -101,7 +98,6 @@ if (isset($_GET['search_button'])) {
 
     $sql_kpi_list .= " ORDER BY e.Fname_th ASC, ik.kpi_year DESC";
 
-    // 8. เตรียมและรัน Query
     $stmt = mysqli_prepare($conn, $sql_kpi_list);
 
     if ($stmt === false) {

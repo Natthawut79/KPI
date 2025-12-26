@@ -1,12 +1,11 @@
 <?php
 include 'config/conn.php';
 
-// รับค่าจาก GET
 $searchAcademicYear = isset($_GET['searchAcademicYear']) ? trim($_GET['searchAcademicYear']) : '';
 $userType = isset($_GET['userType']) ? trim($_GET['userType']) : '';
 $isSearch = ($searchAcademicYear !== '' || $userType !== '');
 
-// ✅ ดึงข้อมูล Group ทั้งหมดจาก group_use_kpis
+// ดึงข้อมูล Group ทั้งหมดจาก group_use_kpis
 $sql_user_type = "SELECT Group_ID, Group_Name FROM group_use_kpis ORDER BY Group_ID ASC";
 $result_user_type = mysqli_query($conn, $sql_user_type);
 
@@ -32,7 +31,7 @@ if ($isSearch) {
         $whereSQL = 'WHERE ' . implode(' AND ', $whereClauses);
     }
 
-    // ✅ ดึงข้อมูลจาก kpi_type พร้อมชื่อกลุ่มจาก group_use_kpis
+    //  ดึงข้อมูลจาก kpi_type พร้อมชื่อกลุ่มจาก group_use_kpis
     $sql_kpi = "
         SELECT 
             k.KPI_type_id,

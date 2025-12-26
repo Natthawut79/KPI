@@ -1,7 +1,6 @@
 <?php
-include 'conn.php'; // ไฟล์เชื่อมต่อฐานข้อมูล
+include 'conn.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // รับค่าจากฟอร์ม
     $KPI_Type_Name_EN = mysqli_real_escape_string($conn, $_POST['KPI_Type_Name_EN']);
     $KPI_Type_Name_TH = mysqli_real_escape_string($conn, $_POST['KPI_Type_Name_TH']);
     $Weight = mysqli_real_escape_string($conn, $_POST['Weight']);
@@ -10,7 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $Academic = mysqli_real_escape_string($conn, $_POST['Academic']);
     $Group_ID = mysqli_real_escape_string($conn, $_POST['Group_ID']);
 
-    // SQL สำหรับ insert
     $sql = "INSERT INTO kpi_type 
                 (KPI_Type_Name_EN, KPI_Type_Name_TH, Weight, Order_No, Description_text, Academic, Group_ID) 
             VALUES 

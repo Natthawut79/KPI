@@ -1,35 +1,38 @@
 <?php
 if (isset($_GET['group_id'])) {
-    include 'config/conn.php'; // เชื่อมต่อ DB เฉพาะเมื่อเป็น AJAX request
+    include 'config/conn.php';
 
     $group_id = intval($_GET['group_id']);
+    // รับค่าปีการศึกษา
+    $academic = isset($_GET['academic']) ? mysqli_real_escape_string($conn, $_GET['academic']) : '';
+    
     $types = [];
 
     if ($group_id > 0) {
-        // ดึงข้อมูล kpi_type ที่ตรงกับ Group_ID ที่ส่งมา
-        $sql_ajax = "SELECT KPI_type_id, KPI_Type_Name_EN, KPI_Type_Name_TH
-                FROM kpi_type
-                WHERE Group_ID = ?
-                ORDER BY Order_No ASC";
+        $sql_ajax = "SELECT KPI_type_id, KPI_Type_Name_EN, KPI_Type_Name_TH, Academic
+                     FROM kpi_type
+                     WHERE Group_ID = '$group_id' ";
+        
+        // ถ้ามีการส่งปีการศึกษามา ให้เพิ่มเงื่อนไข
+        if (!empty($academic)) {
+            $sql_ajax .= " AND Academic = '$academic' ";
+        }
 
-        $stmt = mysqli_prepare($conn, $sql_ajax);
-        mysqli_stmt_bind_param($stmt, "i", $group_id);
-        mysqli_stmt_execute($stmt);
-        $result_ajax = mysqli_stmt_get_result($stmt);
+        $sql_ajax .= " ORDER BY Academic DESC, Order_No ASC";
+
+        $result_ajax = mysqli_query($conn, $sql_ajax);
 
         if ($result_ajax) {
             while ($row_type = mysqli_fetch_assoc($result_ajax)) {
                 $types[] = $row_type;
             }
         }
-        mysqli_stmt_close($stmt);
     }
     mysqli_close($conn);
 
-    // ส่งข้อมูลกลับเป็น JSON แล้วหยุดการทำงานทันที
     header('Content-Type: application/json');
     echo json_encode($types);
-    exit(); // <<-- สำคัญมาก: หยุดไม่ให้แสดง HTML ด้านล่าง
+    exit();
 }
 $page_title = "ตัวชี้วัด";
 include 'templates/navbar.php';
@@ -38,9 +41,8 @@ include 'config/academic_year_resolver.php';
 
 $Academic = isset($_POST['Academic']) ? mysqli_real_escape_string($conn, $_POST['Academic']) : '';
 $Group_ID = isset($_POST['group_use_kpis']) ? mysqli_real_escape_string($conn, $_POST['group_use_kpis']) : '';
-$KPI_type_id = isset($_POST['kpi_type']) ? mysqli_real_escape_string($conn, $_POST['kpi_type']) : ''; // <-- เพิ่มตัวแปรใหม่
+$KPI_type_id = isset($_POST['kpi_type']) ? mysqli_real_escape_string($conn, $_POST['kpi_type']) : '';
 
-// ตรวจสอบว่ามีการกดค้นหาหรือไม่
 $isSearch = ($_SERVER['REQUEST_METHOD'] === 'POST');
 
 
@@ -70,11 +72,8 @@ if (!empty($Group_ID) && $Group_ID !== 'empty') {
 if (!empty($KPI_type_id)) {
     $sql .= " AND ktype.KPI_type_id = '$KPI_type_id'";
 }
-// === [ สิ้นสุดการแก้ไขส่วน SQL WHERE ] ===
 
 $sql .= " ORDER BY kt.KPI_topic_id ASC";
-
-// ✅ ถ้าผู้ใช้เลือกช่องว่าง ให้ไม่ดึงข้อมูล
 $result = ($isSearch && !$noResult) ? mysqli_query($conn, $sql) : false;
 ?>
 
@@ -140,11 +139,10 @@ $result = ($isSearch && !$noResult) ? mysqli_query($conn, $sql) : false;
             </thead>
             <tbody>
                 <?php
-                // [เพิ่ม] กำหนดปีปัจจุบัน (พ.ศ.)
+                // กำหนดปีปัจจุบัน (พ.ศ.)
                 $current_year = $current_academic_year;
 
                 if ($noResult) {
-                    // กรณีเลือก "ช่องว่าง"
                     echo "<tr><td colspan='6' class='text-center text-muted'>ไม่มีข้อมูลให้แสดง</td></tr>";
                 } elseif ($isSearch && $result && mysqli_num_rows($result) > 0) {
                     $count = 1;

@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (startDateInput.value && endDateInput.value) {
                 if (endDate < startDate) {
                     alert("วันที่สิ้นสุดต้องไม่น้อยกว่าวันที่เริ่มต้น");
-                    endDateInput.value = ""; // ล้างค่าวันที่สิ้นสุด
+                    endDateInput.value = "";
                 }
             }
         }

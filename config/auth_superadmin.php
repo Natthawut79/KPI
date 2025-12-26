@@ -1,12 +1,9 @@
 <?php
-// ไฟล์: KPI/config/auth_superadmin.php
-// ใชสำหรับตรวจสอบว่าเป็น Super Admin (Type_id = 2) หรือไม่
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// ID ของ Super Admin คือ 2a
 $superadmin_type_id = 2; 
 
 if (!isset($_SESSION['Type_id']) || $_SESSION['Type_id'] != $superadmin_type_id) {

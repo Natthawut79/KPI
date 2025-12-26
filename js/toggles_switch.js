@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-    // ส่วนจัดการ Form Submit (checkbox)
     const recordForm = document.getElementById('recordForm');
     if (recordForm) {
         recordForm.addEventListener('submit', function(e) {
@@ -13,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 checkbox.value = "เปิด";
             } else if (checkbox) {
-                // ถ้าไม่ได้ติ๊ก ให้ disable checkbox เพื่อไม่ให้ส่งค่าไป (จะส่งค่าจาก hidden แทน)
                 checkbox.disabled = true; 
                 if(hiddenInput) {
                     hiddenInput.disabled = false; 
@@ -34,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (startDateInput.value && endDateInput.value) {
                 if (endDate < startDate) {
                     alert("วันที่สิ้นสุดต้องไม่น้อยกว่าวันที่เริ่มต้น");
-                    endDateInput.value = ""; // ล้างค่าวันที่สิ้นสุด
+                    endDateInput.value = "";
                 }
             }
         }

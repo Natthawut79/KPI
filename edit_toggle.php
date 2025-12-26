@@ -3,8 +3,6 @@ $page_title = "แก้ไขรอบการบันทึกผลงา�
 include 'templates/navbar.php';
 include 'config/auth_admin.php'; 
 include 'config/conn.php';
-
-// 1. ตรวจสอบ ID
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     echo "<p>Error: ไม่พบ ID ที่ต้องการแก้ไข</p>";
     include 'templates/footer.php';
@@ -12,7 +10,6 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 }
 $toggles_id = mysqli_real_escape_string($conn, $_GET['id']);
 
-// 2. ดึงข้อมูลเดิม
 $sql_data = "SELECT * FROM toggles_switch WHERE Toggles_id = ? LIMIT 1";
 $stmt_data = mysqli_prepare($conn, $sql_data);
 mysqli_stmt_bind_param($stmt_data, "i", $toggles_id);
@@ -26,8 +23,6 @@ if (!$toggle_data) {
     include 'templates/footer.php';
     exit();
 }
-
-// 3. ดึงประเภทการส่งข้อมูล (Dropdown)
 $sql_submit_types = "SELECT Submit_type_id, Submit_type_name FROM submit_type ORDER BY Submit_type_id";
 $result_submit_types = $conn->query($sql_submit_types);
 ?>

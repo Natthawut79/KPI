@@ -6,7 +6,6 @@ include 'config/academic_year_resolver.php';
 if (isset($_GET['KPI_type_id'])) {
     $KPI_type_id = mysqli_real_escape_string($conn, $_GET['KPI_type_id']);
 
-    // ดึงข้อมูลจาก DB
     $sql = "SELECT * FROM kpi_type WHERE KPI_type_id = '$KPI_type_id' LIMIT 1";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($result);
@@ -15,7 +14,6 @@ if (isset($_GET['KPI_type_id'])) {
     $current_year = $current_academic_year; 
     $is_editable = ($row['Academic'] == $current_year);
 
-    // Style เพิ่มเติมสำหรับปุ่ม Disable
     $disabled_style = 'background-color: #cccccc !important; cursor: not-allowed; pointer-events: none; opacity: 0.7;';
 
     if (!$row) {

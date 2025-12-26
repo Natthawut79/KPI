@@ -3,7 +3,6 @@ $page_title = "สร้างประเภทตัวชี้วัด";
 include 'templates/navbar.php';
 include 'config/conn.php';
 
-// 1. ดึงข้อมูลกลุ่มผู้ใช้ สำหรับใส่ใน Dropdown
 $sql_group = "SELECT Group_ID, Group_Name FROM group_use_kpis";
 $res_group = mysqli_query($conn, $sql_group);
 $options_html = "";
@@ -13,8 +12,6 @@ if ($res_group) {
     }
 }
 
-// 2. [ส่วนที่แก้ไข] ดึงข้อมูลประวัติ KPI (Group, Year, Order) ทั้งหมด ส่งให้ JS
-// เพื่อให้ JS สามารถค้นหาได้ว่า ปีนี้+กลุ่มนี้ ล่าสุดคือเลขอะไร โดยไม่ต้องรีโหลดหน้า
 $sql_all_kpi = "SELECT Group_ID, Academic, Order_No FROM kpi_type";
 $res_all_kpi = mysqli_query($conn, $sql_all_kpi);
 $all_kpi_data = [];
@@ -23,7 +20,7 @@ if ($res_all_kpi) {
         $all_kpi_data[] = $row;
     }
 }
-$json_all_kpi = json_encode($all_kpi_data); // แปลงเป็น JSON string
+$json_all_kpi = json_encode($all_kpi_data);
 ?>
 
 <link rel="stylesheet" href="css/create_kpi_type.css">

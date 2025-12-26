@@ -4,22 +4,21 @@ include 'conn.php';
 
 header('Content-Type: application/json');
 
-// 1. ตรวจสอบ Emp_code
+// ตรวจสอบ Emp_code
 if (!isset($_SESSION['Emp_code'])) {
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit();
 }
 $current_emp_code = $_SESSION['Emp_code'];
-// 2. รับค่า JSON
+// รับค่า JSON
 $data = json_decode(file_get_contents('php://input'), true);
 $file_path_id_to_delete = $data['file_path_id'] ?? 0;
 
-// ▼▼▼ [แก้ไขส่วนนี้] ▼▼▼
-// 3. รับ academic_year จาก JSON body (ที่ JavaScript ส่งมา)
+// รับ academic_year จาก JSON body (ที่ JavaScript ส่งมา)
 $current_academic_year = $data['academic_year'] ?? 0; 
 
-// 4. แก้ไขการตรวจสอบ
+// แก้ไขการตรวจสอบ
 if ($file_path_id_to_delete <= 0 || $current_academic_year <= 0) { 
     echo json_encode(['success' => false, 'message' => 'Invalid File ID or Academic Year']);
     exit();
@@ -28,7 +27,7 @@ if ($file_path_id_to_delete <= 0 || $current_academic_year <= 0) {
 mysqli_begin_transaction($conn);
 
 try {
-    // 3. ดึงข้อมูลไฟล์ (รวมถึง Fk_table_id)
+    // ดึงข้อมูลไฟล์ (รวมถึง Fk_table_id)
     $file_name_relative = null;
     $topic_id = null;
     
@@ -46,16 +45,15 @@ try {
     }
     
     $file_name_relative = $file_row['File_name'];
-    $topic_id = $file_row['Fk_table_id']; // <-- [สำคัญ] เราต้องการ Topic ID
+    $topic_id = $file_row['Fk_table_id'];
     mysqli_stmt_close($stmt_select);
 
-    // 4. ตรวจสอบความเป็นเจ้าของ
     $path_parts = explode('/', $file_name_relative);
     if (count($path_parts) < 3 || $path_parts[1] !== $current_emp_code) {
         throw new Exception("คุณไม่ใช่เจ้าของไฟล์นี้");
     }
 
-    // 5. ลบข้อมูลจาก attach_file
+    //  ลบข้อมูลจาก attach_file
     $sql_delete = "DELETE FROM attach_file WHERE File_path = ?";
     $stmt_delete = mysqli_prepare($conn, $sql_delete);
     if (!$stmt_delete) throw new Exception("Prepare failed (delete): " . mysqli_error($conn));
@@ -66,7 +64,7 @@ try {
     }
     mysqli_stmt_close($stmt_delete);
 
-    // 6. ลบไฟล์จริงออกจาก Server
+    //  ลบไฟล์จริงออกจาก Server
     $upload_dir_base = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'kpi_evidence' . DIRECTORY_SEPARATOR;
     $full_file_path = $upload_dir_base . $file_name_relative;
     $full_file_path = str_replace('/', DIRECTORY_SEPARATOR, $full_file_path);
@@ -79,10 +77,6 @@ try {
          error_log("Physical file not found: " . $full_file_path);
     }
 
-    // ⬇⬇⬇ [เพิ่มส่วนนี้] ⬇⬇⬇
-    // 7. อัปเดตตาราง individual_kpi (ลบ ID ออกจาก String)
-    
-    // 7.1 ดึง String 'File_path' เก่า (เช่น "101;102;103")
     $old_file_path_string = null;
     $sql_get_kpi = "SELECT File_path FROM individual_kpi 
                     WHERE Emp_code = ? AND Academic = ? AND KPI_topic_id = ? AND Submit_type_id = 2 
@@ -100,26 +94,17 @@ try {
     mysqli_stmt_close($stmt_get_kpi);
 
     if ($old_file_path_string !== null) {
-        // 7.2 แปลง String เป็น Array, ลบ ID ที่ไม่ต้องการ, แปลงกลับเป็น String
         $file_ids_array = explode(';', $old_file_path_string);
-        
-        // ลบ ID (ที่ถูกแปลงเป็น string) ออกจาก Array
         $key_to_remove = array_search((string)$file_path_id_to_delete, $file_ids_array, true);
-        
         if ($key_to_remove !== false) {
             unset($file_ids_array[$key_to_remove]);
         }
-        
-        // กรองค่าว่างที่อาจเกิดขึ้น
         $file_ids_array_filtered = array_filter($file_ids_array);
-        
-        // 7.3 สร้าง String ใหม่
         $new_file_path_string = null;
         if (!empty($file_ids_array_filtered)) {
-             $new_file_path_string = implode(';', $file_ids_array_filtered); // เช่น "101;103"
+             $new_file_path_string = implode(';', $file_ids_array_filtered);
         }
 
-        // 7.4 อัปเดตกลับไปที่ individual_kpi
         $sql_update_kpi = "UPDATE individual_kpi SET File_path = ? 
                            WHERE Emp_code = ? AND Academic = ? AND KPI_topic_id = ? AND Submit_type_id = 2";
         $stmt_update_kpi = mysqli_prepare($conn, $sql_update_kpi);
@@ -132,10 +117,6 @@ try {
         }
         mysqli_stmt_close($stmt_update_kpi);
     }
-    // ⬆⬆⬆ [จบส่วนที่เพิ่ม] ⬆⬆⬆
-
-
-    // 8. Commit
     mysqli_commit($conn);
     echo json_encode(['success' => true, 'message' => 'ลบไฟล์เรียบร้อย']);
 

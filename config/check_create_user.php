@@ -2,11 +2,10 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-include 'conn.php'; // เชื่อมต่อฐานข้อมูล
+include 'conn.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // รับค่าจากฟอร์ม
     $Emp_code       = mysqli_real_escape_string($conn, $_POST['Emp_code']);
     $Password       = mysqli_real_escape_string($conn, $_POST['Password']);
     $Title_id       = mysqli_real_escape_string($conn, $_POST['Title_id']);
@@ -17,26 +16,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $Department_id  = mysqli_real_escape_string($conn, $_POST['Department_id']);
     $Type_id        = mysqli_real_escape_string($conn, $_POST['Type_id']);
 
-    // --- **[แก้ไข]** จัดการไฟล์รูปภาพ ---
+    // จัดการไฟล์รูปภาพ 
     $imgData = null; // กำหนดค่าเริ่มต้นเป็น null
     if (isset($_FILES['IMGname']) && $_FILES['IMGname']['error'] == 0 && $_FILES['IMGname']['size'] > 0) {
         // อ่านข้อมูล binary ของไฟล์รูปภาพ
         $imgData = file_get_contents($_FILES['IMGname']['tmp_name']);
         if ($imgData === false) {
-             // Handle error reading file if necessary
              echo "<script>alert('เกิดข้อผิดพลาดในการอ่านไฟล์รูปภาพ'); window.history.back();</script>";
              exit;
         }
     }
-    // --- **[สิ้นสุดการแก้ไข]** ---
 
-
-    // --- เริ่มต้น Transaction ---
     mysqli_begin_transaction($conn);
 
     try {
-        // 1. SQL สำหรับเพิ่มข้อมูลลงในตาราง employee
-        // --- **[แก้ไข]** เปลี่ยน ? ตัวที่ 6 (IMGname) และ bind_param type เป็น 'b' สำหรับ BLOB ---
         $sql_employee = "INSERT INTO employee
                         (Emp_code, Fname_th, Lname_th, Fname_eng, Lname_eng, IMGname, Title_id, Department_id)
                         VALUES
@@ -47,22 +40,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         //ถ้าไฟล์รูปเกินขนาดที่กำหนด จะไม่สามารถอัปโหลดได้
        if ($imgData !== null) {
-            // กำหนดขนาดชิ้นข้อมูลที่จะส่ง (เช่น 8KB ต่อครั้ง)
             $chunkSize = 8192; 
             $length = strlen($imgData);
             
             for ($i = 0; $i < $length; $i += $chunkSize) {
-                // ตัดข้อมูลออกมาทีละส่วน
                 $chunk = substr($imgData, $i, $chunkSize);
-                // ส่งชิ้นส่วนนั้นไปยัง MySQL
                 mysqli_stmt_send_long_data($stmt_employee, 5, $chunk);
             }
         }
-        // --- **[สิ้นสุดการแก้ไข]** ---
 
         mysqli_stmt_execute($stmt_employee);
 
-        // 2. SQL สำหรับเพิ่มข้อมูลลงในตาราง user (เหมือนเดิม)
         $PasswordHash = password_hash($Password, PASSWORD_DEFAULT);
         $sql_user = "INSERT INTO user (Emp_code, Type_id, Password) VALUES (?, ?, ?)";
 
@@ -70,19 +58,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         mysqli_stmt_bind_param($stmt_user, "sis", $Emp_code, $Type_id, $PasswordHash);
         mysqli_stmt_execute($stmt_user);
 
-        // --- หากสำเร็จทั้งหมด ให้ commit ---
         mysqli_commit($conn);
         echo "<script>alert('สร้างบัญชีผู้ใช้เรียบร้อยแล้ว'); window.location='../manage_users.php';</script>";
 
     } catch (mysqli_sql_exception $exception) {
         // --- หากมีข้อผิดพลาด ให้ rollback ---
         mysqli_rollback($conn);
-        // แสดงข้อผิดพลาด (ควรปิดใน production)
         echo "เกิดข้อผิดพลาด: " . $exception->getMessage();
-        // แสดง alert หรือข้อความที่เป็นมิตรกับผู้ใช้
-        // echo "<script>alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล'); window.history.back();</script>";
     } finally {
-        // ปิด statement เสมอ
         if (isset($stmt_employee)) {
             mysqli_stmt_close($stmt_employee);
         }
@@ -91,5 +74,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
-mysqli_close($conn); // ปิด connection ตอนท้ายสุด
+mysqli_close($conn);
 ?>

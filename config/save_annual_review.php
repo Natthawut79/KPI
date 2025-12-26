@@ -1,9 +1,6 @@
 <?php
 session_start();
-// **สำคัญ:** ตรวจสอบ path ไปยัง conn.php ให้ถูกต้อง
 include 'conn.php';
-
-// (ฟังก์ชันนี้ถูกต้องแล้ว)
 function getFileTypeIdFromExtension($ext)
 {
     switch (strtolower($ext)) {
@@ -16,48 +13,40 @@ function getFileTypeIdFromExtension($ext)
         case 'xlsx':
             return 3;
         default:
-            return 4; // อื่นๆ (ppt, jpg, png ฯลฯ)
+            return 4;
     }
 }
 
-
-// --- Basic Security Checks ---
-header('Content-Type: application/json'); // Set header to return JSON
+header('Content-Type: application/json');
 
 if (!isset($_SESSION['Emp_code'])) {
-    http_response_code(403); // Forbidden
+    http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Unauthorized: กรุณา Login ก่อน']);
     exit();
 }
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405); // Method Not Allowed
+    http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
     exit();
 }
 
-$current_emp_code = $_SESSION['Emp_code']; // นี่คือรหัสของคนที่ Login (เช่น Admin)
+$current_emp_code = $_SESSION['Emp_code'];
 $academic_year = isset($_POST['academic_year']) ? intval($_POST['academic_year']) : 0;
 
-// 1. ตรวจสอบว่า Admin กำลังแก้ไขข้อมูลของใคร
 if (isset($_POST['emp_code_to_save']) && !empty($_POST['emp_code_to_save'])) {
     $emp_code_for_sql = $_POST['emp_code_to_save'];
 } else {
     $emp_code_for_sql = $current_emp_code;
 }
-
-
-// รับข้อมูล Array หลัก
 $data = $_POST['data'] ?? [];
 
 if ($academic_year <= 0 || empty($data)) {
-    http_response_code(400); // Bad Request
+    http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'ข้อมูลไม่ครบถ้วน (ปีการศึกษา หรือ ข้อมูลหลัก)']);
     exit();
 }
-
-// --- กำหนดค่าสำหรับการอัปโหลด ---
 define('UPLOAD_DIR_BASE', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'kpi_evidence' . DIRECTORY_SEPARATOR); // Path เต็มไปยังโฟลเดอร์หลัก
-define('MAX_FILE_SIZE', 5 * 1024 * 1024); // 5 MB
+define('MAX_FILE_SIZE', 5 * 1024 * 1024);
 $allowed_mime_types = [
     'application/pdf',
     'application/msword',
@@ -70,8 +59,6 @@ $allowed_mime_types = [
     'image/png'
 ];
 $allowed_extensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'jpg', 'jpeg', 'png'];
-
-// --- Database Operations ---
 mysqli_begin_transaction($conn);
 $all_queries_success = true;
 $errors = [];
@@ -102,7 +89,7 @@ try {
     if (!$stmt_insert_file) {
         throw new Exception("Prepare statement failed (attach_file): " . mysqli_error($conn));
     }
-    $table_id_kpi = 1; // 1 = individual_kpi
+    $table_id_kpi = 1;
 
 
     // ดึงค่าน้ำหนัก (weight)
@@ -134,10 +121,10 @@ try {
         $topic_weight = $topic_weights[$topic_id];
         $advice_value = $topic_data['Advice'] ?? null;
 
-        // [เพิ่มส่วนนี้] ตัวแปรสำหรับเก็บค่า H1 เพื่อนำไปรวมกับ H2
+        // ตัวแปรสำหรับเก็บค่า H1 เพื่อนำไปรวมกับ H2
         $actual_h1_for_calc = null;
 
-        // 1. ดึง File_path_id_string เก่า (ถ้ามี)
+        // ดึง File_path_id_string เก่า (ถ้ามี)
         $old_file_path_string = null;
         $sql_get_old_path = "SELECT File_path FROM individual_kpi 
                                WHERE Emp_code = ? AND Academic = ? AND KPI_topic_id = ? AND Submit_type_id = 2 
@@ -148,7 +135,7 @@ try {
             mysqli_stmt_execute($stmt_get_old);
             $res_old = mysqli_stmt_get_result($stmt_get_old);
             if ($row_old = mysqli_fetch_assoc($res_old)) {
-                $old_file_path_string = $row_old['File_path']; // เช่น "101;102"
+                $old_file_path_string = $row_old['File_path'];
             }
             mysqli_stmt_close($stmt_get_old);
         }
@@ -158,7 +145,6 @@ try {
 
         $file_input_name = 'kpi_file_' . $topic_id;
 
-        // ตรวจสอบว่ามีการอัปโหลดไฟล์สำหรับ Topic นี้หรือไม่
         if (isset($_FILES[$file_input_name]) && !empty($_FILES[$file_input_name]['name'][0])) {
 
             $files_for_topic = $_FILES[$file_input_name];
@@ -249,10 +235,9 @@ try {
                     $errors[] = "เกิดข้อผิดพลาดในการย้ายไฟล์ '$fileName' (Topic $topic_id)";
                     $all_queries_success = false;
                 }
-            } // end for loop (ไฟล์ใน topic)
+            }
         }
 
-        // 2. รวม ID เก่าและ ID ใหม่
         $old_ids = [];
         if (!empty($old_file_path_string)) {
             $old_ids = explode(';', $old_file_path_string);
@@ -276,23 +261,19 @@ try {
             $approve_id_for_h1 = 3;
             $approve_id_for_h2 = 3;
         }
-
-        // Process H1 (Submit Type 1)
         if (isset($topic_data[1])) {
             $goal_h1 = isset($topic_data[1]['Goal_job']) && $topic_data[1]['Goal_job'] !== '' ? $topic_data[1]['Goal_job'] : null;
             $actual_h1 = isset($topic_data[1]['Actual_work']) && $topic_data[1]['Actual_work'] !== '' ? $topic_data[1]['Actual_work'] : null;
 
-            // [เพิ่มส่วนนี้] เก็บค่า H1 ไว้ใช้คำนวณ
             $actual_h1_for_calc = $actual_h1;
-
             $score_h1 = null;
             $total_score_h1 = null;
             $actual_work_all_year_h1 = null;
-            $file_url_h1 = null;  // H1 ไม่เก็บ url ไฟล์
+            $file_url_h1 = null;
             $submit_type_h1 = 1;
             $additional_h1 = '';
 
-            $file_path_h1 = null; // H1 ไม่เก็บ path ไฟล์
+            $file_path_h1 = null;
 
             mysqli_stmt_bind_param(
                 $stmt_upsert_individual,
@@ -320,29 +301,18 @@ try {
             }
         }
 
-        // Process H2 (Submit Type 2) and Final Scores
         $goal_h2 = isset($topic_data[2]['Goal_job']) && $topic_data[2]['Goal_job'] !== '' ? $topic_data[2]['Goal_job'] : null;
         $actual_h2 = isset($topic_data[2]['Actual_work']) && $topic_data[2]['Actual_work'] !== '' ? $topic_data[2]['Actual_work'] : null;
         $score_input = $topic_data['score'] ?? '';
         $score_value = ($score_input !== '' && is_numeric($score_input) && $score_input >= 1 && $score_input <= 5) ? floatval($score_input) : null;
 
-        // =========================================================
-        // [Logic ใหม่]: H1 + User Input + H2 (รวมแบบไม่ซ้ำ)
-        // =========================================================
-
-        // 1. รับค่าข้อความปัจจุบันจากหน้าเว็บ (ซึ่งมีข้อความที่ User พิมพ์เพิ่มอยู่ด้วย)
         $user_manual_input = trim($topic_data['Actual_work_all_year'] ?? '');
-        $h1_val_clean = trim($actual_h1_for_calc ?? ''); // H1 ที่แท้จริง
-        $h2_val_clean = trim($actual_h2 ?? '');          // H2 ที่แท้จริง
-
-        // เริ่มต้นด้วยสิ่งที่ User เห็น/แก้ไขมา
+        $h1_val_clean = trim($actual_h1_for_calc ?? '');
+        $h2_val_clean = trim($actual_h2 ?? '');
         $final_all_year_text = $user_manual_input;
 
-        // 2. ตรวจสอบว่า H1 หายไปหรือไม่? (ถ้ามี H1 แต่ในข้อความรวมหาไม่เจอ -> ให้เติมไว้ข้างหน้า)
         if (!empty($h1_val_clean)) {
-            // ใช้ strpos เช็คว่ามีข้อความ H1 อยู่ในนั้นไหม
             if (strpos($final_all_year_text, $h1_val_clean) === false) {
-                // ถ้าไม่มี ให้เอา H1 ไปแปะไว้ข้างหน้าสุด
                 if (!empty($final_all_year_text)) {
                     $final_all_year_text = $h1_val_clean . "\n" . $final_all_year_text;
                 } else {
@@ -350,11 +320,8 @@ try {
                 }
             }
         }
-
-        // 3. ตรวจสอบว่า H2 หายไปหรือไม่? (ถ้ามี H2 แต่ในข้อความรวมหาไม่เจอ -> ให้เติมต่อท้าย)
         if (!empty($h2_val_clean)) {
             if (strpos($final_all_year_text, $h2_val_clean) === false) {
-                // ถ้าไม่มี ให้เอา H2 ไปต่อท้ายสุด
                 if (!empty($final_all_year_text)) {
                     $final_all_year_text .= "\n" . $h2_val_clean;
                 } else {
@@ -362,10 +329,7 @@ try {
                 }
             }
         }
-
-        // ค่าที่จะบันทึกลง DB
         $actual_work_all_year_value = !empty($final_all_year_text) ? $final_all_year_text : null;
-        // =========================================================
 
         $total_score_value = ($score_value !== null) ? (floatval($topic_weight) * $score_value) : null;
         $file_url_input = $topic_data['File_url'] ?? '';
@@ -397,11 +361,10 @@ try {
             $all_queries_success = false;
             $errors[] = "Error saving H2/Score for topic $topic_id: " . mysqli_stmt_error($stmt_upsert_individual);
         }
-    } // End foreach data
+    }
     mysqli_stmt_close($stmt_upsert_individual);
     mysqli_stmt_close($stmt_insert_file);
 
-    // --- 2. Recalculate and Update/Insert score_evaluation ---
     if ($all_queries_success) {
         $sql_delete_cat = "DELETE FROM score_evaluation WHERE Emp_code = ? AND Academic = ? AND Submit_type_id = 2";
         $stmt_delete_cat = mysqli_prepare($conn, $sql_delete_cat);
@@ -417,24 +380,9 @@ try {
         mysqli_stmt_close($stmt_delete_cat);
     }
     if ($all_queries_success) {
-        // [แก้ไขใหม่] ใช้ Subquery ดึงคะแนนเต็มรวมจาก kpi_topic โดยตรง
-        // เพื่อแก้ปัญหาตัวหารไม่ครบ กรณี User ยังไม่บันทึกบางหัวข้อ
         $sql_insert_cat = "INSERT INTO score_evaluation (Emp_code, KPI_type_id, Academic, Submit_type_id, Category_score)
         SELECT
-              ik.Emp_code, 
-              kt.KPI_type_id, 
-              ik.Academic, 
-              2, 
-              (
-                (
-                    SUM(ik.total_score) / 
-                    (
-                        SELECT SUM(sub_kt.Weight) * 5 
-                        FROM kpi_topic sub_kt 
-                        WHERE sub_kt.KPI_type_id = kt.KPI_type_id
-                    )
-                ) * ktype.Weight
-              ) * 5    /* <--- เพิ่ม * 5 ตรงนี้ครับ */
+              ik.Emp_code, kt.KPI_type_id, ik.Academic, 2, ((SUM(ik.total_score) / (SELECT SUM(sub_kt.Weight) * 5 FROM kpi_topic sub_kt WHERE sub_kt.KPI_type_id = kt.KPI_type_id)) * ktype.Weight) * 5
         FROM individual_kpi ik
         JOIN kpi_topic kt ON ik.KPI_topic_id = kt.KPI_topic_id
         JOIN kpi_type ktype ON kt.KPI_type_id = ktype.KPI_type_id
@@ -483,17 +431,14 @@ try {
         }
         mysqli_stmt_close($stmt_upsert_total);
     }
-    // --- จบส่วนที่ 3 ---
 
-
-    // --- Commit or Rollback ---
     if ($all_queries_success) {
         mysqli_commit($conn);
         echo json_encode(['success' => true, 'message' => 'บันทึกผลการประเมินประจำปีเรียบร้อยแล้ว ✅']);
     } else {
         mysqli_rollback($conn);
         http_response_code(500);
-        $unique_errors = array_unique($errors); // แสดงเฉพาะ Error ที่ไม่ซ้ำ
+        $unique_errors = array_unique($errors);
         echo json_encode(['success' => false, 'message' => 'เกิดข้อผิดพลาดในการบันทึก: ' . implode('; ', $unique_errors)]);
     }
 
