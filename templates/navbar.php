@@ -46,9 +46,13 @@ if(isset($_SESSION['Emp_code'])){
 
 <div class="navbar">
     <div class="navbar-left">
-        <img src="img/ICT.png" alt="Logo">
+        <div class="hamburger" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
 
-        <nav>
+        <img src="img/ICT.png" alt="Logo" class="nav-logo">
+
+        <nav id="nav-menu">
             <?php if (isset($_SESSION['Type_id'])): ?>
                 <?php
                 switch ($_SESSION['Type_id']) {
@@ -59,10 +63,10 @@ if(isset($_SESSION['Emp_code'])){
                         $active_indicators = (in_array($current_page, ['indicators.php', 'create_indicator.php', 'edit_indicator.php'])) ? 'active-nav' : '';
                         $active_toggle = (in_array($current_page, ['show_on_off.php', 'toggles_switch.php', 'edit_toggles_switch.php'])) ? 'active-nav' : '';
 
-                        echo "<a href=\"mainadmin.php\" class=\"$active_main\">หน้าหลัก</a> |
-                              <a href=\"manage_users.php\" class=\"$active_users\">บัญชีผู้ใช้</a> |
-                              <a href=\"kpi_type.php\" class=\"$active_kpi_type\">ประเภทตัวชี้วัด</a> |
-                              <a href=\"indicators.php\" class=\"$active_indicators\">ตัวชี้วัด</a> |
+                        echo "<a href=\"mainadmin.php\" class=\"$active_main\">หน้าหลัก</a>
+                              <a href=\"manage_users.php\" class=\"$active_users\">บัญชีผู้ใช้</a>
+                              <a href=\"kpi_type.php\" class=\"$active_kpi_type\">ประเภทตัวชี้วัด</a>
+                              <a href=\"indicators.php\" class=\"$active_indicators\">ตัวชี้วัด</a>
                               <a href=\"show_on_off.php\" class=\"$active_toggle\">เปิด-ปิดผลงาน</a>";
                         break;
 
@@ -74,13 +78,12 @@ if(isset($_SESSION['Emp_code'])){
                         $active_kpi_ceo = ($current_page == 'individualceo_kpi.php') ? 'active-nav' : '';
                         $active_approve = ($current_page == 'approve_kpi.php') ? 'active-nav' : '';
 
-                        echo "<a href=\"mainsuper.php\" class=\"$active_main\">หน้าหลัก</a> |
-                              <a href=\"kpi_type.php\" class=\"$active_kpi_type\">ประเภทตัวชี้วัด</a> |
-                              <a href=\"subject_topic.php\" class=\"$active_subject\">หัวข้อตัวชี้วัด</a> |
-                              <a href=\"indicators.php\" class=\"$active_indicators\">ตัวชี้วัด</a> |
-                              <a href=\"individualceo_kpi.php\" class=\"$active_kpi_ceo\">บันทึกผลการดำเนินงาน</a> |
-                              <a href=\"approve_kpi.php\" class=\"$active_approve\">การอนุมัติผลงาน</a>";
-                        
+                        echo "<a href=\"mainsuper.php\" class=\"$active_main\">หน้าหลัก</a>
+                              <a href=\"kpi_type.php\" class=\"$active_kpi_type\">ประเภทตัวชี้วัด</a>
+                              <a href=\"subject_topic.php\" class=\"$active_subject\">หัวข้อตัวชี้วัด</a>
+                              <a href=\"indicators.php\" class=\"$active_indicators\">ตัวชี้วัด</a>
+                              <a href=\"individualceo_kpi.php\" class=\"$active_kpi_ceo\">บันทึกผลงาน</a>
+                              <a href=\"approve_kpi.php\" class=\"$active_approve\">การอนุมัติ</a>";
                         break;  
 
                     case 3: // bachelor Menu
@@ -88,9 +91,9 @@ if(isset($_SESSION['Emp_code'])){
                         $active_profile = ($current_page == 'profile.php') ? 'active-nav' : '';
                         $active_kpi = ($current_page == 'individual_kpi.php') ? 'active-nav' : '';
 
-                        echo "<a href=\"main_bachelor.php\" class=\"$active_main\">หน้าหลัก</a> |
-                              <a href=\"profile.php\" class=\"$active_profile\">บัญชีผู้ใช้</a> |
-                              <a href=\"individual_kpi.php\" class=\"$active_kpi\">จัดการบันทึกผลงาน</a>";
+                        echo "<a href=\"main_bachelor.php\" class=\"$active_main\">หน้าหลัก</a>
+                              <a href=\"profile.php\" class=\"$active_profile\">บัญชีผู้ใช้</a>
+                              <a href=\"individual_kpi.php\" class=\"$active_kpi\">บันทึกผลงาน</a>";
                         break;
 
                     case 4: // Associate_Dean Menu
@@ -98,9 +101,9 @@ if(isset($_SESSION['Emp_code'])){
                         $active_profile = ($current_page == 'profile.php') ? 'active-nav' : '';
                         $active_kpi_ceo = ($current_page == 'individualceo_kpi.php') ? 'active-nav' : '';
 
-                        echo "<a href=\"main_associate_dean.php\" class=\"$active_main\">หน้าหลัก</a> |
-                              <a href=\"profile.php\" class=\"$active_profile\">บัญชีผู้ใช้</a> |
-                              <a href=\"individualceo_kpi.php\" class=\"$active_kpi_ceo\">จัดการบันทึกผลงาน</a>";
+                        echo "<a href=\"main_associate_dean.php\" class=\"$active_main\">หน้าหลัก</a>
+                              <a href=\"profile.php\" class=\"$active_profile\">บัญชีผู้ใช้</a>
+                              <a href=\"individualceo_kpi.php\" class=\"$active_kpi_ceo\">บันทึกผลงาน</a>";
                         break;
 
                     case 5: // Head_of_Department Menu
@@ -108,31 +111,29 @@ if(isset($_SESSION['Emp_code'])){
                         $active_profile = ($current_page == 'profile.php') ? 'active-nav' : '';
                         $active_kpi_ceo = ($current_page == 'individualceo_kpi.php') ? 'active-nav' : '';
 
-                        echo "<a href=\"main_head_of_department.php\" class=\"$active_main\">หน้าหลัก</a> |
-                              <a href=\"profile.php\" class=\"$active_profile\">บัญชีผู้ใช้</a> |
-                              <a href=\"individualceo_kpi.php\" class=\"$active_kpi_ceo\">บันทึกผลการดำเนินงาน</a>";
+                        echo "<a href=\"main_head_of_department.php\" class=\"$active_main\">หน้าหลัก</a>
+                              <a href=\"profile.php\" class=\"$active_profile\">บัญชีผู้ใช้</a>
+                              <a href=\"individualceo_kpi.php\" class=\"$active_kpi_ceo\">บันทึกผลงาน</a>";
                         break;
                 }
                 ?>
             <?php endif; ?>
         </nav>
     </div>
+    
     <div class="user-box">
-        <a href="profile.php?Emp_code=<?php echo htmlspecialchars($Emp_code ?? ''); ?>">
+        <a href="profile.php?Emp_code=<?php echo htmlspecialchars($Emp_code ?? ''); ?>" class="user-img-link">
         <?php
             if ($user && !empty($user['IMGname'])) {
-                // แสดงรูปภาพจากข้อมูล BLOB ที่เข้ารหัส Base64
-                echo '<img src="data:image/jpeg;base64,' . base64_encode($user['IMGname']) . '" alt="Profile Picture" style="cursor: pointer;">';
+                echo '<img src="data:image/jpeg;base64,' . base64_encode($user['IMGname']) . '" alt="Profile">';
             } else {
-                // แสดงรูปภาพเริ่มต้นถ้าไม่มีข้อมูลในฐานข้อมูล
-                echo '<img src="img/profile.png" alt="Default Profile Picture" style="cursor: pointer;">';
+                echo '<img src="img/profile.png" alt="Default Profile">';
             }
-         
         ?>
         </a>
-        <div>
-            <strong>รหัสพนักงาน :</strong> <?php echo htmlspecialchars($user['Emp_code'] ?? ''); ?> <br>
-            <strong>ชื่อ-สกุล :</strong> <?php echo htmlspecialchars($user['Fname_th'] ?? '') . " " . htmlspecialchars($user['Lname_th'] ?? ''); ?> <br>
+        <div class="user-info-text">
+            <strong>รหัส :</strong> <?php echo htmlspecialchars($user['Emp_code'] ?? ''); ?> <br>
+            <strong>ชื่อ :</strong> <?php echo htmlspecialchars($user['Fname_th'] ?? '') . " " . htmlspecialchars($user['Lname_th'] ?? ''); ?> <br>
             <strong>ตำแหน่ง :</strong> <?php echo htmlspecialchars($user['Type_name_th'] ?? ''); ?>
         </div>
         <button class="logout-btn" onclick="logout()">
@@ -141,4 +142,18 @@ if(isset($_SESSION['Emp_code'])){
     </div>
 </div>
 
+<script>
+    function toggleMenu() {
+        var nav = document.getElementById("nav-menu");
+        nav.classList.toggle("show");
+    }
+
+    function logout() {
+        if(confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
+            window.location.href = 'logout.php';
+        }
+    }
+</script>
+
+</body>
 </html>

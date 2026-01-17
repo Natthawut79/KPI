@@ -5,78 +5,116 @@ body {
   background-color: #5D8C6F; 
   color: white;
 }
-
 /* =================================
-   NAVBAR (ใช้ร่วมกันทุกหน้า)
+   NAVBAR (Desktop Style - พื้นฐาน)
    ================================= */
 .navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: #0b3d1c;
-  padding: 15px 40px; 
+  padding: 10px 20px;
   color: white;
+  font-family: "TH Sarabun New", sans-serif;
   font-size: 26px; 
   font-weight: bold;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  position: relative; 
+  z-index: 1000;
 }
 
 .navbar-left {
   display: flex;
   align-items: center;
-  gap: 80px; 
-  font-size: 35px;
+  gap: 20px; 
 }
 
-.navbar-left img {
-  height: 90px; 
-  width: 90px;
+/* Hamburger (ซ่อนไว้ก่อน) */
+.hamburger {
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: white;
+    margin-right: 15px;
+}
+
+.navbar-left img.nav-logo {
+  height: 60px;
+  width: 60px;
   border-radius: 50%; 
   object-fit: cover; 
   background-color: white; 
-  padding: 5px; 
+  padding: 3px; 
+}
+
+/* --- เมนูแนวนอน --- */
+.navbar-left nav {
+    display: flex;
+    align-items: center;
+    gap: 0; 
 }
 
 .navbar-left nav a {
   color: white;
-  text-decoration: none;
+  text-decoration: none; 
   transition: color 0.3s;
+  padding: 0 15px; 
+  white-space: nowrap;
+  position: relative; 
+  display: inline-block;
+  line-height: 1; 
 }
 
-.navbar-left nav a:hover {
-  color: #a3e4d7; 
+/* เส้นคั่น | */
+.navbar-left nav a:not(:last-child)::after {
+    content: "|";
+    position: absolute;
+    right: 0; 
+    top: 50%;
+    transform: translateY(-55%);
+    color: #ffffff; 
+    font-size: 26px;
+    font-family: "TH Sarabun New", sans-serif; 
+    font-weight: normal;
+    pointer-events: none;
 }
 
-/* === [ เพิ่มเติม ] === */
-/* สไตล์สำหรับลิงก์ Navbar ที่กำลังใช้งาน (Active) */
+.navbar-left nav a:hover { color: #a3e4d7; }
+
 .navbar-left nav a.active-nav {
-  color: #FFFF00; /* สีเหลือง */
-  font-weight: bold; /* ทำให้เด่นขึ้นเล็กน้อย */
+  color: #FFFF00; 
+  font-weight: bold;
+  text-decoration: none; 
 }
-/* === [ สิ้นสุดการเพิ่มเติม ] === */
-  
+
+/* --- User Box --- */
 .user-box {
   display: flex;
   align-items: center;
-  gap: 20px; 
+  gap: 15px; 
   background: #C8DACE;
-  padding: 15px 25px; 
-  border-radius: 25px;
+  padding: 5px 15px;
+  border-radius: 15px;
   color: black;
-  font-size: 19px;
-  border: 3px solid #0b3d1c;
+  font-size: 16px; 
+  border: 2px solid #0b3d1c;
+  max-width: 400px;
+  white-space: nowrap; 
 }
 
 .user-box img {
-  height: 60px;
-  width: 60px;
+  height: 45px; 
+  width: 45px;
   border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
 }
+
+.user-info-text { line-height: 1.1; }
 
 .logout-btn {
   background-color: transparent;
-  border: 3px solid #e74c3c;
+  border: 2px solid #e74c3c;
   cursor: pointer;
   padding: 5px;
   border-radius: 50%;
@@ -84,84 +122,98 @@ body {
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s;
-  width: 45px;
-  height: 45px;
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+  margin-left: 0; 
 }
 
-.logout-btn:hover {
-    background-color: rgba(231, 76, 60, 0.1);
-}
+.logout-btn:hover { background-color: rgba(231, 76, 60, 0.1); }
+.logout-btn img { height: 20px; width: 20px; }
 
-.logout-btn img {
-    height: 30px;
-    width: 30px;
-}
-  
+
 /* =================================
-   MODAL / POP-UP STYLES (ใช้ร่วมกัน)
+   RESPONSIVE (ปรับปรุงใหม่)
    ================================= */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+
+/* 1. Laptop & Tablet แนวนอน (1024px ถึง 1280px) */
+/* *** แก้ไข: ให้โชว์ User Info ครบ ไม่ซ่อนแล้ว *** */
+@media screen and (max-width: 1280px) {
+    .navbar { padding: 10px 15px; }
+    
+    /* ลดขนาดฟอนต์นิดหน่อยเพื่อให้ Fit พอดี แต่ข้อมูลยังอยู่ครบ */
+    .navbar-left nav a { font-size: 22px; padding: 0 10px; }
+    .navbar-left nav a:not(:last-child)::after { font-size: 22px; }
+    
+    .user-box {
+        font-size: 14px; /* ลดฟอนต์ User Box เล็กน้อย */
+        padding: 5px 10px;
+    }
 }
 
-.modal.show {
-    display: flex;
-    opacity: 1;
-    visibility: visible;
+/* 2. Tablet แนวตั้ง (768px ถึง 880px) */
+/* *** เฉพาะช่วงนี้ที่แคบจริงๆ ถึงจะซ่อน Text User *** */
+@media screen and (max-width: 880px) {
+    .user-info-text { display: none; } /* ซ่อนชื่อ */
+    
+    .user-box {
+        gap: 8px;
+        padding: 5px;
+        border: none;
+        background: none;
+    }
+    .user-box img { border: 2px solid white; }
+    
+    /* ปรับเมนูให้เล็กลงอีกนิดให้พอดีจอ */
+    .navbar-left nav a { font-size: 20px; padding: 0 8px; }
+    .navbar-left nav a:not(:last-child)::after { font-size: 20px; }
 }
 
-.modal-content {
-  background-color: #fff;
-  color: #333;
-  padding: 30px 50px;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0 5px 25px rgba(0,0,0,0.2);
-  transform: scale(0.9);
-  transition: transform 0.3s ease;
-}
+/* 3. Mobile (< 767px) -> เป็น Hamburger */
+@media screen and (max-width: 767px) {
+    .hamburger { display: block; } 
 
-.modal.show .modal-content {
-    transform: scale(1);
-}
+    .navbar-left nav {
+        display: none; 
+        flex-direction: column;
+        position: absolute;
+        top: 100%; 
+        left: 0;
+        width: 100%;
+        background-color: #0b3d1c;
+        padding: 20px 0;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        text-align: center;
+        z-index: 999;
+    }
 
-.modal-icon {
-  font-size: 60px;
-}
+    .navbar-left nav.show { display: flex; }
 
-.modal-content h2 {
-  font-size: 32px;
-  font-weight: bold;
-  margin: 15px 0;
-  color: #0b3d1c;
-}
-
-.close-button {
-  background-color: #0b6623;
-  color: white;
-  border: none;
-  padding: 10px 40px;
-  border-radius: 50px;
-  font-size: 22px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 15px;
-  transition: background-color 0.3s;
-  font-family: "TH Sarabun New", sans-serif;
-}
-
-.close-button:hover {
-  background-color: #145a32;
+    .navbar-left nav a {
+        width: 100%;
+        box-sizing: border-box; 
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding: 15px;
+        font-size: 20px;
+        display: block;
+    }
+    
+    .navbar-left nav a:not(:last-child)::after { content: none; }
+    .navbar-left nav a:last-child { border-bottom: none; }
+    
+    .navbar-left img.nav-logo { height: 50px; width: 50px; }
+    
+    /* User Box บนมือถือ */
+    .user-info-text { display: none; }
+    .user-box {
+        gap: 10px;
+        background: transparent; 
+        border: none; 
+        padding: 0;
+    }
+    .user-box img {
+        height: 40px;
+        width: 40px;
+        border: 2px solid white; 
+    }
 }
