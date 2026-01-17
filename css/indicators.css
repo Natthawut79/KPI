@@ -17,12 +17,15 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+    flex-wrap: wrap; /* ให้ตกบรรทัดได้ถ้าจอเล็ก */
+    gap: 1rem;
 }
 
 .page-header h1 {
     font-size: 2.2rem;
     font-weight: 700;
     color: #2c3e50;
+    margin: 0;
 }
 
 /* ปุ่ม "เพิ่มตัวชี้วัด" */
@@ -39,6 +42,7 @@ body {
     gap: 0.5rem;
     transition: all 0.3s ease;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    white-space: nowrap; /* ป้องกันข้อความตัดคำ */
 }
 
 .add-indicator-btn:hover {
@@ -60,10 +64,12 @@ body {
     display: flex;
     gap: 1.5rem;
     align-items: flex-end;
+    flex-wrap: wrap; /* สำคัญ: ยอมให้ Input ตกบรรทัดได้ */
 }
 
 .form-group {
     flex-grow: 1;
+    min-width: 200px; /* กำหนดความกว้างขั้นต่ำ เพื่อไม่ให้ Input เล็กเกินไป */
 }
 
 .form-group label {
@@ -101,17 +107,27 @@ body {
     cursor: pointer;
     flex-shrink: 0;
     box-sizing: border-box;
+    height: fit-content;
 }
 
 .search-button:hover {
     background-color: #0b3d1c;
 }
 
-/* ตารางแสดงข้อมูล */
+/* --- ส่วนตาราง --- */
+.table-container {
+    /* สำคัญ: ทำให้ตารางเลื่อนซ้ายขวาได้ถ้าจอเล็กเกินไป */
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* เพื่อการเลื่อนที่ลื่นไหลบนมือถือ */
+    padding-bottom: 1rem; /* เผื่อพื้นที่ให้ Scrollbar */
+}
+
 .indicator-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0 0.75rem;
+    min-width: 800px; /* กำหนดความกว้างต่ำสุดของตาราง เพื่อป้องกันคอลัมน์บีบ */
 }
 
 .indicator-table th,
@@ -125,6 +141,7 @@ body {
     background-color: #0b3d1c;
     color: white;
     font-size: 1.4rem;
+    white-space: nowrap; /* หัวตารางห้ามตัดคำ */
 }
 
 .indicator-table thead th:first-child { border-radius: 10px 0 0 10px; }
@@ -146,39 +163,86 @@ body {
 .indicator-table tbody td:last-child { border-radius: 0 10px 10px 0; }
 .indicator-table .text-center { text-align: center; }
 
-/* ปุ่มแก้ไขและลบ */
+/* --- ส่วนจัดการปุ่ม (Action Buttons) --- */
+.action-cell {
+    min-width: 160px; /* บังคับความกว้างขั้นต่ำให้ช่องจัดการ */
+}
+
+.action-buttons-wrapper {
+    display: flex;       /* ใช้ Flexbox จัดปุ่ม */
+    gap: 8px;           /* ระยะห่างระหว่างปุ่ม */
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;  /* ห้ามปุ่มตกบรรทัด */
+}
+
 .action-btn {
     text-decoration: none;
-    padding: 0.4rem 1.2rem;
+    padding: 0.4rem 1rem; /* ลด padding ด้านข้างเล็กน้อย */
     border: none;
     border-radius: 5px;
     font-weight: bold;
     font-size: 1.1rem;
     transition: opacity 0.3s;
-}
-.form-group {
-    flex-grow: 1;
-}
-
-.form-group label {
-    display: block;
-    font-weight: bold;
-    font-size: 1.3rem;
-    margin-bottom: 0.5rem;
-    color: #34495e;
-}
-
-.form-group input,
-.form-group select {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    font-size: 1.2rem;
-    font-family: "TH Sarabun New", sans-serif;
-    border: 1px solid #dcdcdc;
-    border-radius: 8px;
-    box-sizing: border-box; /* สำคัญมาก */
+    white-space: nowrap; /* ห้ามข้อความในปุ่มตัดคำ */
+    display: inline-block;
 }
 
 .action-btn:hover { opacity: 0.85; }
 .btn-edit { background-color: #ffc107; color: #333; }
 .btn-delete { background-color: #dc3545; color: white; }
+
+/* --- Responsive Layout (Media Queries) --- */
+
+/* สำหรับ Tablet และหน้าจอขนาดกลาง (น้อยกว่า 1024px) */
+@media screen and (max-width: 1024px) {
+    .content-wrapper {
+        padding: 1.5rem;
+    }
+    
+    .search-form {
+        gap: 1rem;
+    }
+    
+    .search-button {
+        padding: 0.75rem 2rem;
+    }
+}
+
+/* สำหรับ Mobile (น้อยกว่า 768px) */
+@media screen and (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .add-indicator-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .search-container {
+        padding: 1.5rem;
+    }
+
+    .search-form {
+        flex-direction: column; /* เรียง Input ลงมาแนวตั้ง */
+        align-items: stretch;
+    }
+
+    .search-button {
+        width: 100%; /* ปุ่มค้นหาเต็มความกว้าง */
+        margin-top: 0.5rem;
+    }
+
+    /* ปรับขนาด Font ให้เหมาะกับมือถือ */
+    .indicator-table th, 
+    .indicator-table td {
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+    
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
+}

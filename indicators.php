@@ -129,12 +129,12 @@ $result = ($isSearch && !$noResult) ? mysqli_query($conn, $sql) : false;
         <table class="indicator-table">
             <thead>
                 <tr>
-                    <th>ลำดับ</th>
+                    <th style="width: 50px;">ลำดับ</th>
                     <th>ชื่อตัวชี้วัด</th>
-                    <th>หน่วยวัด</th>
+                    <th style="width: 100px;">หน่วยวัด</th>
                     <th>เป้าหมาย</th>
                     <th>ระดับความสำคัญ</th>
-                    <th class="text-center">จัดการ</th>
+                    <th class="text-center action-header">จัดการ</th>
                 </tr>
             </thead>
             <tbody>
@@ -151,11 +151,9 @@ $result = ($isSearch && !$noResult) ? mysqli_query($conn, $sql) : false;
                         // [เพิ่ม] สร้างปุ่มลบตามเงื่อนไขปีปัจจุบัน
                         $delete_btn = '';
                         if ($row['Academic'] == $current_year) {
-                            // ปุ่มลบปกติ
                             $delete_btn = "<a href='config/checkdelete_indicator.php?KPI_topic_id={$row['KPI_topic_id']}' class='action-btn btn-delete' 
                                            onclick='return confirm(\"คุณแน่ใจหรือว่าต้องการลบตัวชี้วัดนี้?\");'>ลบ</a>";
                         } else {
-                            // ปุ่มลบแบบ Disable (สีเทา + กดไม่ได้)
                             $delete_btn = "<a href='#' class='action-btn btn-delete' 
                                            style='background-color: #cccccc; cursor: not-allowed; pointer-events: none; opacity: 0.6;' 
                                            title='ไม่สามารถลบข้อมูลย้อนหลังได้'>ลบ</a>";
@@ -168,9 +166,11 @@ $result = ($isSearch && !$noResult) ? mysqli_query($conn, $sql) : false;
                                 <td>{$row['Goal']}</td>
                                 <td>{$row['Priority']}</td>
                                 
-                                <td class='text-center'>
-                                    <a href='edit_indicator.php?KPI_topic_id={$row['KPI_topic_id']}' class='action-btn btn-edit'>แก้ไข</a>
-                                    {$delete_btn} 
+                                <td class='text-center action-cell'>
+                                    <div class='action-buttons-wrapper'>
+                                        <a href='edit_indicator.php?KPI_topic_id={$row['KPI_topic_id']}' class='action-btn btn-edit'>แก้ไข</a>
+                                        {$delete_btn}
+                                    </div>
                                 </td>
                               </tr>";
                         $count++;
@@ -184,7 +184,6 @@ $result = ($isSearch && !$noResult) ? mysqli_query($conn, $sql) : false;
             </tbody>
         </table>
     </div>
-</div>
 
 <script src="js/indicators.js"></script>
 
