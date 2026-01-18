@@ -136,16 +136,21 @@ include 'config/search_mainsuper.php';
                         } else {
                             $status_color = "";
                         }
+        
                         $export_btn_html = "";
                         if ($row['Approve_id'] == 2) {
-                            // ปุ่มสีเขียว (Export ได้)
+                            // ปุ่มสีเขียว (Export ได้) - เปลี่ยนจาก Inline Style ยาวๆ เป็น Class 'btn-export'
                             $export_link = $export_script . '?Emp_code=' . $emp_code . '&year=' . $kpi_year;
-                            $export_btn_html = '<a href="' . $export_link . '" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: normal; transition: background-color 0.3s;"><i class="fas fa-file-excel"></i> Export</a>';
+                            $export_btn_html = '<a href="' . $export_link . '" target="_blank" class="btn-export status-success">
+                            <i class="fas fa-file-excel"></i> Export
+                        </a>';
                         } else {
-                            // ปุ่มสีเทา (Disabled)
-                            $export_btn_html = '<span style="display: inline-block; padding: 10px 20px; background-color: #6c757d; color: white; border-radius: 4px; font-size: 12px; cursor: not-allowed; opacity: 0.6; font-weight: normal;"><i class="fas fa-file-excel"></i> Export</span>';
+                            // ปุ่มสีเทา (Disabled) - เปลี่ยนเป็น Class 'btn-export status-disabled'
+                            $export_btn_html = '<span class="btn-export status-disabled">
+                            <i class="fas fa-file-excel"></i> Export
+                        </span>';
                         }
-
+                
 
                         echo "<tr>";
                         echo "<td>" . htmlspecialchars($row['Title_shortname'] . $row['Fname_th'] . " " . $row['Lname_th']) . "</td>";

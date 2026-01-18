@@ -129,10 +129,10 @@ $loaded_kpi_type_id = isset($row['KPI_type_id']) ? $row['KPI_type_id'] : null;
         <form action="config/checkcreate_indicator.php" method="POST"
             onsubmit="return confirm('คุณต้องการบันทึกข้อมูลใช่หรือไม่?');">
 
-            <div class="form-group" style="display: flex; flex-direction: row; align-items: center; flex-wrap: nowrap;">
-                <label style="margin: 0; margin-right: 15px; white-space: nowrap;">กลุ่มผู้ใช้ตัวชี้วัด :</label>
+            <div class="form-group">
+                <label>กลุ่มผู้ใช้ตัวชี้วัด :</label>
                 
-                <div class="radio-container" style="display: flex; flex-direction: row; align-items: center;">
+                <div class="radio-container">
                 <?php
                     $sql_groups = "SELECT Group_ID, Group_Name FROM group_use_kpis ORDER BY Group_ID ASC";
                     $res_groups = mysqli_query($conn, $sql_groups);
@@ -141,8 +141,9 @@ $loaded_kpi_type_id = isset($row['KPI_type_id']) ? $row['KPI_type_id'] : null;
                         while ($group = mysqli_fetch_assoc($res_groups)) {
                             $checked = ($loaded_group_id == $group['Group_ID']) ? 'checked' : '';
                             
-                            echo "<label style='display: flex; align-items: center; margin: 0; margin-right: 25px; cursor: pointer; white-space: nowrap;'>";
-                            echo "<input type='radio' name='Group_ID' id='group_radio_{$group['Group_ID']}' value='{$group['Group_ID']}' $checked required style='margin-right: 8px;'> ";
+                            // ใช้ label ธรรมดา ให้ CSS จัดการ
+                            echo "<label class='radio-label'>";
+                            echo "<input type='radio' name='Group_ID' value='{$group['Group_ID']}' $checked required> ";
                             echo htmlspecialchars($group['Group_Name']);
                             echo "</label>";
                         }
@@ -168,30 +169,24 @@ $loaded_kpi_type_id = isset($row['KPI_type_id']) ? $row['KPI_type_id'] : null;
 
             <div class="form-group">
                 <label>กรอกข้อมูลเพิ่มหรือไม่ :</label>
-                <div>
-                    <label style="display: inline-block; font-weight: normal; padding-top: 0; font-size: 1.3rem;">
-                        <input type="radio" name="fill_data" value="no"
-                            style="width: auto; vertical-align: middle; margin-right: 5px;" checked> ไม่กรอกข้อมูล
+                <div class="radio-container">
+                    <label class="radio-label">
+                        <input type="radio" name="fill_data" value="no" checked> ไม่กรอกข้อมูล
                     </label>
-                    <label
-                        style="display: inline-block; margin-right: 20px; font-weight: normal; padding-top: 0; font-size: 1.3rem;">
-                        <input type="radio" name="fill_data" value="yes"
-                            style="width: auto; vertical-align: middle; margin-right: 5px;"> กรอกข้อมูล
+                    <label class="radio-label">
+                        <input type="radio" name="fill_data" value="yes"> กรอกข้อมูล
                     </label>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>ดึงข้อมูลจากฐานข้อมูลหรือไม่ :</label>
-                <div>
-                    <label style="display: inline-block; font-weight: normal; padding-top: 0; font-size: 1.3rem;">
-                        <input type="radio" name="fetch_data" value="no"
-                            style="width: auto; vertical-align: middle; margin-right: 5px;" checked> ไม่ดึงข้อมูล
+                <div class="radio-container">
+                    <label class="radio-label">
+                        <input type="radio" name="fetch_data" value="no" checked> ไม่ดึงข้อมูล
                     </label>
-                    <label
-                        style="display: inline-block; margin-right: 20px; font-weight: normal; padding-top: 0; font-size: 1.3rem;">
-                        <input type="radio" name="fetch_data" value="yes"
-                            style="width: auto; vertical-align: middle; margin-right: 5px;"> ดึงข้อมูล
+                    <label class="radio-label">
+                        <input type="radio" name="fetch_data" value="yes"> ดึงข้อมูล
                     </label>
                 </div>
             </div>

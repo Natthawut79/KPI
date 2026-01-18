@@ -33,26 +33,28 @@ body {
     margin-bottom: 35px;
 }
 
-/* ================= START [แก้ไข] ================= */
+/* Layout แบบ Grid (Desktop): Label อยู่ซ้าย | Input อยู่ขวา
+*/
 .form-group {
     display: grid;
     grid-template-columns: 280px 1fr; 
     gap: 15px;
-    align-items: start; /* <-- เปลี่ยนจาก center เป็น start */
+    align-items: center; /* จัดกึ่งกลางแนวตั้ง */
     margin-bottom: 18px;
 }
 
+/* [แก้ไข] ให้ Label ชิดขวา เหมือน create_indicator */
 .form-group label {
     font-size: 1.4rem;
     font-weight: bold;
     color: #444;
-    text-align: left;  /* <-- เปลี่ยนจาก right เป็น left */
-    padding-top: 8px;  /* <-- เพิ่ม padding-top */
+    text-align: right; 
+    margin: 0;
 }
 
 .form-group input,
 .form-group select,
-.form-group textarea { /* <-- เพิ่ม textarea */
+.form-group textarea {
     width: 100%;
     padding: 8px 15px;
     font-size: 1.3rem;
@@ -65,25 +67,49 @@ body {
 
 .form-group input:focus,
 .form-group select:focus,
-.form-group textarea:focus { /* <-- เพิ่ม textarea */
+.form-group textarea:focus {
     outline: none;
     border-color: #4CAF50;
     box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
 }
 
-/* เพิ่มสไตล์สำหรับ textarea (เหมือน create_indicator.css) */
 .form-group textarea {
-    min-height: 150px;
-    resize: none;
+    min-height: 120px;
+    resize: vertical;
 }
-/* ================= END [แก้ไข] ================= */
 
+/* --- จัดการ Radio Buttons (เพิ่มใหม่) --- */
+.radio-container {
+    display: flex;
+    flex-wrap: wrap; /* ยอมให้ตกบรรทัดได้ถ้าจอเล็ก */
+    gap: 15px;
+    align-items: center;
+}
 
+.radio-label {
+    display: flex;
+    align-items: center;
+    font-weight: normal !important;
+    font-size: 1.3rem !important;
+    cursor: pointer;
+    margin: 0;
+    white-space: nowrap;
+    text-align: left !important; /* radio label ให้ชิดซ้ายเสมอ */
+}
+
+.radio-label input {
+    width: auto !important;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+/* --- ปุ่มกด --- */
 .button-container {
     display: flex;
     justify-content: center;
     gap: 20px;
     margin-top: 30px;
+    flex-wrap: wrap; /* ยอมให้ปุ่มตกบรรทัด */
 }
 
 .save-btn, .delete-btn {
@@ -98,6 +124,7 @@ body {
     font-family: "TH Sarabun New", sans-serif;
     text-decoration: none;
     display: inline-block;
+    text-align: center;
 }
 
 .save-btn {
@@ -122,4 +149,60 @@ body {
     background-color: #F1C4C8;
     border-color: #EBACB1;
     transform: translateY(-2px);
+}
+
+/* =========================================
+   RESPONSIVE SECTION (720px, 768px, 1024px)
+   ========================================= */
+
+/* สำหรับ Tablet (Max 1024px) */
+@media screen and (max-width: 1024px) {
+    .main-container {
+        width: 95%;
+        margin: 20px auto;
+    }
+    
+    .form-wrapper {
+        padding: 25px 30px;
+    }
+}
+
+/* สำหรับ Mobile / Tablet แนวตั้ง (Max 768px) */
+@media screen and (max-width: 768px) {
+    .form-title {
+        font-size: 2rem;
+        margin-bottom: 25px;
+    }
+
+    /* เปลี่ยน Grid เป็น 1 คอลัมน์ (Label บน | Input ล่าง) */
+    .form-group {
+        grid-template-columns: 1fr; 
+        gap: 8px;
+        align-items: start;
+    }
+
+    /* กลับมาจัด Label ชิดซ้ายเมื่อเป็นมือถือ */
+    .form-group label {
+        text-align: left; 
+        margin-bottom: 5px; 
+        width: 100%; 
+    }
+
+    /* ปรับ Radio Container ให้ชิดซ้ายเต็มจอ */
+    .radio-container {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    /* ปุ่มกด */
+    .button-container {
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+    }
+    
+    .save-btn, .delete-btn {
+        width: 100%;
+        box-sizing: border-box;
+    }
 }

@@ -31,7 +31,7 @@ include 'config/search_head_of_department.php';
     </div>
 
     <div class="search-container">
-        <form class="search-form layout-1col" method="GET">
+        <form class="search-form layout-2col" method="GET">
             <input type="hidden" name="view" value="<?php echo htmlspecialchars($view_mode); ?>">
 
             <div class="form-group">

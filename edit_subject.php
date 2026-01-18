@@ -40,9 +40,10 @@ $disabled_style = "background-color: #cccccc !important; border-color: #cccccc !
                        value="<?php echo $row['Academic']; ?>" required>
             </div>
 
-            <div class="form-group" style="display: flex; flex-direction: row; align-items: center; flex-wrap: nowrap;">
-                <label style="margin: 0; margin-right: 15px; white-space: nowrap;">กลุ่มผู้ใช้ตัวชี้วัด :</label>
-                <div class="radio-container" style="display: flex; flex-direction: row; align-items: center;">
+            <div class="form-group">
+                <label>กลุ่มผู้ใช้ตัวชี้วัด :</label>
+                
+                <div class="radio-container">
                 <?php
                     $sql_groups = "SELECT Group_ID, Group_Name FROM group_use_kpis ORDER BY Group_ID ASC";
                     $res_groups = mysqli_query($conn, $sql_groups);
@@ -50,8 +51,9 @@ $disabled_style = "background-color: #cccccc !important; border-color: #cccccc !
                     while ($group = mysqli_fetch_assoc($res_groups)) {
                         $checked = ($group['Group_ID'] == $row['Group_ID']) ? 'checked' : ''; 
                         
-                        echo "<label style='display: flex; align-items: center; margin: 0; margin-right: 25px; cursor: pointer; white-space: nowrap;'>";
-                        echo "<input type='radio' name='Group_ID' value='{$group['Group_ID']}' $checked required style='margin-right: 8px;'> ";
+                        // ใช้ class radio-label แทน inline style
+                        echo "<label class='radio-label'>";
+                        echo "<input type='radio' name='Group_ID' value='{$group['Group_ID']}' $checked required> ";
                         echo htmlspecialchars($group['Group_Name']);
                         echo "</label>";
                     }

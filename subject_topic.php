@@ -106,26 +106,26 @@ $result = ($isSearch) ? mysqli_query($conn, $sql) : false;
             </div>
 
             <div class="form-group">
-    <label for="kpi_type">ประเภทตัวชี้วัด</label>
-    <select id="kpi_type" name="kpi_type">
-        <option value="">ทั้งหมด</option>
-        <?php 
-        if (!empty($Group_ID)) {
-            $sql_t = "SELECT KPI_type_id, KPI_Type_Name_EN, Academic FROM kpi_type WHERE Group_ID = '$Group_ID' ";
-            if(!empty($Academic)){
-                $sql_t .= " AND Academic = '$Academic' ";
-            }
-            $sql_t .= " ORDER BY Academic DESC, Order_No ASC";
-            
-            $res_t = mysqli_query($conn, $sql_t);
-            while($row_t = mysqli_fetch_assoc($res_t)){
-                $sel = ($KPI_type_id == $row_t['KPI_type_id']) ? 'selected' : '';
-                echo "<option value='{$row_t['KPI_type_id']}' $sel>{$row_t['KPI_Type_Name_EN']}</option>";
-            }
-        }
-        ?>
-    </select>
-</div>
+                <label for="kpi_type">ประเภทตัวชี้วัด</label>
+                <select id="kpi_type" name="kpi_type">
+                    <option value="">ทั้งหมด</option>
+                    <?php 
+                    if (!empty($Group_ID)) {
+                        $sql_t = "SELECT KPI_type_id, KPI_Type_Name_EN, Academic FROM kpi_type WHERE Group_ID = '$Group_ID' ";
+                        if(!empty($Academic)){
+                            $sql_t .= " AND Academic = '$Academic' ";
+                        }
+                        $sql_t .= " ORDER BY Academic DESC, Order_No ASC";
+                        
+                        $res_t = mysqli_query($conn, $sql_t);
+                        while($row_t = mysqli_fetch_assoc($res_t)){
+                            $sel = ($KPI_type_id == $row_t['KPI_type_id']) ? 'selected' : '';
+                            echo "<option value='{$row_t['KPI_type_id']}' $sel>{$row_t['KPI_Type_Name_EN']}</option>";
+                        }
+                    }
+                    ?>
+                </select>
+            </div>
 
             <button type="submit" class="search-button">ค้นหา</button>
         </form>
@@ -135,19 +135,18 @@ $result = ($isSearch) ? mysqli_query($conn, $sql) : false;
         <table class="indicator-table">
             <thead>
                 <tr>
-                    <th>ลำดับ</th>
-                    <th>ชื่อหัวข้อตัวชี้วัด</th>
+                    <th style="width: 60px;">ลำดับ</th>
+                    <th class="subject-name-col">ชื่อหัวข้อตัวชี้วัด</th>
                     <th>ประเภทตัวชี้วัด</th>
                     <th>กลุ่มผู้ใช้</th>
                     <th>ปีการศึกษา</th>
-                    <th class="text-center">จัดการ</th>
+                    <th class="text-center action-header">จัดการ</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
                 $current_year = $current_academic_year;
 
-                
                 if($isSearch && $result && mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         if ($row['Academic'] == $current_year) {
@@ -165,9 +164,12 @@ $result = ($isSearch) ? mysqli_query($conn, $sql) : false;
                                 <td>{$row['KPI_Type_Name_EN']}</td>
                                 <td>{$row['Group_Name']}</td>
                                 <td>{$row['Academic']}</td>
-                                <td class='text-center'>
-                                    <a href='edit_subject.php?subject_id={$row['subject_id']}' class='action-btn btn-edit'>แก้ไข</a>
-                                    {$delete_btn}
+                                
+                                <td class='text-center action-cell'>
+                                    <div class='action-buttons-wrapper'>
+                                        <a href='edit_subject.php?subject_id={$row['subject_id']}' class='action-btn btn-edit'>แก้ไข</a>
+                                        {$delete_btn}
+                                    </div>
                                 </td>
                               </tr>";
                     }

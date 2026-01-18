@@ -1,12 +1,8 @@
-/* =================================
-   FILE: KPI/css/kpi_type.css
-   (ฉบับแก้ไขสมบูรณ์)
-   ================================= */
-
-/* กำหนดพื้นหลังและ font เริ่มต้น */
 body {
     background-color: #f4f7f6;
     font-family: "TH Sarabun New", sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 /* Container หลักของเนื้อหา */
@@ -22,12 +18,15 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+    flex-wrap: wrap; /* ให้ตกบรรทัดได้ถ้าจอเล็กมาก */
+    gap: 1rem;
 }
 
 .page-header h1 {
     font-size: 2.2rem;
     font-weight: 700;
     color: #2c3e50;
+    margin: 0;
 }
 
 /* ปุ่ม "เพิ่มประเภทตัวชี้วัด" */
@@ -44,6 +43,7 @@ body {
     gap: 0.5rem;
     transition: all 0.3s ease;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    white-space: nowrap; /* ห้ามตัดคำในปุ่ม */
 }
 
 .add-kpi-btn:hover {
@@ -65,10 +65,12 @@ body {
     display: flex;
     gap: 1.5rem;
     align-items: flex-end;
+    flex-wrap: wrap; /* สำคัญ: ยอมให้ Input ตกบรรทัดได้ */
 }
 
 .form-group {
     flex-grow: 1;
+    min-width: 200px; /* กำหนดความกว้างขั้นต่ำ เพื่อไม่ให้ Input เล็กเกินไป */
 }
 
 .form-group label {
@@ -80,14 +82,18 @@ body {
 }
 
 .form-group input,
-.form-group select { 
+.form-group select {
     width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 1rem; /* ปรับ padding บนล่างลดลง เพราะเราจะคุมด้วย height */
     font-size: 1.2rem;
     font-family: "TH Sarabun New", sans-serif;
     border: 1px solid #dcdcdc;
     border-radius: 8px;
     box-sizing: border-box; 
+    
+    /* [เพิ่ม] บังคับความสูงให้แน่นอน */
+    height: 48px; 
+    line-height: normal; /* ป้องกันตัวหนังสือลอย */
 }
 
 .form-group input::placeholder {
@@ -99,42 +105,58 @@ body {
     background-color: #157347;
     color: white;
     border: none;
-    padding: 0.75rem 2.5rem;
+    
+    /* [แก้ไข] ปรับ padding ด้านข้างได้ แต่ด้านบนล่างให้เป็น 0 */
+    padding: 0 2.5rem; 
+    
     font-size: 1.2rem;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
     flex-shrink: 0;
     box-sizing: border-box;
+
+    /* [เพิ่ม] บังคับความสูงให้เท่ากับ Input เป๊ะๆ */
+    height: 48px; 
+    
+    /* [เพิ่ม] จัดข้อความให้อยู่กลางปุ่ม */
+    display: inline-flex;
+    align-items: center; 
+    justify-content: center;
 }
 
 .search-button:hover {
     background-color: #0b3d1c;
 }
 
-/* ตารางแสดงข้อมูล */
+/* --- ส่วนตาราง (Table) --- */
+.table-container {
+    /* ทำให้ตารางเลื่อนซ้ายขวาได้ถ้าจอเล็ก (Scrollable) */
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 5px; /* เผื่อพื้นที่ให้ Scrollbar */
+}
+
 .kpi-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0 0.75rem;
+    min-width: 1000px; /* กำหนดความกว้างต่ำสุด ป้องกันข้อความบีบตัว */
 }
 
-/*
- * =================================
- * === [ จุดแก้ไขที่ 1: แก้ข้อความลอย ] ===
- * =================================
-*/
 .kpi-table th,
 .kpi-table td {
     padding: 1.2rem;
     text-align: left;
-    vertical-align: middle; /* <--- แก้จาก top เป็น middle */
+    vertical-align: middle;
 }
 
 .kpi-table thead th {
     background-color: #0b3d1c;
     color: white;
     font-size: 1.4rem;
+    white-space: nowrap; /* ห้ามหัวตารางตัดคำ (แก้ปัญหาในรูปภาพ) */
 }
 
 .kpi-table thead th:first-child { border-radius: 10px 0 0 10px; }
@@ -150,30 +172,17 @@ body {
     color: #333;
     font-size: 1.3rem;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-
 }
 
 .kpi-table tbody td:first-child { border-radius: 10px 0 0 10px; }
 .kpi-table tbody td:last-child { border-radius: 0 10px 10px 0; }
 
-/*
- * =================================
- * === [ จุดแก้ไขที่ 2: แก้ปุ่มซ้อน ] ===
- * =================================
-*/
 .kpi-table .text-center { 
     text-align: center;
-    white-space: nowrap; /* <--- เพิ่มบังคับไม่ให้ปุ่มตกบรรทัด */
+    white-space: nowrap; 
 }
 
-/*
- * =================================
- * === [ จุดแก้ไขที่ 3: แก้ไข Syntax ] ===
- * (ลบ .form-group ที่ซ้ำซ้อนออก)
- * =================================
-*/
-
-/* ปุ่มแก้ไขและลบ */
+/* ปุ่มจัดการ (Edit/Delete) */
 .action-btn {
     text-decoration: none;
     padding: 0.4rem 1.2rem;
@@ -182,9 +191,9 @@ body {
     font-weight: bold;
     font-size: 1.1rem;
     transition: opacity 0.3s;
+    display: inline-block; /* ป้องกันปุ่มแหว่ง */
 }
 
-/* เพิ่มระยะห่างระหว่างปุ่ม */
 .action-btn + .action-btn {
     margin-left: 0.5rem;
 }
@@ -192,3 +201,75 @@ body {
 .action-btn:hover { opacity: 0.85; }
 .btn-edit { background-color: #ffc107; color: #333; }
 .btn-delete { background-color: #dc3545; color: white; }
+
+
+/* =========================================
+   RESPONSIVE (Media Queries)
+   ========================================= */
+
+/* 1. สำหรับ Laptop เล็ก / Tablet แนวนอน (Max 1280px) */
+@media screen and (max-width: 1280px) {
+    .content-wrapper {
+        padding: 1.5rem;
+    }
+    
+    .search-form {
+        gap: 1rem;
+    }
+    
+    /* ปรับปุ่มค้นหาให้ยืดหยุ่นขึ้น */
+    .search-button {
+        padding: 0.75rem 2rem;
+    }
+}
+
+/* 2. สำหรับ Tablet แนวตั้ง / Mobile ใหญ่ (Max 1024px) */
+@media screen and (max-width: 1024px) {
+    .search-form {
+        /* บังคับให้ Input แบ่งเป็น 2 แถว หรือตามความกว้าง */
+        align-items: stretch; 
+    }
+}
+
+/* 3. สำหรับ Mobile (Max 768px และ 720px) */
+@media screen and (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .add-kpi-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .search-container {
+        padding: 1.5rem;
+    }
+
+    .search-form {
+        flex-direction: column; /* เรียง Input ลงมาเป็นชั้นๆ */
+        gap: 1rem;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    .search-button {
+        width: 100%; /* ปุ่มค้นหาเต็มความกว้าง */
+        margin-top: 0.5rem;
+    }
+
+    /* ปรับขนาด Font ในตารางให้เหมาะกับมือถือ */
+    .kpi-table th, 
+    .kpi-table td {
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+    
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
+}

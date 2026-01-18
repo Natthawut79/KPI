@@ -4,7 +4,8 @@ include 'templates/navbar.php';
 include 'config/auth_admin.php';
 include 'config/conn.php';
 include 'config/search_toggles.php';
-function formatDateThai($date) {
+function formatDateThai($date)
+{
     if (!$date || $date == '0000-00-00') {
         return '-';
     }
@@ -17,22 +18,23 @@ function formatDateThai($date) {
 ?>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="stylesheet" href="css/manage_users.css"> 
+<link rel="stylesheet" href="css/manage_users.css">
 
 <div class="content-wrapper">
     <div class="page-header">
         <h1>เปิด-ปิดรอบการบันทึกผลงาน</h1>
-        <a href="toggles_switch.php" class="add-user-btn"> <i class="fas fa-plus-circle"></i> <span>เพิ่มรอบการบันทึกผลงาน</span>
+        <a href="toggles_switch.php" class="add-user-btn"> <i class="fas fa-plus-circle"></i>
+            <span>เพิ่มรอบการบันทึกผลงาน</span>
         </a>
     </div>
 
     <div class="search-container" style="margin-bottom: 20px;">
-        <form class="search-form layout-4col" method="GET">
-            
+        <form class="search-form layout-2col" method="GET">
+
             <div class="form-group">
                 <label for="searchYear">ค้นหาปี (พ.ศ.)</label>
-                <input type="text" id="searchYear" name="searchYear" placeholder="ค้นหาปี พ.ศ. ..." 
-                       value="<?php echo htmlspecialchars($searchYear); ?>">
+                <input type="text" id="searchYear" name="searchYear" placeholder="ค้นหาปี พ.ศ. ..."
+                    value="<?php echo htmlspecialchars($searchYear); ?>">
             </div>
 
             <div class="form-group">
@@ -41,7 +43,7 @@ function formatDateThai($date) {
                     <option value="all">ทั้งหมด</option>
                     <?php
                     if ($result_submit_types && mysqli_num_rows($result_submit_types) > 0) {
-                        mysqli_data_seek($result_submit_types, 0); 
+                        mysqli_data_seek($result_submit_types, 0);
                         while ($type = mysqli_fetch_assoc($result_submit_types)) {
                             $selected = ($filter_submit_type == $type['Submit_type_id']) ? 'selected' : '';
                             echo '<option value="' . $type['Submit_type_id'] . '" ' . $selected . '>' . htmlspecialchars($type['Submit_type_name']) . '</option>';
@@ -69,35 +71,33 @@ function formatDateThai($date) {
                 </tr>
             </thead>
             <tbody>
-<?php
-if (isset($search_error_message)) {
-     echo "<tr><td colspan='6' class='text-center'>" . htmlspecialchars($search_error_message) . "</td></tr>";
-}
-elseif ($result_toggles === null) {
-    echo "<tr><td colspan='6' class='text-center'>กรุณากรอกข้อมูล แล้วกดปุ่มค้นหา</td></tr>";
-} 
-elseif ($result_toggles && mysqli_num_rows($result_toggles) > 0) {
-    while ($row = mysqli_fetch_assoc($result_toggles)) {
-        $status_class = ($row['Status'] == 'เปิด') ? 'status-open' : 'status-closed';
-        
-        echo "<tr>";
-        echo "<td>" . htmlspecialchars($row['Academic']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['Submit_type_name']) . "</td>";
-        echo "<td>" . htmlspecialchars(formatDateThai($row['Start_date'])) . "</td>";
-        echo "<td>" . htmlspecialchars(formatDateThai($row['End_date'])) . "</td>";
-        echo "<td class='{$status_class}'>" . htmlspecialchars($row['Status']) . "</td>";
-        echo '<td class="text-center">
+                <?php
+                if (isset($search_error_message)) {
+                    echo "<tr><td colspan='6' class='text-center'>" . htmlspecialchars($search_error_message) . "</td></tr>";
+                } elseif ($result_toggles === null) {
+                    echo "<tr><td colspan='6' class='text-center'>กรุณากรอกข้อมูล แล้วกดปุ่มค้นหา</td></tr>";
+                } elseif ($result_toggles && mysqli_num_rows($result_toggles) > 0) {
+                    while ($row = mysqli_fetch_assoc($result_toggles)) {
+                        $status_class = ($row['Status'] == 'เปิด') ? 'status-open' : 'status-closed';
+
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($row['Academic']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['Submit_type_name']) . "</td>";
+                        echo "<td>" . htmlspecialchars(formatDateThai($row['Start_date'])) . "</td>";
+                        echo "<td>" . htmlspecialchars(formatDateThai($row['End_date'])) . "</td>";
+                        echo "<td class='{$status_class}'>" . htmlspecialchars($row['Status']) . "</td>";
+                        echo '<td class="text-center">
                 <a href="edit_toggle.php?id=' . $row['Toggles_id'] . '" class="action-btn btn-edit">แก้ไข</a>
                 <a href="config/delete_toggle.php?id=' . $row['Toggles_id'] . '" class="action-btn btn-delete" 
                    onclick="return confirm(\'คุณแน่ใจหรือไม่ว่าต้องการลบ?\')">ลบ</a>
               </td>';
-        echo "</tr>";
-    }
-} else {
-    echo "<tr><td colspan='6' class='text-center'>ไม่พบข้อมูลตามเงื่อนไขที่ค้นหา</td></tr>";
-}
-?>
-</tbody>
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='6' class='text-center'>ไม่พบข้อมูลตามเงื่อนไขที่ค้นหา</td></tr>";
+                }
+                ?>
+            </tbody>
         </table>
     </div>
 </div>

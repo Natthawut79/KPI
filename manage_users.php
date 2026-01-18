@@ -16,7 +16,7 @@ include 'config/search_users.php';
     </div>
 
     <div class="search-container">
-        <form class="search-form" method="GET">
+        <form class="search-form layout-2col" method="GET">
             <div class="form-group">
                 <label for="searchName">ชื่อ-นามสกุล</label>
                 <input type="text" id="searchName" name="searchName" placeholder="ค้นหา..." 

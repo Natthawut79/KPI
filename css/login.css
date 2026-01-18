@@ -248,5 +248,118 @@ body {
 /* สำหรับ Firefox */
 .input-group input[type="number"] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
-/* === [ สิ้นสุดการเพิ่มเติม ] === */
+
+/* 1. สำหรับจอ Laptop เล็ก (Max 1280px) */
+@media screen and (max-width: 1280px) {
+    /* ลดความกว้างแถบข่าวลงเล็กน้อย เพื่อให้ฝั่ง Login มีที่มากขึ้น */
+    .news-container {
+        width: 380px; 
+    }
+}
+
+/* 2. สำหรับจอ Tablet แนวนอน / iPad Pro (Max 1024px) */
+@media screen and (max-width: 1024px) {
+    .news-container {
+        width: 320px; /* บีบแถบข่าวให้เล็กลงอีก */
+        padding: 20px;
+    }
+    
+    .news-title {
+        font-size: 1.8rem; /* ลดขนาดหัวข้อข่าว */
+    }
+    
+    .login-form {
+        padding: 30px 40px; /* ลด padding ในกล่อง Login */
+    }
+}
+
+/* 3. สำหรับจอ Tablet แนวตั้ง / Mobile (Max 768px และ 720px)
+   จุดเปลี่ยนสำคัญ: สลับ Layout จาก ซ้าย-ขวา เป็น บน-ล่าง
+*/
+@media screen and (max-width: 768px) {
+    .page-wrapper {
+        /* สลับทิศทาง: column-reverse จะเอา element ตัวหลัง (Login) ขึ้นบน 
+           และเอาตัวแรก (News) ลงล่าง */
+        flex-direction: column-reverse; 
+        height: auto;
+        min-height: 100vh;
+    }
+
+    /* --- ส่วน Login (จะขึ้นมาอยู่ด้านบน) --- */
+    .login-container {
+        width: 100%;
+        padding: 40px 20px; /* เพิ่มพื้นที่หายใจรอบๆ */
+        min-height: auto;
+        display: block; /* ยกเลิก Flex center เพื่อให้จัด layout เอง */
+    }
+    
+    .login-wrapper {
+        max-width: 100%; 
+        margin: 0 auto;
+    }
+    
+    .login-form {
+        padding: 30px 20px;
+        /* ปรับพื้นหลังให้โปร่งขึ้นนิดหน่อย ให้กลืนกับพื้นหลัง */
+        background-color: rgba(240, 249, 244, 0.9); 
+    }
+
+    /* --- ส่วนข่าวสาร (จะลงไปอยู่ด้านล่าง) --- */
+    .news-container {
+        width: 100%;
+        height: auto;      /* ยกเลิกความสูง 100vh */
+        max-height: 600px; /* จำกัดความสูง */
+        padding: 30px 20px;
+        border-radius: 30px 30px 0 0; /* ทำขอบมนด้านบนให้ดูสวย */
+        background-color: rgba(0, 0, 0, 0.4); /* พื้นหลังเข้มขึ้นให้อ่านง่าย */
+    }
+
+    .news-grid {
+        grid-template-columns: 1fr; /* ข่าวเรียงลงมา 1 คอลัมน์ */
+        gap: 20px;
+    }
+    
+    /* ปรับขนาดโลโก้ให้เล็กลง */
+    .logo {
+        width: 130px;
+        height: 130px;
+    }
+}
+
+/* 4. สำหรับมือถือจอเล็ก (Max 480px) */
+@media screen and (max-width: 480px) {
+    .system-name {
+        font-size: 1.8rem;
+    }
+    
+    .welcome-text {
+        font-size: 1.3rem;
+    }
+    
+    .login-form h2 {
+        font-size: 2rem;
+    }
+    
+    .logo {
+        width: 110px;
+        height: 110px;
+        margin-bottom: 15px;
+    }
+    
+    /* ปรับช่องกรอกข้อมูลให้กดง่ายบนมือถือ */
+    .input-group {
+        padding: 5px 15px;
+    }
+    
+    .input-group input {
+        font-size: 1rem;
+        padding: 12px;
+    }
+    
+    .login-btn {
+        padding: 12px;
+        font-size: 1.1rem;
+    }
+}

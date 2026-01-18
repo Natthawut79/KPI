@@ -1,5 +1,3 @@
-/* --- สไตล์สำหรับหน้า manage_users.php (ฉบับแก้ไขสมบูรณ์) --- */
-
 /* กำหนดพื้นหลังและ font เริ่มต้น */
 body {
     background-color: #f4f7f6;
@@ -84,10 +82,9 @@ body {
     font-family: "TH Sarabun New", sans-serif;
     border: 1px solid #dcdcdc;
     border-radius: 8px;
-    box-sizing: border-box; /* สำคัญมาก */
+    box-sizing: border-box;
 }
 
-/* --- จุดแก้ไขสำคัญ: ปรับขนาดปุ่มให้เท่าช่องค้นหา --- */
 .search-button {
     background-color: #157347;
     color: white;
@@ -98,8 +95,8 @@ body {
     border-radius: 8px;
     cursor: pointer;
     flex-shrink: 0;
-    font-family: "TH Sarabun New", sans-serif; /* ใช้ font เดียวกัน */
-    box-sizing: border-box; /* <<<< ใช้วิธีคำนวณขนาดแบบเดียวกับ input */
+    font-family: "TH Sarabun New", sans-serif;
+    box-sizing: border-box;
 }
 
 .search-button:hover {
@@ -159,9 +156,8 @@ body {
 .action-btn:hover { opacity: 0.85; }
 .btn-edit { background-color: #ffc107; color: #333; }
 .btn-delete { background-color: #dc3545; color: white; }
-/* เพิ่มใน css/manage_users.css */
 
-/* สำหรับฟอร์มค้นหาแบบ 1 ช่อง (เช่น main_bachelor.php) */
+
 .search-form.layout-1col {
     grid-template-columns: 1fr auto;
 }
@@ -200,3 +196,153 @@ body {
     .action-btn + .action-btn {
         margin-left: 10px; 
     }
+/* --- เพิ่มสไตล์สำหรับปุ่ม Export (แทน Inline Style เดิม) --- */
+.btn-export {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0.5rem 1rem; /* ลด Padding ให้กระชับขึ้น */
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: normal;
+    transition: all 0.3s;
+    white-space: nowrap; /* ห้ามตัดคำ */
+    min-width: 80px;
+}
+
+.status-success {
+    background-color: #28a745;
+    color: white;
+}
+.status-success:hover {
+    background-color: #218838;
+}
+
+.status-disabled {
+    background-color: #6c757d;
+    color: white;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* =========================================
+   RESPONSIVE SECTION (รองรับ 720, 768, 1024, 1280)
+   ========================================= */
+
+/* 1. จัดการตารางให้เลื่อนแนวนอนได้ (Scrollable) เมื่อจอเล็ก */
+.table-container {
+    width: 100%;
+    overflow-x: auto; /* หัวใจสำคัญ: ถ้าตารางล้น ให้เลื่อนแกน X ได้ */
+    -webkit-overflow-scrolling: touch; /* ลื่นไหลบน iOS */
+    padding-bottom: 10px;
+    margin-top: 1rem;
+    border-radius: 10px;
+}
+
+.user-table {
+    /* กำหนดความกว้างต่ำสุดให้ตาราง เพื่อไม่ให้คอลัมน์บีบตัวจนเละ */
+    min-width: 1000px; 
+}
+
+/* ห้ามปุ่มในตารางตัดคำเด็ดขาด */
+.user-table .action-btn, 
+.user-table .btn-export {
+    white-space: nowrap;
+}
+
+/* 2. จัดการ Layout แบบ Grid ของฟอร์มค้นหา */
+.search-form {
+    display: grid;
+    gap: 1rem;
+    align-items: end;
+    /* Default คือ grid ตาม class layout ที่ php ส่งมา */
+}
+
+/* หน้าจอ Laptop/Tablet แนวนอน (1024px - 1280px) */
+@media screen and (max-width: 1280px) {
+    .content-wrapper {
+        padding: 1.5rem;
+    }
+    
+    /* ปรับฟอร์ม 4 ช่องให้เหลือแถวละ 2 ช่อง */
+    .search-form.layout-4col {
+        grid-template-columns: 1fr 1fr; 
+    }
+    
+    /* ปุ่มค้นหาให้ขยายเต็มช่อง หรืออยู่บรรทัดใหม่ */
+    .search-button {
+        width: 100%;
+        margin-top: 0;
+    }
+}
+
+/* หน้าจอ Tablet แนวตั้ง (768px - 1023px) */
+@media screen and (max-width: 1023px) {
+    /* ปรับฟอร์ม 3 ช่องให้เหลือแถวละ 2 ช่อง */
+    .search-form.layout-3col {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* หน้าจอ Mobile (เล็กกว่า 768px) */
+@media screen and (max-width: 767px) {
+    /* บังคับทุกฟอร์มให้เรียงลงมาเป็นแนวตั้ง 1 คอลัมน์ */
+    .search-form.layout-4col,
+    .search-form.layout-3col,
+    .search-form.layout-2col,
+    .search-form.layout-1col {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group input, 
+    .form-group select {
+        font-size: 1rem;
+    }
+
+    .search-button {
+        width: 100%;
+    }
+
+    /* ลดขนาด Padding ของตารางบนมือถือ */
+    .user-table th, 
+    .user-table td {
+        padding: 0.8rem;
+        font-size: 1rem;
+    }
+    
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
+}
+/* =========================================
+   แก้ไขเฉพาะ Layout 2 Columns (สำหรับ show_on_off.php)
+   ========================================= */
+
+/* ตั้งค่าพื้นฐานสำหรับ 2 ช่อง + 1 ปุ่ม */
+.search-form.layout-2col {
+    grid-template-columns: 1fr 1fr auto; /* แบ่งซ้ายขวาเท่ากัน + ปุ่มตามขนาดตัวอักษร */
+    gap: 1.5rem; /* ระยะห่างระหว่างช่อง */
+}
+
+/* ถ้าหน้าจอเริ่มเล็ก (Tablet / Laptop เล็ก) */
+@media screen and (max-width: 1024px) {
+    .search-form.layout-2col {
+        /* ยังคงแนวนอนได้อยู่ เพราะมีแค่ 2 ช่อง พื้นที่เหลือเฟือ */
+        grid-template-columns: 1fr 1fr auto; 
+    }
+}
+
+/* ถ้าหน้าจอเป็น Mobile (น้อยกว่า 768px) */
+@media screen and (max-width: 768px) {
+    .search-form.layout-2col {
+        grid-template-columns: 1fr; /* เรียงลงมาเป็นแนวตั้ง */
+        gap: 1rem;
+    }
+    
+    .search-form.layout-2col .search-button {
+        width: 100%; /* ปุ่มเต็มความกว้าง */
+        margin-top: 0.5rem;
+    }
+}

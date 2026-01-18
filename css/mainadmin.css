@@ -3,6 +3,8 @@
    ================================= */
 .container {
   padding: 30px;
+  max-width: 1400px; /* เพิ่ม max-width เพื่อไม่ให้เนื้อหาบานเกินไปในจอใหญ่มาก */
+  margin: 0 auto;    /* จัดกึ่งกลาง */
 }
 
 .stats {
@@ -10,10 +12,12 @@
   justify-content: space-between;
   gap: 50px;
   margin-bottom: 40px;
+  flex-wrap: wrap; /* สำคัญ: ยอมให้กล่องตกบรรทัดเมื่อจอเล็ก */
 }
 
 .stat-box {
   flex: 1;
+  min-width: 250px; /* กำหนดความกว้างขั้นต่ำของกล่อง */
   background: white;
   border-radius: 15px;
   padding: 25px;
@@ -21,6 +25,11 @@
   text-align: center;
   color: black;
   border: 2px solid #444;
+  transition: transform 0.3s ease; /* เพิ่มลูกเล่นขยับนิดหน่อย */
+}
+
+.stat-box:hover {
+  transform: translateY(-5px);
 }
 
 .stat-box h3 {
@@ -35,6 +44,7 @@
   color: #333;
 }
 
+/* --- Switch Toggle Styles --- */
 .switch {
   position: relative;
   display: inline-block;
@@ -67,10 +77,19 @@
 input:checked + .slider { background-color: #4CAF50; }
 input:checked + .slider:before { transform: translateX(46px); }
 
+/* --- Table Styles --- */
 .table-title {
   font-size: 32px;
   margin-bottom: 20px;
   font-weight: bold;
+  color: #2c3e50; /* เพิ่มสีให้ชัดเจนขึ้น */
+}
+
+/* เพิ่ม Container สำหรับตารางเพื่อให้เลื่อนได้ในมือถือ */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 table {
@@ -81,6 +100,7 @@ table {
   box-shadow: none;
   color: black;
   font-size: 22px; 
+  min-width: 800px; /* บังคับความกว้างขั้นต่ำ กันตารางบีบ */
 }
 
 td, th {
@@ -93,6 +113,7 @@ th {
   background-color: #EAEAEA;
   color: #333;
   font-size: 24px; 
+  white-space: nowrap; /* หัวตารางห้ามตัดคำ */
 }
 
 th:first-child { border-radius: 15px 0 0 15px; }
@@ -100,7 +121,7 @@ th:last-child { border-radius: 0 15px 15px 0; }
 
 tbody tr {
     background-color: #D4E6D9;
-    border-radius: 15px;
+    border-radius: 15px; /* หมายเหตุ: border-radius บน tr อาจไม่แสดงผลในบาง Browser ต้องอาศัย td */
 }
 
 tbody tr:hover { background-color: #b2d8be; }
@@ -115,13 +136,13 @@ td:last-child { border-radius: 0 15px 15px 0; }
   display: flex;
   align-items: center;
   gap: 8px;
+  white-space: nowrap; /* ห้ามปุ่มตัดคำ */
 }
 
 .action img {
   height: 24px;
   width: 24px;
 }
-
 
 .delete-btn {
   color: #fff;
@@ -132,8 +153,87 @@ td:last-child { border-radius: 0 15px 15px 0; }
   text-decoration: none;
   margin-left: 10px;
   transition: background-color 0.3s ease;
+  white-space: nowrap;
 }
 
 .delete-btn:hover {
   background-color: #c82333;
+}
+
+
+/* =========================================
+   RESPONSIVE (Media Queries)
+   ========================================= */
+
+/* 1. Laptop & Tablet Landscape (1024px - 1280px) */
+@media screen and (max-width: 1280px) {
+    .container {
+        padding: 20px;
+    }
+    
+    .stats {
+        gap: 30px; /* ลดระยะห่างระหว่างกล่อง */
+    }
+
+    .table-title {
+        font-size: 28px;
+    }
+}
+
+/* 2. Tablet Portrait (768px - 1024px) */
+@media screen and (max-width: 1024px) {
+    .stat-box {
+        padding: 20px;
+    }
+
+    .stat-box h3 {
+        font-size: 24px;
+    }
+
+    .stat-number {
+        font-size: 40px;
+    }
+    
+    /* ปรับขนาดตารางและตัวอักษร */
+    table {
+        font-size: 20px;
+    }
+    th {
+        font-size: 22px;
+    }
+}
+
+/* 3. Mobile (Max 768px and 720px) */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .stats {
+        flex-direction: column; /* เรียงกล่องลงมาแนวตั้งถ้ามีหลายกล่อง */
+        gap: 20px;
+    }
+    
+    .stat-box {
+        width: 100%; /* กล่องขยายเต็มจอ */
+        box-sizing: border-box; /* ให้ padding รวมอยู่ใน width */
+    }
+
+    .stat-box h3 {
+        font-size: 22px;
+    }
+
+    .stat-number {
+        font-size: 36px;
+    }
+    
+    /* ถ้ามีตารางในหน้านี้ จะเลื่อนแนวนอนได้ */
+    .table-responsive {
+        display: block;
+        width: 100%;
+    }
+    
+    td, th {
+        padding: 15px; /* ลด padding ในตาราง */
+    }
 }
