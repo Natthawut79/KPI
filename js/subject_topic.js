@@ -68,4 +68,20 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!isEditMode) {
         loadNextOrderNo();
     }
+    const form = document.querySelector('form');
+    const subjectNameInput = document.querySelector('input[name="subject_name"]');
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const subjectName = subjectNameInput.value.trim();
+            const validNameRegex = /^[ก-๙0-9\s\.\-\(\)]+$/;
+
+            if (!validNameRegex.test(subjectName)) {
+                e.preventDefault();
+                alert("ชื่อหัวข้อตัวชี้วัดต้องประกอบด้วยภาษาไทยหรือตัวเลขเท่านั้น");
+                subjectNameInput.focus();
+                return;
+            }
+        });
+    }
 });

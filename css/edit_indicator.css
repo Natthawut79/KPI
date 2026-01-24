@@ -206,3 +206,8 @@ body {
         box-sizing: border-box;
     }
 }
+.required-mark {
+    color: red;
+    margin-left: 3px;
+    font-weight: bold;
+}

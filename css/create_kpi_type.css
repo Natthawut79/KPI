@@ -131,3 +131,8 @@ select:focus {
     background-color: #145a32;
     transform: translateY(-2px);
 }
+.required-mark {
+    color: red;
+    margin-left: 3px;
+    font-weight: bold;
+}

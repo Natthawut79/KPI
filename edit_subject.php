@@ -28,20 +28,20 @@ $disabled_style = "background-color: #cccccc !important; border-color: #cccccc !
     <div class="form-wrapper">
         <h1 class="form-title">แก้ไขหัวข้อตัวชี้วัด</h1>
 
-        <form action="config/checkedit_subject.php" method="POST" onsubmit="return confirm('ยืนยันการบันทึกการแก้ไข?');">
+        <form id="createSubjectForm" action="config/checkedit_subject.php" method="POST" onsubmit="return confirm('ยืนยันการบันทึกการแก้ไข?');">
             <input type="hidden" name="subject_id" value="<?php echo $subject_id; ?>">
             
             <input type="hidden" id="is_edit_mode" value="1">
             <input type="hidden" id="current_kpi_type_id" value="<?php echo $row['KPI_type_id']; ?>">
 
             <div class="form-group">
-                <label>ปีการศึกษา :</label>
+                <label>ปีการศึกษา :<span class="required-mark"> *</span></label>
                 <input type="number" id="academic_year" name="Academic" 
                        value="<?php echo $row['Academic']; ?>" required>
             </div>
 
             <div class="form-group">
-                <label>กลุ่มผู้ใช้ตัวชี้วัด :</label>
+                <label>กลุ่มผู้ใช้ตัวชี้วัด :<span class="required-mark"> *</span></label>
                 
                 <div class="radio-container">
                 <?php
@@ -62,23 +62,23 @@ $disabled_style = "background-color: #cccccc !important; border-color: #cccccc !
             </div>
 
             <div class="form-group">
-                <label>ชื่อประเภทตัวชี้วัด :</label>
+                <label>ชื่อประเภทตัวชี้วัด :<span class="required-mark"> *</span></label>
                 <select name="KPI_type_id" id="kpi_type_select" required>
                     <option value="">กำลังโหลดข้อมูล...</option>
                 </select>
             </div>
+            <div class="form-group">
+                <label>ชื่อหัวข้อตัวชี้วัด :<span class="required-mark"> *</span></label>
+                <input type="text" name="subject_name" 
+                       value="<?php echo htmlspecialchars($row['subject_name']); ?>" required>
+            </div>
 
             <div class="form-group">
-                <label>ลำดับที่ :</label>
+                <label>ลำดับที่ :<span class="required-mark"> *</span></label>
                 <input type="number" name="subject_order" id="order_no_input" 
                        value="<?php echo $row['subject_order']; ?>" required>
             </div>
 
-            <div class="form-group">
-                <label>ชื่อหัวข้อตัวชี้วัด :</label>
-                <input type="text" name="subject_name" 
-                       value="<?php echo htmlspecialchars($row['subject_name']); ?>" required>
-            </div>
 
             <div class="button-container">
                 <button type="submit" class="save-btn"

@@ -39,13 +39,13 @@ $result_submit_types = $conn->query($sql_submit_types);
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="academic_year"><i class="fas fa-calendar-day"></i> ปีการศึกษา (พ.ศ.):</label>
+                    <label for="academic_year"><i class="fas fa-calendar-day"></i> ปีการศึกษา (พ.ศ.):<span class="required-mark">*</span></label>
                     <input type="number" id="academic_year" name="academic_year"
                            value="<?php echo htmlspecialchars($toggle_data['Academic']); ?>" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="submit_type_id"><i class="fas fa-tasks"></i> รอบการประเมิน:</label>
+                    <label for="submit_type_id"><i class="fas fa-tasks"></i> รอบการประเมิน:<span class="required-mark">*</span></label>
                     <select id="submit_type_id" name="submit_type_id" required>
                         <option value="" disabled>-- เลือกรอบการประเมิน --</option>
                         <?php
@@ -73,12 +73,12 @@ $result_submit_types = $conn->query($sql_submit_types);
 
             <div class="form-group date-group">
                 <div class="date-input">
-                    <label for="start-datetime"><i class="fas fa-calendar-alt"></i> วันที่เริ่มต้น:</label>
+                    <label for="start-datetime"><i class="fas fa-calendar-alt"></i> วันที่เริ่มต้น:<span class="required-mark">*</span></label>
                     <input type="date" id="start-datetime" name="start-datetime" 
                            value="<?php echo date('Y-m-d', strtotime($toggle_data['Start_date'])); ?>" required>
                 </div>
                 <div class="date-input">
-                    <label for="end-datetime"><i class="fas fa-calendar-check"></i> วันที่สิ้นสุด:</label>
+                    <label for="end-datetime"><i class="fas fa-calendar-check"></i> วันที่สิ้นสุด:<span class="required-mark">*</span></label>
                     <input type="date" id="end-datetime" name="end-datetime" 
                            value="<?php echo date('Y-m-d', strtotime($toggle_data['End_date'])); ?>" required>
                 </div>

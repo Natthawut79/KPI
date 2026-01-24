@@ -37,7 +37,7 @@ if (isset($_GET['group_id'])) {
         $sql = "SELECT KPI_type_id, KPI_Type_Name_EN, KPI_Type_Name_TH 
                 FROM kpi_type 
                 WHERE Group_ID = ? AND Academic = ? 
-                ORDER BY Order_No ASC";
+                ORDER BY KPI_Type_Name_EN ASC";
         
         $stmt = mysqli_prepare($conn, $sql);
         mysqli_stmt_bind_param($stmt, "ii", $group_id, $academic);
@@ -67,16 +67,16 @@ include 'config/academic_year_resolver.php';
     <div class="form-wrapper">
         <h1 class="form-title">สร้างหัวข้อตัวชี้วัด</h1>
 
-        <form action="config/checkcreate_subject.php" method="POST" onsubmit="return confirm('คุณต้องการบันทึกข้อมูลใช่หรือไม่?');">
+        <form id="createSubjectForm" action="config/checkcreate_subject.php" method="POST" onsubmit="return confirm('คุณต้องการบันทึกข้อมูลใช่หรือไม่?');">
             
             <div class="form-group">
-                <label>ปีการศึกษา :</label>
+                <label>ปีการศึกษา :<span class="required-mark"> *</span></label>
                 <input type="number" id="academic_year" name="Academic" 
                        value="<?php echo $current_academic_year; ?>" required>
             </div>
 
             <div class="form-group">
-                <label>กลุ่มผู้ใช้ตัวชี้วัด :</label>
+                <label>กลุ่มผู้ใช้ตัวชี้วัด :<span class="required-mark"> *</span></label>
                 
                 <div class="radio-container">
                 <?php
@@ -87,7 +87,7 @@ include 'config/academic_year_resolver.php';
                         $checked = $first ? 'checked' : ''; 
                         $first = false;
                         
-                        // ใช้ class radio-label แทน inline style
+
                         echo "<label class='radio-label'>";
                         echo "<input type='radio' name='Group_ID' value='{$group['Group_ID']}' $checked required> ";
                         echo htmlspecialchars($group['Group_Name']);
@@ -98,19 +98,19 @@ include 'config/academic_year_resolver.php';
             </div>
 
             <div class="form-group">
-                <label>ชื่อประเภทตัวชี้วัด :</label>
+                <label>ชื่อประเภทตัวชี้วัด :<span class="required-mark"> *</span></label>
                 <select name="KPI_type_id" id="kpi_type_select" required>
                     <option value="">--- กรุณาเลือก ---</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>ชื่อหัวข้อตัวชี้วัด :</label>
+                <label>ชื่อหัวข้อตัวชี้วัด (TH) :<span class="required-mark"> *</span></label>
                 <input type="text" name="subject_name" required placeholder="กรอกชื่อหัวข้อตัวชี้วัด...">
             </div>
 
             <div class="form-group">
-                <label>ลำดับที่ :</label>
+                <label>ลำดับที่ :<span class="required-mark"> *</span></label>
                 <input type="number" name="subject_order" id="order_no_input" required>
             </div>
 

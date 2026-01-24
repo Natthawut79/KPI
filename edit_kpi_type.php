@@ -32,38 +32,13 @@ if (isset($_GET['KPI_type_id'])) {
     <div class="form-wrapper">
         <h1 class="form-title">แก้ไขข้อมูลประเภทตัวชี้วัด</h1>
 
-        <form action="config/checkedit_kpi_type.php" method="POST">
+        <form id="editKpiForm" action="config/checkedit_kpi_type.php" method="POST">
             <input type="hidden" name="KPI_type_id" value="<?php echo $row['KPI_type_id']; ?>">
-
             <div class="form-group">
-                <label>ชื่อประเภทตัวชี้วัด (ENG) :</label>
-                <input type="text" name="KPI_Type_Name_EN" value="<?php echo $row['KPI_Type_Name_EN']; ?>" required>
-            </div>
-            <div class="form-group">
-                <label>ชื่อประเภทตัวชี้วัด (TH) :</label>
-                <input type="text" name="KPI_Type_Name_TH" value="<?php echo $row['KPI_Type_Name_TH']; ?>" required>
-            </div>
-            <div class="form-group">
-                <label>ค่าน้ำหนัก :</label>
-                <input type="number" name="Weight" value="<?php echo $row['Weight']; ?>" required>
-            </div>
-            <div class="form-group">
-                <label>ลำดับที่ :</label>
-                <input type="number" name="Order_No" value="<?php echo $row['Order_No']; ?>" required>
-            </div>
-            <div class="form-group">
-                <label>หมายเหตุ :</label>
-                <input type="text" name="Description_text" value="<?php echo $row['Description_text']; ?>">
-            </div>
-            <div class="form-group">
-                <label>ปีการศึกษา :</label>
-                <input type="number" name="Academic" value="<?php echo $row['Academic']; ?>" required>
-            </div>
-            <div class="form-group">
-                <label>กลุ่มผู้ใช้ :</label>
+                <label>กลุ่มผู้ใช้ :<span class="required-mark">  *</span></label>
                 <select name="Group_ID" required>
                     <?php
-                    $sql_group = "SELECT Group_ID, Group_Name FROM group_use_kpis";
+                    $sql_group = "SELECT Group_ID, Group_Name FROM group_use_kpis ORDER BY Group_Name ASC";
                     $res_group = mysqli_query($conn, $sql_group);
                     while ($group = mysqli_fetch_assoc($res_group)) {
                         $selected = ($group['Group_ID'] == $row['Group_ID']) ? "selected" : "";
@@ -72,6 +47,33 @@ if (isset($_GET['KPI_type_id'])) {
                     ?>
                 </select>
             </div>
+            <div class="form-group">
+                <label>ปีการศึกษา :<span class="required-mark">  *</span></label>
+                <input type="number" name="Academic" value="<?php echo $row['Academic']; ?>" required>
+            </div>
+
+            <div class="form-group">
+                <label>ชื่อประเภทตัวชี้วัด (ENG) :<span class="required-mark">  *</span></label>
+                <input type="text" name="KPI_Type_Name_EN" value="<?php echo $row['KPI_Type_Name_EN']; ?>" required>
+            </div>
+            <div class="form-group">
+                <label>ชื่อประเภทตัวชี้วัด (TH) :<span class="required-mark">  *</span></label>
+                <input type="text" name="KPI_Type_Name_TH" value="<?php echo $row['KPI_Type_Name_TH']; ?>" required>
+            </div>
+            <div class="form-group">
+                <label>ค่าน้ำหนัก :<span class="required-mark">  *</span></label>
+                <input type="number" name="Weight" value="<?php echo $row['Weight']; ?>" required>
+            </div>
+            <div class="form-group">
+                <label>ลำดับที่ :<span class="required-mark">  *</span></label>
+                <input type="number" name="Order_No" value="<?php echo $row['Order_No']; ?>" required>
+            </div>
+            <div class="form-group">
+            <label>หมายเหตุ :</label>
+            <textarea name="Description_text" rows="5"><?php echo $row['Description_text']; ?></textarea>
+            </div>
+            
+            
 
             <div class="button-container">
                 <button type="submit" class="save-btn" 
@@ -90,7 +92,7 @@ if (isset($_GET['KPI_type_id'])) {
         </form>
     </div>
 </div>
-
+<script src="js/edit_kpi_type.js"></script>
 <?php
 include 'templates/footer.php';
 ?>

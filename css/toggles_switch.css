@@ -85,14 +85,13 @@ body {
     resize: vertical;
 }
 
-/* ✅ [แก้ไข] เปลี่ยนมาใช้ Flexbox เพื่อจัดปุ่มให้ตรงกัน */
 .button-container {
     /* text-align: center; (Flexbox จะจัดการแทน) */
     margin-top: 30px;
     display: flex;
     justify-content: center; /* จัดให้อยู่ตรงกลางแนวนอน */
     align-items: center;   /* จัดให้อยู่ตรงกลางแนวตั้ง (แก้เบี้ยว) */
-    gap: 10px;             /* ✅ เพิ่มระยะห่างระหว่างปุ่ม */
+    gap: 10px;
 }
 
 .save-btn {
@@ -174,4 +173,9 @@ input:checked + .slider:before { transform: translateX(46px); }
 /* ✅ [เพิ่ม] ระยะห่างระหว่างปุ่มบันทึกและยกเลิก */
 .button-container .save-btn {
     margin-right: 10px;
+}
+.required-mark {
+    color: red;
+    margin-left: 3px;
+    font-weight: bold;
 }

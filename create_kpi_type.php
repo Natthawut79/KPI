@@ -3,7 +3,7 @@ $page_title = "สร้างประเภทตัวชี้วัด";
 include 'templates/navbar.php';
 include 'config/conn.php';
 
-$sql_group = "SELECT Group_ID, Group_Name FROM group_use_kpis";
+$sql_group = "SELECT Group_ID, Group_Name FROM group_use_kpis ORDER BY Group_Name ASC";
 $res_group = mysqli_query($conn, $sql_group);
 $options_html = "";
 if ($res_group) {
@@ -32,33 +32,32 @@ $json_all_kpi = json_encode($all_kpi_data);
         <form action="config/checkcreate_kpi_type.php " method="POST">
 
             <div class="form-group">
-                <label>ปีการศึกษา :</label>
+                <label>ปีการศึกษา :<span class="required-mark">  *</span></label>
                 <input type="number" name="Academic" id="academic_input" value="" required>
-                    required>
             </div>
 
             <div class="form-group">
-                <label>กลุ่มผู้ใช้ :</label>
+                <label>กลุ่มผู้ใช้ :<span class="required-mark">  *</span></label>
                 <select name="Group_ID" id="group_select" required>
-                    <option value="">--- เลือกกลุ่มผู้ใช้ ---</option>
+                    <option value="">--- โปรดเลือกกลุ่มผู้ใช้ ---</option>
                     <?php echo $options_html; ?>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>ชื่อประเภทตัวชี้วัด (ENG) :</label>
+                <label>ชื่อประเภทตัวชี้วัด (ENG) :<span class="required-mark">  *</span></label>
                 <input type="text" name="KPI_Type_Name_EN" required>
             </div>
             <div class="form-group">
-                <label>ชื่อประเภทตัวชี้วัด (TH) :</label>
+                <label>ชื่อประเภทตัวชี้วัด (TH) :<span class="required-mark">  *</span></label>
                 <input type="text" name="KPI_Type_Name_TH" required>
             </div>
             <div class="form-group">
-                <label>ค่าน้ำหนัก :</label>
+                <label>ค่าน้ำหนัก :<span class="required-mark">  *</span></label>
                 <input type="number" name="Weight" required>
             </div>
             <div class="form-group">
-                <label>ลำดับที่ :</label>
+                <label>ลำดับที่ :<span class="required-mark">  *</span></label>
                 <input type="number" name="Order_No" id="order_no" required>
             </div>
             <div class="form-group">

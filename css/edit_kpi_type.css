@@ -129,3 +129,26 @@ select:focus {
     border-color: #EBACB1;
     transform: translateY(-2px);
 }
+
+.required-mark {
+    color: red;
+    margin-left: 3px;
+    font-weight: bold;
+}
+.form-group textarea {
+    width: 100%;
+    padding: 8px 15px;
+    font-size: 1.3rem;
+    font-family: "TH Sarabun New", sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    resize: vertical;
+}
+
+.form-group textarea:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+}
