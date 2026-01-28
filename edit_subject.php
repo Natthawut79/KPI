@@ -18,7 +18,7 @@ if (!$row) {
     exit();
 }
 $current_year = $current_academic_year;
-$is_editable = ($row['Academic'] == $current_year);
+$is_editable = ($row['Academic'] >= $current_year);
 $disabled_style = "background-color: #cccccc !important; border-color: #cccccc !important; color: #666666 !important; cursor: not-allowed; pointer-events: none; opacity: 0.8; box-shadow: none;";
 ?>
 

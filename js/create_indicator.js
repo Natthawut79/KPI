@@ -4,9 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const radioButtons = document.querySelectorAll('input[name="Group_ID"]');
     const orderNoInput = document.getElementById('order_no_input');
     
-    // เพิ่มตัวแปรสำหรับ Subject Topic
     const subjectSelect = document.getElementById('subject_select');
-    
+    const publicationTypeSelect = document.getElementById('publication_type_select');
     const articleTypeSelect = document.getElementById('article_type_select');
     const publicationOptionsGroup = document.getElementById('publication_options_group');
     const fetchDataRadios = document.querySelectorAll('input[name="fetch_data"]');
@@ -115,25 +114,45 @@ document.addEventListener('DOMContentLoaded', function() {
     function togglePublicationOptions() {
         if (!articleTypeSelect || !publicationOptionsGroup) return;
 
-        // เช็คว่าเป็น publication (ID 3) หรือไม่
-        if (articleTypeSelect.value == '3') { 
-            publicationOptionsGroup.style.display = 'grid';
+        if (articleTypeSelect.value === '3') { 
+            publicationOptionsGroup.style.display = 'grid'; 
+            // เพิ่ม: บังคับเลือก
+            if (publicationTypeSelect) publicationTypeSelect.required = true;
         } else {
             publicationOptionsGroup.style.display = 'none';
+            // เพิ่ม: เลิกบังคับเลือก และเคลียร์ค่า
+            if (publicationTypeSelect) {
+                publicationTypeSelect.required = false;
+                publicationTypeSelect.value = ""; 
+            }
         }
     }
 
-    // เช็คการดึงข้อมูลจากฐานข้อมูล
     function toggleArticleOptions() {
-        const selectedRadio = document.querySelector('input[name="fetch_data"]:checked');
-        if (!selectedRadio) return;
+        const selectedFetchRadio = document.querySelector('input[name="fetch_data"]:checked');
+        if (!selectedFetchRadio) return;
+        
+        const selectedFetchData = selectedFetchRadio.value;
 
-        if (selectedRadio.value === 'yes') {
-            if(articleTypeGroup) articleTypeGroup.style.display = 'grid'; 
+        if (selectedFetchData === 'yes') {
+            if (articleTypeGroup) articleTypeGroup.style.display = 'grid'; 
+            // เพิ่ม: บังคับเลือก
+            if (articleTypeSelect) articleTypeSelect.required = true;
+            
             togglePublicationOptions(); 
         } else {
-            if(articleTypeGroup) articleTypeGroup.style.display = 'none'; 
-            if(publicationOptionsGroup) publicationOptionsGroup.style.display = 'none'; 
+            if (articleTypeGroup) articleTypeGroup.style.display = 'none'; 
+            if (publicationOptionsGroup) publicationOptionsGroup.style.display = 'none'; 
+            
+            // เพิ่ม: เลิกบังคับเลือก และเคลียร์ค่าทั้งหมด
+            if (articleTypeSelect) {
+                articleTypeSelect.required = false;
+                articleTypeSelect.value = "";
+            }
+            if (publicationTypeSelect) {
+                publicationTypeSelect.required = false;
+                publicationTypeSelect.value = "";
+            }
         }
     }
 

@@ -74,11 +74,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (form) {
         form.addEventListener('submit', function(e) {
             const subjectName = subjectNameInput.value.trim();
-            const validNameRegex = /^[ก-๙0-9\s\.\-\(\)]+$/;
+            const validNameRegex = /^[ก-๙a-zA-Z0-9\s\.\-\(\)]+$/;
 
             if (!validNameRegex.test(subjectName)) {
                 e.preventDefault();
-                alert("ชื่อหัวข้อตัวชี้วัดต้องประกอบด้วยภาษาไทยหรือตัวเลขเท่านั้น");
+                alert("กรุณากรอกเฉพาะภาษาไทย, ภาษาอังกฤษ, ตัวเลข, ช่องว่าง และเครื่องหมาย . - ( ) เท่านั้น ห้ามใช้อักขระพิเศษอื่น");
                 subjectNameInput.focus();
                 return;
             }

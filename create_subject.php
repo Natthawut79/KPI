@@ -105,7 +105,7 @@ include 'config/academic_year_resolver.php';
             </div>
 
             <div class="form-group">
-                <label>ชื่อหัวข้อตัวชี้วัด (TH) :<span class="required-mark"> *</span></label>
+                <label>ชื่อหัวข้อตัวชี้วัด :<span class="required-mark"> *</span></label>
                 <input type="text" name="subject_name" required placeholder="กรอกชื่อหัวข้อตัวชี้วัด...">
             </div>
 

@@ -12,7 +12,7 @@ if (isset($_GET['KPI_type_id'])) {
 
 
     $current_year = $current_academic_year; 
-    $is_editable = ($row['Academic'] == $current_year);
+    $is_editable = ($row['Academic'] >= $current_year);
 
     $disabled_style = 'background-color: #cccccc !important; cursor: not-allowed; pointer-events: none; opacity: 0.7;';
 

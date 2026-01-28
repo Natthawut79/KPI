@@ -84,7 +84,7 @@ if ($result_kpi === null) {
         echo '<a href="edit_kpi_type.php?KPI_type_id=' . $row['KPI_type_id'] . '" class="action-btn btn-edit">แก้ไข</a> ';
         
         // เงื่อนไขตรวจสอบปีการศึกษาสำหรับปุ่มลบ
-        if ($row['Academic'] == $current_year) {
+        if ($row['Academic'] >= $current_year) {
             // กรณีปีตรงกับปีปัจจุบัน -> แสดงปุ่มลบปกติ
             echo '<a href="config/checkdelete_kpi_type.php?KPI_type_id=' . $row['KPI_type_id'] . '" class="action-btn btn-delete"
                    onclick="return confirm(\'คุณแน่ใจหรือไม่ว่าต้องการลบ?\')">ลบ</a>';

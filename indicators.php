@@ -150,7 +150,7 @@ $result = ($isSearch && !$noResult) ? mysqli_query($conn, $sql) : false;
                         
                         // [เพิ่ม] สร้างปุ่มลบตามเงื่อนไขปีปัจจุบัน
                         $delete_btn = '';
-                        if ($row['Academic'] == $current_year) {
+                        if ($row['Academic'] >= $current_year) {
                             $delete_btn = "<a href='config/checkdelete_indicator.php?KPI_topic_id={$row['KPI_topic_id']}' class='action-btn btn-delete' 
                                            onclick='return confirm(\"คุณแน่ใจหรือว่าต้องการลบตัวชี้วัดนี้?\");'>ลบ</a>";
                         } else {

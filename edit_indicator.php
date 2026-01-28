@@ -8,7 +8,7 @@ if (isset($_GET['get_subjects']) && isset($_GET['kpi_type_id'])) {
         $sql = "SELECT subject_id, subject_name 
                 FROM subject_topic 
                 WHERE KPI_type_id = ? 
-                ORDER BY subject_order ASC";
+                ORDER BY subject_name ASC";
         $stmt = mysqli_prepare($conn, $sql);
         mysqli_stmt_bind_param($stmt, "i", $kpi_type_id);
         mysqli_stmt_execute($stmt);
@@ -38,7 +38,7 @@ if (isset($_GET['group_id'])) {
         $sql_ajax = "SELECT KPI_type_id, KPI_Type_Name_EN, KPI_Type_Name_TH
                      FROM kpi_type
                      WHERE Group_ID = ? AND Academic = ?
-                     ORDER BY Order_No ASC";
+                     ORDER BY KPI_Type_Name_EN ASC";
 
         $stmt = mysqli_prepare($conn, $sql_ajax);
         mysqli_stmt_bind_param($stmt, "is", $group_id, $current_academic_year);
@@ -86,7 +86,7 @@ if (isset($_GET['KPI_topic_id'])) {
     }
 
     $current_year = $current_academic_year;
-    $is_editable = ($row['Academic'] == $current_year);
+    $is_editable = ($row['Academic'] >= $current_year);
 
     $btn_base_style = "min-width: 100px; text-align: center; justify-content: center; display: inline-flex; align-items: center; margin-right: 10px;";
     $disabled_style = "background-color: #cccccc !important; border-color: #cccccc !important; color: #666666 !important; cursor: not-allowed; pointer-events: none; opacity: 0.8; box-shadow: none;";
@@ -114,7 +114,7 @@ if (isset($_GET['KPI_topic_id'])) {
             <input type="hidden" name="KPI_topic_id" value="<?php echo htmlspecialchars($row['KPI_topic_id']); ?>">
 
             <div class="form-group">
-                <label>กลุ่มผู้ใช้ตัวชี้วัด :</label>
+                <label>กลุ่มผู้ใช้ตัวชี้วัด :<span class="required-mark">  *</span></label>
                 
                 <div class="radio-container">
                 <?php
@@ -136,21 +136,21 @@ if (isset($_GET['KPI_topic_id'])) {
             </div>
 
             <div class="form-group">
-                <label>ชื่อประเภทตัวชี้วัด :</label>
+                <label>ชื่อประเภทตัวชี้วัด :<span class="required-mark">  *</span></label>
                 <select name="KPI_type_id" id="kpi_type_select" data-loaded-id="<?php echo $loaded_kpi_type_id; ?>" required>
                      <option value="">--- กรุณาเลือก ---</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>ชื่อหัวข้อตัวชี้วัด :</label>
+                <label>ชื่อหัวข้อตัวชี้วัด :<span class="required-mark">  *</span></label>
                 <select name="subject_id" id="subject_select" data-loaded-subject-id="<?php echo isset($row['subject_id']) ? $row['subject_id'] : ''; ?>">
                     <option value="">--- กรุณาเลือก ---</option>
                 </select>
             </div>
             
             <div class="form-group">
-                <label>กรอกข้อมูลเพิ่มหรือไม่ :</label>
+                <label>กรอกข้อมูลเพิ่มหรือไม่ :<span class="required-mark">  *</span></label>
                 <div class="radio-container">
                     <label class="radio-label">
                         <input type="radio" name="fill_data" value="no" <?php echo ($additional_value == 'no') ? 'checked' : ''; ?>> ไม่กรอกข้อมูล
@@ -162,7 +162,7 @@ if (isset($_GET['KPI_topic_id'])) {
             </div>
 
             <div class="form-group">
-                <label>ดึงข้อมูลจากฐานข้อมูลหรือไม่ :</label>
+                <label>ดึงข้อมูลจากฐานข้อมูลหรือไม่ :<span class="required-mark">  *</span></label>
                 <div class="radio-container">
                     <label class="radio-label">
                         <input type="radio" name="fetch_data" value="no" <?php echo ($retrieve_value == 'no') ? 'checked' : ''; ?>> ไม่ดึงข้อมูล
@@ -172,41 +172,59 @@ if (isset($_GET['KPI_topic_id'])) {
                     </label>
                 </div>
             </div>
-
             <div class="form-group" id="article_type_group" style="display: none;">
-                <label>ประเภทบทความ :</label>
-                <select name="Table_id" id="article_type_select">
-                    <option value="2" <?php echo (isset($row['Table_id']) && $row['Table_id'] == 2) ? 'selected' : ''; ?>>research</option>
-                    <option value="3" <?php echo (isset($row['Table_id']) && $row['Table_id'] == 3) ? 'selected' : ''; ?>>publication</option>
-                </select>
+            <label>ประเภทบทความ :<span class="required-mark">  *</span></label>
+            <select name="Table_id" id="article_type_select">
+                <option value="">--- กรุณาเลือก ---</option>
+                <?php
+                $sql_table = "SELECT Table_id, Table_name FROM tablename WHERE Table_id IN (2, 3) ORDER BY 	Table_name ASC";
+                $res_table = mysqli_query($conn, $sql_table);
+
+            if (mysqli_num_rows($res_table) > 0) {
+                while ($row_tbl = mysqli_fetch_assoc($res_table)) {
+                    $selected = (isset($row['Table_id']) && $row['Table_id'] == $row_tbl['Table_id']) ? 'selected' : '';
+                    echo '<option value="' . $row_tbl['Table_id'] . '" ' . $selected . '>' . htmlspecialchars($row_tbl['Table_name']) . '</option>';
+                }
+            }
+                ?>
+            </select>
             </div>
             <div class="form-group" id="publication_options_group" style="display: none;">
-                <label>ประเภทการตีพิมพ์ :</label>
-                <select name="Publication_type_id" id="publication_type_select">
-                    <option value="1" <?php echo (isset($row['Publication_type_id']) && $row['Publication_type_id'] == 1) ? 'selected' : ''; ?>>นานาชาติ (ฐาน Scopus)</option>
-                    <option value="2" <?php echo (isset($row['Publication_type_id']) && $row['Publication_type_id'] == 2) ? 'selected' : ''; ?>>ฐานข้อมูล TCI</option>
-                    <option value="3" <?php echo (isset($row['Publication_type_id']) && $row['Publication_type_id'] == 3) ? 'selected' : ''; ?>>อาจารย์ประจำหลักสูตร</option>
-                </select>
-            </div>
+            <label>ประเภทการตีพิมพ์ :<span class="required-mark">  *</span></label>
+            <select name="Publication_type_id" id="publication_type_select">
+                <option value="">--- กรุณาเลือก ---</option>
+                    <?php
+                    $sql_pub_type = "SELECT Publication_type_id, Publication_type_name FROM publicationtype ORDER BY Publication_type_name ASC";
+                    $res_pub_type = mysqli_query($conn, $sql_pub_type);
+
+        if (mysqli_num_rows($res_pub_type) > 0) {
+            while ($row_pt = mysqli_fetch_assoc($res_pub_type)) {
+                $selected = (isset($row['Publication_type_id']) && $row['Publication_type_id'] == $row_pt['Publication_type_id']) ? 'selected' : '';
+                echo '<option value="' . $row_pt['Publication_type_id'] . '" ' . $selected . '>' . htmlspecialchars($row_pt['Publication_type_name']) . '</option>';
+            }
+        }
+        ?>
+    </select>
+</div>
             
             <div class="form-group">
-                <label>ลำดับที่ :</label>
+                <label>ลำดับที่ :<span class="required-mark">  *</span></label>
                 <input type="number" name="Order_no" value="<?php echo htmlspecialchars($row['Order_no']); ?>" required>
             </div>
             <div class="form-group">
-                <label>ชื่อตัวชี้วัด :</label>
+                <label>ชื่อตัวชี้วัด :<span class="required-mark">  *</span></label>
                 <input type="text" name="KPI_topic_name" value="<?php echo htmlspecialchars($row['KPI_topic_name']); ?>" required>
             </div>
             <div class="form-group">
-                <label>หน่วยวัด :</label>
+                <label>หน่วยวัด :<span class="required-mark">  *</span></label>
                 <input type="text" name="Unit" value="<?php echo htmlspecialchars($row['Unit']); ?>">
             </div>
             <div class="form-group">
-                <label>เป้าหมายความสำเร็จที่คาดหวังทั้งปี :</label>
+                <label>เป้าหมายความสำเร็จที่คาดหวังทั้งปี :<span class="required-mark">  *</span></label>
                 <input type="text" name="Goal" value="<?php echo htmlspecialchars($row['Goal']); ?>">
             </div>
             <div class="form-group">
-                <label>เกณฑ์การให้คะแนนตามผลงานที่ทำได้ :</label>
+                <label>เกณฑ์การให้คะแนนตามผลงานที่ทำได้ :<span class="required-mark">  *</span></label>
                 <textarea name="Score_criteria" rows="5"><?php echo htmlspecialchars($row['Score_criteria']); ?></textarea>
                 
                 <label>เกณฑ์การให้คะแนน ช่องที่ 1:</label>
@@ -225,12 +243,13 @@ if (isset($_GET['KPI_topic_id'])) {
                 <input type="text" name="criteria_5" value="<?php echo isset($row['criteria_5']) ? htmlspecialchars($row['criteria_5']) : ''; ?>">
             </div>
             <div class="form-group">
-                <label>น้ำหนัก :</label>
+                <label>น้ำหนัก :<span class="required-mark">  *</span></label>
                 <input type="number" step="0.5" name="Weight" value="<?php echo htmlspecialchars($row['Weight']); ?>">
             </div>
             <div class="form-group">
-                <label>ระดับความสำคัญ :</label>
+                <label>ระดับความสำคัญ :<span class="required-mark">  *</span></label>
                 <select name="Important_level_no" required>
+                    <option value="">--- กรุณาเลือก ---</option>
                     <?php
                     $sql_important_level_no = "SELECT Important_level_no, Important_level_name FROM important_level";
                     $res_important_level_no = mysqli_query($conn, $sql_important_level_no);

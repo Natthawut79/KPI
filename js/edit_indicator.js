@@ -95,15 +95,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const articleTypeSelect = document.getElementById('article_type_select');
     const publicationOptionsGroup = document.getElementById('publication_options_group');
+    // เพิ่มบรรทัดนี้เพื่ออ้างอิงถึง select ของประเภทการตีพิมพ์
+    const publicationTypeSelect = document.getElementById('publication_type_select'); 
+    
     const fetchDataRadios = document.querySelectorAll('input[name="fetch_data"]');
     const articleTypeGroup = document.getElementById('article_type_group');
 
     function togglePublicationOptions() {
         if (!articleTypeSelect || !publicationOptionsGroup) return;
+        
         if (articleTypeSelect.value === '3') { 
             publicationOptionsGroup.style.display = 'grid'; 
+            // เพิ่ม: บังคับเลือกเมื่อแสดง
+            if (publicationTypeSelect) publicationTypeSelect.required = true; 
         } else {
             publicationOptionsGroup.style.display = 'none';
+            // เพิ่ม: ยกเลิกบังคับเลือกเมื่อซ่อน และเคลียร์ค่า
+            if (publicationTypeSelect) {
+                publicationTypeSelect.required = false;
+                publicationTypeSelect.value = ""; // รีเซ็ตเป็นค่าเริ่มต้น
+            } 
         }
     }
 
@@ -115,10 +126,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (selectedFetchData === 'yes') {
             if (articleTypeGroup) articleTypeGroup.style.display = 'grid'; 
+            // เพิ่ม: บังคับเลือกเมื่อแสดง
+            if (articleTypeSelect) articleTypeSelect.required = true;
+            
             togglePublicationOptions(); 
         } else {
             if (articleTypeGroup) articleTypeGroup.style.display = 'none'; 
             if (publicationOptionsGroup) publicationOptionsGroup.style.display = 'none'; 
+            
+            // เพิ่ม: ยกเลิกบังคับเลือกทั้งหมดเมื่อซ่อน และเคลียร์ค่า
+            if (articleTypeSelect) {
+                articleTypeSelect.required = false;
+                articleTypeSelect.value = "";
+            }
+            if (publicationTypeSelect) {
+                publicationTypeSelect.required = false;
+                publicationTypeSelect.value = "";
+            }
         }
     }
 

@@ -149,7 +149,7 @@ $result = ($isSearch) ? mysqli_query($conn, $sql) : false;
 
                 if($isSearch && $result && mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
-                        if ($row['Academic'] == $current_year) {
+                        if ($row['Academic'] >= $current_year) {
                             $delete_btn = "<a href='config/checkdelete_subject.php?subject_id={$row['subject_id']}' class='action-btn btn-delete' 
                                            onclick='return confirm(\"คุณแน่ใจหรือว่าต้องการลบข้อมูลนี้?\");'>ลบ</a>";
                         } else {
