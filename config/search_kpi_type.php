@@ -6,7 +6,7 @@ $userType = isset($_GET['userType']) ? trim($_GET['userType']) : '';
 $isSearch = ($searchAcademicYear !== '' || $userType !== '');
 
 // ดึงข้อมูล Group ทั้งหมดจาก group_use_kpis
-$sql_user_type = "SELECT Group_ID, Group_Name FROM group_use_kpis ORDER BY Group_ID ASC";
+$sql_user_type = "SELECT Group_ID, Group_Name FROM group_use_kpis ORDER BY Group_Name ASC";
 $result_user_type = mysqli_query($conn, $sql_user_type);
 
 // ค่าเริ่มต้น (ยังไม่ค้นหา)
@@ -45,7 +45,7 @@ if ($isSearch) {
         FROM kpi_type k
         JOIN group_use_kpis g ON k.Group_ID = g.Group_ID
         $whereSQL
-        ORDER BY k.Order_No ASC
+        ORDER BY k.Academic DESC, k.KPI_Type_Name_EN ASC
     ";
 
     $result_kpi = mysqli_query($conn, $sql_kpi);

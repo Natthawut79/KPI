@@ -11,7 +11,7 @@ $filter_user_type = isset($_GET['userType']) ? mysqli_real_escape_string($conn, 
 $filter_department = isset($_GET['department']) ? mysqli_real_escape_string($conn, $_GET['department']) : 'all';
 
 
-$sql_user_types = "SELECT Type_id, Type_name, Type_name_th FROM user_type WHERE Type_id != 1 ORDER BY Type_id";
+$sql_user_types = "SELECT Type_id, Type_name, Type_name_th FROM user_type WHERE Type_id != 1 ORDER BY Type_name_th";
 $result_user_types = mysqli_query($conn, $sql_user_types);
 
 $sql_departments = "SELECT Department_id, Department_name FROM department ORDER BY Department_name";

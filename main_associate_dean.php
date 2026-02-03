@@ -38,7 +38,7 @@ include 'config/search_associate_dean.php';
     </h2>
 
     <div class="table-container">
-        <table class="user-table">
+        <table class="user-table associate-dean-table">
             <thead>
                 <tr>
                     <th class="text-center">อาจารย์</th>

@@ -55,7 +55,7 @@ include 'config/search_head_of_department.php';
     </h2>
 
     <div class="table-container">
-        <table class="user-table">
+        <table class="user-table head-dept-table">
             <thead>
                 <tr>
                     <th class="text-center">อาจารย์</th>

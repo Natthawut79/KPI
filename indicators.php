@@ -18,7 +18,7 @@ if (isset($_GET['group_id'])) {
             $sql_ajax .= " AND Academic = '$academic' ";
         }
 
-        $sql_ajax .= " ORDER BY Academic DESC, Order_No ASC";
+        $sql_ajax .= " ORDER BY KPI_Type_Name_EN ASC";
 
         $result_ajax = mysqli_query($conn, $sql_ajax);
 
@@ -53,6 +53,7 @@ $sql = "
         kt.KPI_topic_name,
         kt.Unit,
         kt.Goal,
+        kt.Order_No,
         il.Important_level_name AS Priority,
         gtk.Group_Name,
         ktype.Academic
@@ -73,7 +74,7 @@ if (!empty($KPI_type_id)) {
     $sql .= " AND ktype.KPI_type_id = '$KPI_type_id'";
 }
 
-$sql .= " ORDER BY kt.KPI_topic_id ASC";
+$sql .= " ORDER BY kt.KPI_topic_name ASC , kt.Order_no ASC";
 $result = ($isSearch && !$noResult) ? mysqli_query($conn, $sql) : false;
 ?>
 
@@ -129,8 +130,8 @@ $result = ($isSearch && !$noResult) ? mysqli_query($conn, $sql) : false;
         <table class="indicator-table">
             <thead>
                 <tr>
-                    <th style="width: 50px;">ลำดับ</th>
                     <th>ชื่อตัวชี้วัด</th>
+                    <th style="width: 50px;">ลำดับ</th>
                     <th style="width: 100px;">หน่วยวัด</th>
                     <th>เป้าหมาย</th>
                     <th>ระดับความสำคัญ</th>
@@ -145,7 +146,7 @@ $result = ($isSearch && !$noResult) ? mysqli_query($conn, $sql) : false;
                 if ($noResult) {
                     echo "<tr><td colspan='6' class='text-center text-muted'>ไม่มีข้อมูลให้แสดง</td></tr>";
                 } elseif ($isSearch && $result && mysqli_num_rows($result) > 0) {
-                    $count = 1;
+                    
                     while ($row = mysqli_fetch_assoc($result)) {
                         
                         // [เพิ่ม] สร้างปุ่มลบตามเงื่อนไขปีปัจจุบัน
@@ -160,8 +161,8 @@ $result = ($isSearch && !$noResult) ? mysqli_query($conn, $sql) : false;
                         }
 
                         echo "<tr>
-                                <td>{$count}</td>
                                 <td>{$row['KPI_topic_name']}</td>
+                                <td>{$row['Order_No']}</td>
                                 <td>{$row['Unit']}</td>
                                 <td>{$row['Goal']}</td>
                                 <td>{$row['Priority']}</td>
@@ -173,7 +174,7 @@ $result = ($isSearch && !$noResult) ? mysqli_query($conn, $sql) : false;
                                     </div>
                                 </td>
                               </tr>";
-                        $count++;
+                        
                     }
                 } elseif ($isSearch) {
                     echo "<tr><td colspan='6' class='text-center'>ไม่พบข้อมูล</td></tr>";

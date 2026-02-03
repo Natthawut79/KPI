@@ -80,7 +80,7 @@ include 'config/academic_year_resolver.php';
     </div>
 
     <div class="table-container">
-        <table class="user-table">
+        <table class="user-table approve-table">
             <thead>
                 <tr>
                     <th>ลำดับ</th>

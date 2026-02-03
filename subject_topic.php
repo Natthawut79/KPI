@@ -14,7 +14,7 @@ if (isset($_GET['ajax_request']) && $_GET['ajax_request'] == 'get_kpi_types') {
         $sql .= " AND Academic = '$academic' ";
     }
     
-    $sql .= " ORDER BY Academic DESC, Order_No ASC";
+    $sql .= " ORDER BY KPI_Type_Name_EN ASC";
     
     $result = mysqli_query($conn, $sql);
     if ($result) {
@@ -64,7 +64,7 @@ if (!empty($KPI_type_id)) {
     $sql .= " AND kt.KPI_type_id = '$KPI_type_id'";
 }
 
-$sql .= " ORDER BY kt.Academic DESC, st.subject_order ASC";
+$sql .= " ORDER BY kt.Academic DESC, st.subject_name ASC";
 
 $result = ($isSearch) ? mysqli_query($conn, $sql) : false;
 ?>
@@ -115,7 +115,7 @@ $result = ($isSearch) ? mysqli_query($conn, $sql) : false;
                         if(!empty($Academic)){
                             $sql_t .= " AND Academic = '$Academic' ";
                         }
-                        $sql_t .= " ORDER BY Academic DESC, Order_No ASC";
+                        $sql_t .= " ORDER BY KPI_Type_Name_EN ASC";
                         
                         $res_t = mysqli_query($conn, $sql_t);
                         while($row_t = mysqli_fetch_assoc($res_t)){
@@ -132,11 +132,11 @@ $result = ($isSearch) ? mysqli_query($conn, $sql) : false;
     </div>
 
     <div class="table-container">
-        <table class="indicator-table">
+        <table class="indicator-table subject-table">
             <thead>
                 <tr>
-                    <th style="width: 60px;">ลำดับ</th>
                     <th class="subject-name-col">ชื่อหัวข้อตัวชี้วัด</th>
+                    <th style="width: 60px;">ลำดับ</th>
                     <th>ประเภทตัวชี้วัด</th>
                     <th>กลุ่มผู้ใช้</th>
                     <th>ปีการศึกษา</th>
@@ -159,8 +159,8 @@ $result = ($isSearch) ? mysqli_query($conn, $sql) : false;
                         }
 
                         echo "<tr>
-                                <td>{$row['subject_order']}</td>
                                 <td>{$row['subject_name']}</td>
+                                <td>{$row['subject_order']}</td>
                                 <td>{$row['KPI_Type_Name_EN']}</td>
                                 <td>{$row['Group_Name']}</td>
                                 <td>{$row['Academic']}</td>

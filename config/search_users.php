@@ -6,7 +6,7 @@ $userType   = isset($_GET['userType']) ? trim($_GET['userType']) : '';
 $isSearch   = ($searchName !== '' || $userType !== '');
 
 // ดึงประเภทผู้ใช้ทั้งหมด
-$sql_user_type = "SELECT Type_id, Type_name, Type_name_th FROM user_type ORDER BY Type_id ASC";
+$sql_user_type = "SELECT Type_id, Type_name, Type_name_th FROM user_type ORDER BY Type_name_th ASC";
 $result_user_type = mysqli_query($conn, $sql_user_type);
 
 $result_employee = null;
@@ -24,7 +24,7 @@ if ($isSearch) {
         $whereClauses[] = "u.Type_id = '$userType'";
     }
 
-    // ประกอบ WHERE ถ้ามีเงื่อนไข
+    // WHERE ถ้ามีเงื่อนไข
     $whereSQL = '';
     if (count($whereClauses) > 0) {
         $whereSQL = 'WHERE ' . implode(' AND ', $whereClauses);
@@ -40,7 +40,7 @@ if ($isSearch) {
         JOIN user u ON e.Emp_code = u.Emp_code
         JOIN user_type ut ON u.Type_id = ut.Type_id
         $whereSQL
-        ORDER BY e.Emp_code ASC
+        ORDER BY e.Fname_th ASC, e.Lname_th ASC
     ";
     $result_employee = mysqli_query($conn, $sql_employee);
 }

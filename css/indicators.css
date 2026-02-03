@@ -257,3 +257,57 @@ body {
 .action-cell {
     min-width: 160px;
 }
+/* =========================================
+   จัดตำแหน่งหน้า ตัวชี้วัด (ตารางมี 6 คอลัมน์)
+   ========================================= */
+
+/* 1. จัดหัวตารางทุกคอลัมน์ให้อยู่กึ่งกลาง */
+.indicator-table thead th {
+    text-align: center !important;
+}
+
+/* 2. บังคับให้ข้อมูลทุกช่อง "ชิดด้านบน" และลดช่องว่าง */
+.indicator-table tbody td {
+    vertical-align: top !important;
+    padding-top: 0.2rem !important;
+}
+
+/* 3. คอลัมน์ 1 (ลำดับ) และ 6 (จัดการ) จัดกึ่งกลางแนวนอน */
+.indicator-table tbody td:nth-child(2),
+.indicator-table tbody td:last-child {
+    text-align: center !important;
+}
+
+/* 4. คอลัมน์ 2, 3, 4, 5 จัดชิดซ้ายแนวนอน */
+.indicator-table tbody td:first-child,
+.indicator-table tbody td:nth-child(3),
+.indicator-table tbody td:nth-child(4),
+.indicator-table tbody td:nth-child(5) {
+    text-align: left !important;
+}
+/* 5. ปรับปุ่มคอลัมน์ "จัดการ" ให้ขยับลงมาให้สมดุลกับตัวอักษรบรรทัดแรก */
+.indicator-table tbody td:last-child {
+    padding-top: 0.6rem !important;
+}
+/* 6. บังคับให้แถวแจ้งเตือน (ที่ใช้ colspan) อยู่กึ่งกลางเสมอ */
+.indicator-table tbody td[colspan] {
+    text-align: center !important;
+}
+/* =========================================
+   จัดตำแหน่งเฉพาะหน้า หัวข้อตัวชี้วัด (subject_topic.php)
+   ไม่ส่งผลกระทบกับหน้า indicators.php เพราะใช้คลาส .subject-table
+   ========================================= */
+
+/* 1. กลุ่มชิดซ้าย (คอลัมน์ 1:ชื่อหัวข้อ, 3:ประเภท, 4:กลุ่มผู้ใช้) */
+.subject-table tbody td:first-child,
+.subject-table tbody td:nth-child(3),
+.subject-table tbody td:nth-child(4) {
+    text-align: left !important;
+}
+
+/* 2. กลุ่มกึ่งกลาง (คอลัมน์ 2:ลำดับ, 5:ปีการศึกษา, 6:จัดการ) */
+.subject-table tbody td:nth-child(2),
+.subject-table tbody td:nth-child(5),
+.subject-table tbody td:last-child {
+    text-align: center !important;
+}

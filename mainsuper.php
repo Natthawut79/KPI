@@ -87,7 +87,7 @@ include 'config/search_mainsuper.php';
     </h2>
 
     <div class="table-container">
-        <table class="user-table">
+        <table class="user-table mainsuper-table">
             <thead>
                 <tr>
                     <th class='text-center'>อาจารย์</th>

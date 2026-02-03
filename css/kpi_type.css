@@ -273,3 +273,34 @@ body {
         font-size: 1.8rem;
     }
 }
+/* 1. จัดหัวตารางทุกคอลัมน์ให้อยู่กึ่งกลาง */
+.kpi-table thead th {
+    text-align: center !important;
+}
+
+/* 2. บังคับให้ข้อมูลทุกช่อง "ชิดด้านบน" และลดช่องว่าง */
+.kpi-table tbody td {
+    vertical-align: top !important;
+    padding-top: 0.2rem !important;
+}
+
+/* 3. กลุ่มชิดซ้าย (คอลัมน์ 1:ชื่อ ENG, 2:ชื่อ TH, 5:หมายเหตุ, 7:กลุ่มผู้ใช้) */
+.kpi-table tbody td:nth-child(1),
+.kpi-table tbody td:nth-child(2),
+.kpi-table tbody td:nth-child(5),
+.kpi-table tbody td:nth-child(7) {
+    text-align: left !important;
+}
+
+/* 4. กลุ่มกึ่งกลาง (คอลัมน์ 3:ค่าน้ำหนัก, 4:ลำดับที่, 6:ปีการศึกษา, 8:จัดการ) */
+.kpi-table tbody td:nth-child(3),
+.kpi-table tbody td:nth-child(4),
+.kpi-table tbody td:nth-child(6),
+.kpi-table tbody td:last-child {
+    text-align: center !important;
+}
+
+/* 5. ปรับปุ่มคอลัมน์ "จัดการ" ให้ขยับลงมาให้สวยงาม */
+.kpi-table tbody td:last-child {
+    padding-top: 0.6rem !important;
+}

@@ -7,10 +7,10 @@ $search_name = isset($_GET['searchName']) ? mysqli_real_escape_string($conn, $_G
 $filter_user_type = isset($_GET['userType']) ? mysqli_real_escape_string($conn, $_GET['userType']) : 'all';
 $filter_department = isset($_GET['department']) ? mysqli_real_escape_string($conn, $_GET['department']) : 'all';
 
-$sql_status_list = "SELECT Approve_id, Status_approve_name FROM status_approve ORDER BY Approve_id ASC";
+$sql_status_list = "SELECT Approve_id, Status_approve_name FROM status_approve ORDER BY Status_approve_name ASC";
 $result_status_list = mysqli_query($conn, $sql_status_list);
 
-$sql_user_types = "SELECT Type_id, Type_name, Type_name_th FROM user_type WHERE Type_id != 1 ORDER BY Type_id";
+$sql_user_types = "SELECT Type_id, Type_name, Type_name_th FROM user_type WHERE Type_id != 1 ORDER BY Type_name_th";
 $result_user_types = mysqli_query($conn, $sql_user_types);
 
 $sql_departments = "SELECT Department_id, Department_name FROM department ORDER BY Department_name";

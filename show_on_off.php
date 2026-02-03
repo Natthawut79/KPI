@@ -64,9 +64,9 @@ function formatDateThai($date)
                 <tr>
                     <th>ปีการศึกษา</th>
                     <th>รอบการประเมิน</th>
-                    <th>วันที่เริ่ม</th>
-                    <th>วันที่สิ้นสุด</th>
-                    <th>สถานะ</th>
+                    <th class="text-center">วันที่เริ่ม</th>
+                    <th class="text-center">วันที่สิ้นสุด</th>
+                    <th class="text-center">สถานะ</th>
                     <th class="text-center">จัดการ</th>
                 </tr>
             </thead>
@@ -83,8 +83,8 @@ function formatDateThai($date)
                         echo "<tr>";
                         echo "<td>" . htmlspecialchars($row['Academic']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['Submit_type_name']) . "</td>";
-                        echo "<td>" . htmlspecialchars(formatDateThai($row['Start_date'])) . "</td>";
-                        echo "<td>" . htmlspecialchars(formatDateThai($row['End_date'])) . "</td>";
+                        echo "<td class='text-center'>" . htmlspecialchars(formatDateThai($row['Start_date'])) . "</td>";
+                        echo "<td class='text-center'>" . htmlspecialchars(formatDateThai($row['End_date'])) . "</td>";
                         echo "<td class='{$status_class}'>" . htmlspecialchars($row['Status']) . "</td>";
                         echo '<td class="text-center">
                 <a href="edit_toggle.php?id=' . $row['Toggles_id'] . '" class="action-btn btn-edit">แก้ไข</a>

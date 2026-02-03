@@ -121,6 +121,7 @@ body {
     background-color: #0b3d1c;
     color: white;
     font-size: 1.4rem;
+    
 }
 
 .user-table thead th:first-child { border-radius: 10px 0 0 10px; }
@@ -316,20 +317,14 @@ body {
         font-size: 1.8rem;
     }
 }
-/* =========================================
-   แก้ไขเฉพาะ Layout 2 Columns (สำหรับ show_on_off.php)
-   ========================================= */
 
-/* ตั้งค่าพื้นฐานสำหรับ 2 ช่อง + 1 ปุ่ม */
 .search-form.layout-2col {
-    grid-template-columns: 1fr 1fr auto; /* แบ่งซ้ายขวาเท่ากัน + ปุ่มตามขนาดตัวอักษร */
-    gap: 1.5rem; /* ระยะห่างระหว่างช่อง */
+    grid-template-columns: 1fr 1fr auto;
+    gap: 1.5rem;
 }
 
-/* ถ้าหน้าจอเริ่มเล็ก (Tablet / Laptop เล็ก) */
 @media screen and (max-width: 1024px) {
     .search-form.layout-2col {
-        /* ยังคงแนวนอนได้อยู่ เพราะมีแค่ 2 ช่อง พื้นที่เหลือเฟือ */
         grid-template-columns: 1fr 1fr auto; 
     }
 }
@@ -337,12 +332,211 @@ body {
 /* ถ้าหน้าจอเป็น Mobile (น้อยกว่า 768px) */
 @media screen and (max-width: 768px) {
     .search-form.layout-2col {
-        grid-template-columns: 1fr; /* เรียงลงมาเป็นแนวตั้ง */
+        grid-template-columns: 1fr;
         gap: 1rem;
     }
     
     .search-form.layout-2col .search-button {
-        width: 100%; /* ปุ่มเต็มความกว้าง */
+        width: 100%;
         margin-top: 0.5rem;
     }
+}
+.user-table tbody td:first-child {
+    vertical-align: top;
+    padding-top: 0.2rem;
+    text-align: center;
+}
+.user-table thead th:first-child {
+    text-align: center;
+}
+.user-table tbody td:nth-child(2),
+.user-table tbody td:nth-child(3),
+.user-table tbody td:nth-child(4),
+.user-table tbody td:nth-child(5) {
+    vertical-align: top;
+    padding-top: 0.2rem;
+    text-align: left;
+}
+.user-table thead th:nth-child(2),
+.user-table thead th:nth-child(3),
+.user-table thead th:nth-child(4) {
+    text-align: center;
+}
+.user-table tbody td:last-child {
+    vertical-align: top;
+    padding-top: 0.6rem;
+    text-align: center;
+}
+.user-table tbody td.text-center,
+.user-table thead th.text-center {
+    text-align: center;
+}
+/* =========================================
+   จัดตำแหน่งเฉพาะหน้า Super Admin (mainsuper.php)
+   ไม่ส่งผลกระทบกับหน้าอื่นๆ เพราะใช้คลาส .mainsuper-table
+   ========================================= */
+
+/* 1. จัดหัวตารางทุกคอลัมน์ให้อยู่กึ่งกลาง */
+.mainsuper-table thead th {
+    text-align: center !important;
+}
+
+/* 2. บังคับให้ข้อมูลทุกช่อง "ชิดด้านบน" และลดช่องว่าง */
+.mainsuper-table tbody td {
+    vertical-align: top !important;
+    padding-top: 0.2rem !important;
+}
+
+/* 3. กลุ่มชิดซ้าย (คอลัมน์ 1:อาจารย์, 2:ประเภท, 3:สาขา, 5:สถานะ) */
+.mainsuper-table tbody td:first-child,
+.mainsuper-table tbody td:nth-child(2),
+.mainsuper-table tbody td:nth-child(3),
+.mainsuper-table tbody td:nth-child(5) {
+    text-align: left !important;
+}
+
+/* 4. กลุ่มกึ่งกลาง (คอลัมน์ 4:ปี, 6:ดาวน์โหลด, 7:จัดการ) */
+.mainsuper-table tbody td:nth-child(4),
+.mainsuper-table tbody td:nth-child(6),
+.mainsuper-table tbody td:last-child {
+    text-align: center !important;
+}
+.mainsuper-table tbody td:nth-child(6) {
+    padding-top: 0.4rem !important; 
+}
+.mainsuper-table tbody td:last-child {
+    padding-top: 0.6rem !important;
+}
+/* =========================================
+   ปรับแต่งเฉพาะหน้า อนุมัติผลงาน (approve_kpi.php)
+   ใช้คลาส .approve-table เพื่อไม่ให้กระทบหน้าอื่น
+   ========================================= */
+
+/* ปรับระยะห่างด้านบนของคอลัมน์ 6 (ดาวน์โหลด/Export) ให้น้อยลง เพื่อให้ปุ่มลอยขึ้นไป */
+.approve-table tbody td:nth-child(6) {
+    vertical-align: top !important;
+    padding-top: 0.4rem !important; /* ปรับเลขนี้ให้น้อยลงได้อีกถ้าอยากให้ขึ้นไปอีก (เช่น 0.2rem) */
+}
+.approve-table tbody td:nth-child(5) {
+    text-align: left !important;
+}
+/* =========================================
+   จัดตำแหน่งเฉพาะหน้า Main Bachelor (main_bachelor.php)
+   ไม่ส่งผลกระทบกับหน้าอื่นๆ เพราะใช้คลาส .bachelor-table
+   ========================================= */
+
+/* 1. จัดหัวตารางทุกคอลัมน์ให้อยู่กึ่งกลาง */
+.bachelor-table thead th {
+    text-align: center !important;
+}
+
+/* 2. บังคับให้ข้อมูลทุกช่อง "ชิดด้านบน" และลดช่องว่าง */
+.bachelor-table tbody td {
+    vertical-align: top !important;
+    padding-top: 0.2rem !important;
+}
+
+/* 3. กลุ่มชิดซ้าย (คอลัมน์ 1:อาจารย์, 2:ประเภท, 3:สาขา, 5:สถานะ) */
+.bachelor-table tbody td:first-child,
+.bachelor-table tbody td:nth-child(2),
+.bachelor-table tbody td:nth-child(3),
+.bachelor-table tbody td:nth-child(5) {
+    text-align: left !important;
+}
+
+/* 4. กลุ่มกึ่งกลาง (คอลัมน์ 4:ปี, 6:ดาวน์โหลด, 7:จัดการ) */
+.bachelor-table tbody td:nth-child(4),
+.bachelor-table tbody td:nth-child(6),
+.bachelor-table tbody td:last-child {
+    text-align: center !important;
+}
+
+/* 5. ปรับระยะปุ่มให้ขยับลงมาสมดุลกับตัวหนังสือ */
+/* ปุ่ม Export (คอลัมน์ 6) */
+.bachelor-table tbody td:nth-child(6) {
+    padding-top: 0.4rem !important; 
+}
+/* ปุ่มดูรายละเอียด (คอลัมน์ 7) */
+.bachelor-table tbody td:last-child {
+    padding-top: 0.6rem !important;
+}
+/* =========================================
+   จัดตำแหน่งเฉพาะหน้า รองคณบดี (main_associate_dean.php)
+   ไม่ส่งผลกระทบกับหน้าอื่นๆ เพราะใช้คลาส .associate-dean-table
+   ========================================= */
+
+/* 1. จัดหัวตารางทุกคอลัมน์ให้อยู่กึ่งกลาง */
+.associate-dean-table thead th {
+    text-align: center !important;
+}
+
+/* 2. บังคับให้ข้อมูลทุกช่อง "ชิดด้านบน" และลดช่องว่าง */
+.associate-dean-table tbody td {
+    vertical-align: top !important;
+    padding-top: 0.2rem !important;
+}
+
+/* 3. กลุ่มชิดซ้าย (คอลัมน์ 1:อาจารย์, 2:ประเภท, 3:สาขา, 5:สถานะ) */
+.associate-dean-table tbody td:first-child,
+.associate-dean-table tbody td:nth-child(2),
+.associate-dean-table tbody td:nth-child(3),
+.associate-dean-table tbody td:nth-child(5) {
+    text-align: left !important;
+}
+
+/* 4. กลุ่มกึ่งกลาง (คอลัมน์ 4:ปี, 6:ดาวน์โหลด, 7:จัดการ) */
+.associate-dean-table tbody td:nth-child(4),
+.associate-dean-table tbody td:nth-child(6),
+.associate-dean-table tbody td:last-child {
+    text-align: center !important;
+}
+
+/* 5. ปรับระยะปุ่มให้ขยับลงมาสมดุลกับตัวหนังสือ */
+/* ปุ่ม Export (คอลัมน์ 6) */
+.associate-dean-table tbody td:nth-child(6) {
+    padding-top: 0.4rem !important; 
+}
+/* ปุ่มดูรายละเอียด (คอลัมน์ 7) */
+.associate-dean-table tbody td:last-child {
+    padding-top: 0.6rem !important;
+}
+/* =========================================
+   จัดตำแหน่งเฉพาะหน้า หัวหน้าสาขา (main_head_of_department.php)
+   ไม่ส่งผลกระทบกับหน้าอื่นๆ เพราะใช้คลาส .head-dept-table
+   ========================================= */
+
+/* 1. จัดหัวตารางทุกคอลัมน์ให้อยู่กึ่งกลาง */
+.head-dept-table thead th {
+    text-align: center !important;
+}
+
+/* 2. บังคับให้ข้อมูลทุกช่อง "ชิดด้านบน" และลดช่องว่าง */
+.head-dept-table tbody td {
+    vertical-align: top !important;
+    padding-top: 0.2rem !important;
+}
+
+/* 3. กลุ่มชิดซ้าย (คอลัมน์ 1:อาจารย์, 2:ประเภท, 3:สาขา, 5:สถานะ) */
+.head-dept-table tbody td:first-child,
+.head-dept-table tbody td:nth-child(2),
+.head-dept-table tbody td:nth-child(3),
+.head-dept-table tbody td:nth-child(5) {
+    text-align: left !important;
+}
+
+/* 4. กลุ่มกึ่งกลาง (คอลัมน์ 4:ปี, 6:ดาวน์โหลด, 7:จัดการ) */
+.head-dept-table tbody td:nth-child(4),
+.head-dept-table tbody td:nth-child(6),
+.head-dept-table tbody td:last-child {
+    text-align: center !important;
+}
+
+/* 5. ปรับระยะปุ่มให้ขยับลงมาสมดุลกับตัวหนังสือ */
+/* ปุ่ม Export (คอลัมน์ 6) */
+.head-dept-table tbody td:nth-child(6) {
+    padding-top: 0.3rem !important; 
+}
+/* ปุ่มดูรายละเอียด (คอลัมน์ 7) */
+.head-dept-table tbody td:last-child {
+    padding-top: 0.6rem !important;
 }
